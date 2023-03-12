@@ -1,27 +1,17 @@
-using Mirror;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
-
-
 
 public class Player : NetworkBehaviour
 {
-    const float SPEED = 0.1f;
-    
-    void HandleMovement()
-    {
-        if (isLocalPlayer)
-        {
-            float moveHorizontal = Input.GetAxis("Horizontal") * SPEED;
-            float moveVertical = Input.GetAxis("Vertical") * SPEED;
-            Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0);
-            transform.position = transform.position + movement;
-        }
-    }
+    //Todo: Use a network sync variable to control player color
 
-    void Update()
+    public override void OnNetworkSpawn()
     {
-        HandleMovement();
+        if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+        {
+            var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+            Material material = playerObject.GetComponent<Renderer>().material;
+            material.color = Color.blue;
+        }
     }
 }
