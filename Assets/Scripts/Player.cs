@@ -1,5 +1,6 @@
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,6 +50,9 @@ public class Player : NetworkBehaviour
 
     #region Health
     public NetworkVariable<int> Health = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<ulong> playerId = new NetworkVariable<ulong>();
+
+    public ulong PlayerId {  get { return playerId.Value; } set { playerId.Value = value; } }
 
     [ServerRpc]
     public void ChangeHealthServerRpc(int value)
@@ -58,43 +62,22 @@ public class Player : NetworkBehaviour
 
     void OnHealthChange(int oldValue, int newValue)
     {
-        Debug.LogFormat($"Client {OwnerClientId} health changed from {oldValue} to {newValue}");
+        UIManager.instance.UpdateHealth(PlayerId, newValue);
     }
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            Health.Value = 100;
-        }
-        if (!IsLocalPlayer)
-        {
-            GetComponentInChildren<Canvas>().enabled = false;
-        }
+        if (IsServer) PlayerId = OwnerClientId;
 
+        Debug.Log("Spawned player: " + PlayerId);
+
+        UIManager.AddPlayer(PlayerId);
         Health.OnValueChanged += OnHealthChange;
-        Health.OnValueChanged += SetPlayer1HealthSliderValue;
     }
 
     public override void OnNetworkDespawn()
     {
         Health.OnValueChanged -= OnHealthChange;
-        Health.OnValueChanged -= SetPlayer1HealthSliderValue;
-    }
-
-    public Slider player1HealthSlider;
-    public Slider player2HealthSlider;
-
-    public void SetPlayer1HealthSliderValue(int oldValue, int newValue)
-    {
-        player1HealthSlider.value = newValue;
-        Debug.Log("Set player 1's health bar slider value.");
-    }
-
-    public void SetPlayer2HealthSliderValue(int oldValue, int newValue)
-    {
-        player1HealthSlider.value = newValue;
-        Debug.Log("Set player 2's health bar slider value.");
     }
 
     #endregion
