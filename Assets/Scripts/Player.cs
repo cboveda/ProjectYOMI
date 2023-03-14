@@ -1,18 +1,12 @@
-using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
 {
-    [Header("UI Settings")]
-    public TMP_Text p1HealthText;
-    public TMP_Text p2HealthText;
-
-    public NetworkVariable<int> Player1Health = new(0);
-    public NetworkVariable<int> Player2Health = new(0);
+    #region Actions
     public NetworkVariable<byte> PlayerAction = new(0);
-
 
     public enum PlayerActions
     {
@@ -22,13 +16,13 @@ public class Player : NetworkBehaviour
         Grab = 3
     }
 
-    public void LightAttack() 
+    public void LightAttack()
     {
         Debug.Log("Light Attack");
         SubmitPlayerActionServerRpc(PlayerActions.LightAttack);
     }
-    
-    public void HeavyAttack() 
+
+    public void HeavyAttack()
     {
         Debug.Log("Heavy Attack");
         SubmitPlayerActionServerRpc(PlayerActions.HeavyAttack);
@@ -51,37 +45,57 @@ public class Player : NetworkBehaviour
     {
         PlayerAction.Value = (byte)action;
     }
+    #endregion
 
+    #region Health
+    public NetworkVariable<int> Health = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone);
 
     [ServerRpc]
-    public void SetPlayerHealthServerRpc(int player, int value)
+    public void ChangeHealthServerRpc(int value)
     {
-        switch (player)
+        Health.Value -= value;
+    }
+
+    void OnHealthChange(int oldValue, int newValue)
+    {
+        Debug.LogFormat($"Client {OwnerClientId} health changed from {oldValue} to {newValue}");
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
         {
-            case 1: Player1Health.Value = value; break;
-            case 2: Player2Health.Value = value; break;
-            default: break;
+            Health.Value = 100;
         }
+        if (!IsLocalPlayer)
+        {
+            GetComponentInChildren<Canvas>().enabled = false;
+        }
+
+        Health.OnValueChanged += OnHealthChange;
+        Health.OnValueChanged += SetPlayer1HealthSliderValue;
     }
 
-    private void OnEnable()
+    public override void OnNetworkDespawn()
     {
-        Player1Health.OnValueChanged += OnHealthChanged;
-        Player2Health.OnValueChanged += OnHealthChanged;
+        Health.OnValueChanged -= OnHealthChange;
+        Health.OnValueChanged -= SetPlayer1HealthSliderValue;
     }
 
-    private void OnDisable()
+    public Slider player1HealthSlider;
+    public Slider player2HealthSlider;
+
+    public void SetPlayer1HealthSliderValue(int oldValue, int newValue)
     {
-        Player1Health.OnValueChanged -= OnHealthChanged;
-        Player2Health.OnValueChanged -= OnHealthChanged;
+        player1HealthSlider.value = newValue;
+        Debug.Log("Set player 1's health bar slider value.");
     }
-    private void OnHealthChanged(int oldValue, int newValue)
+
+    public void SetPlayer2HealthSliderValue(int oldValue, int newValue)
     {
-        if (!IsClient) return;
-        Debug.Log("Health changed!");
-        p1HealthText.SetText("{0}", Player1Health.Value);
-        p2HealthText.SetText("{0}", Player2Health.Value);
+        player1HealthSlider.value = newValue;
+        Debug.Log("Set player 2's health bar slider value.");
     }
 
-
+    #endregion
 }
