@@ -4,56 +4,49 @@ using UnityEngine;
 using System;
 using Unity.VisualScripting;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 
 public class UIManager : NetworkBehaviour
 {
+
+    public static UIManager Instance;
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance.RoundTimerEnabled)
+        {
+            RoundTimerSlider.value = GameManager.Instance.RoundTimer;
+        }
+    }
+
+
+    #region Healthbars
     public Slider player1HealthSlider;
     public Slider player2HealthSlider;
 
-    public List<ulong> Players;
-
-    public static UIManager instance;
-
-    private void Awake()
+    public void UpdateHealth()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (GameManager.Instance.Players.Count > 0) player1HealthSlider.value = GameManager.Instance.Players.Values.ElementAt(0).Health;
+        if (GameManager.Instance.Players.Count == 2) player2HealthSlider.value = GameManager.Instance.Players.Values.ElementAt(1).Health;
     }
+    #endregion
 
-    public void SetPlayer1HealthSliderValue(int oldValue, int newValue)
+
+    public Slider RoundTimerSlider;
+    public TMP_Text RoundTimerText;
+
+    [SerializeField]
+    private float roundLength;
+
+    public void SetRoundTimer(float newValue)
     {
-        player1HealthSlider.value = newValue;
-        Debug.Log("Set player 1's health bar slider value.");
+        RoundTimerSlider.value = newValue;
+        RoundTimerText.text = newValue.ToString("0.0");
     }
-
-    public void SetPlayer2HealthSliderValue(int oldValue, int newValue)
-    {
-        player1HealthSlider.value = newValue;
-        Debug.Log("Set player 2's health bar slider value.");
-    }
-
-    public static void AddPlayer(ulong uid)
-    {
-        Debug.Log("Adding player: " + uid);
-        UIManager.instance.Players.Add(uid);
-    }
-
-    public void UpdateHealth(ulong uid, int newValue)
-    {
-        if (uid == Players[0])
-        {
-            player1HealthSlider.value = newValue;
-        }
-        else if (uid == Players[1])
-        {
-            player2HealthSlider.value = newValue;
-        }
-    }
-
 }

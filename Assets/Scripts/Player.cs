@@ -1,20 +1,19 @@
-using TMPro;
+using System.Linq;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
 {
     #region Actions
     public NetworkVariable<byte> PlayerAction = new(0);
 
-    public enum PlayerActions
+    public enum PlayerActions : byte
     {
-        LightAttack = 0,
-        HeavyAttack = 1,
-        Parry = 2,
-        Grab = 3
+        None = 0,
+        LightAttack = 1,
+        HeavyAttack = 2,
+        Parry = 3,
+        Grab = 4
     }
 
     public void LightAttack()
@@ -44,41 +43,47 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     public void SubmitPlayerActionServerRpc(PlayerActions action)
     {
-        PlayerAction.Value = (byte)action;
+        PlayerAction.Value = (byte) action;
     }
     #endregion
 
     #region Health
-    public NetworkVariable<int> Health = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<int> health = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<ulong> playerId = new NetworkVariable<ulong>();
 
+    public int Health { get { return health.Value; } set { health.Value = value; } }
     public ulong PlayerId {  get { return playerId.Value; } set { playerId.Value = value; } }
-
-    [ServerRpc]
-    public void ChangeHealthServerRpc(int value)
-    {
-        Health.Value -= value;
-    }
-
-    void OnHealthChange(int oldValue, int newValue)
-    {
-        UIManager.instance.UpdateHealth(PlayerId, newValue);
-    }
 
     public override void OnNetworkSpawn()
     {
         if (IsServer) PlayerId = OwnerClientId;
-
         Debug.Log("Spawned player: " + PlayerId);
-
-        UIManager.AddPlayer(PlayerId);
-        Health.OnValueChanged += OnHealthChange;
+        GameManager.AddPlayer(PlayerId, this);
+        health.OnValueChanged += OnHealthChange;
+        if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId) transform.position = new Vector3(-2f, -1f, 0);
+        else { transform.position = new Vector3(2f, -1f, 0); GetComponent<SpriteRenderer>().flipX = true; }
     }
 
     public override void OnNetworkDespawn()
     {
-        Health.OnValueChanged -= OnHealthChange;
+        GameManager.RemovePlayer(PlayerId);
+        health.OnValueChanged -= OnHealthChange;
     }
 
+    public void ChangeHealth(int value)
+    {
+        ChangeHealthServerRpc(10);
+    }
+
+    [ServerRpc(RequireOwnership =false)]
+    public void ChangeHealthServerRpc(int value)
+    {
+        Health -= value;
+    }
+
+    void OnHealthChange(int oldValue, int newValue)
+    {
+        UIManager.Instance.UpdateHealth();
+    }
     #endregion
 }
