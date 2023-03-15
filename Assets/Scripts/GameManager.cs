@@ -145,8 +145,6 @@ public class GameManager : NetworkBehaviour
         UIManager.Instance.SetRoundTimer(newValue);
     }
 
-    #endregion
-
     private void EndOfRound()
     {
         RoundTimerEnabled = false;
@@ -167,18 +165,18 @@ public class GameManager : NetworkBehaviour
         //Evaluate combat
         switch (p1Move)
         {
-            case (byte) Player.PlayerActions.None:
-                if (p2Move != (byte) Player.PlayerActions.None) p1.ChangeHealth(10);
+            case (byte)Player.PlayerActions.None:
+                if (p2Move != (byte)Player.PlayerActions.None) p1.ChangeHealth(10);
                 break;
-            case (byte) Player.PlayerActions.LightAttack:
-                if (p2Move == (byte) Player.PlayerActions.HeavyAttack) p2.ChangeHealth(10);
-                if (p2Move == (byte) Player.PlayerActions.Grab) p2.ChangeHealth(10);
-                if (p2Move == (byte) Player.PlayerActions.Parry) p1.ChangeHealth(10);
+            case (byte)Player.PlayerActions.LightAttack:
+                if (p2Move == (byte)Player.PlayerActions.HeavyAttack) p2.ChangeHealth(10);
+                if (p2Move == (byte)Player.PlayerActions.Grab) p2.ChangeHealth(10);
+                if (p2Move == (byte)Player.PlayerActions.Parry) p1.ChangeHealth(10);
                 break;
             case (byte)Player.PlayerActions.HeavyAttack:
-                if (p2Move == (byte) Player.PlayerActions.LightAttack) p1.ChangeHealth(10);
-                if (p2Move == (byte) Player.PlayerActions.Grab) p1.ChangeHealth(10);
-                if (p2Move == (byte) Player.PlayerActions.Parry) p2.ChangeHealth(10);
+                if (p2Move == (byte)Player.PlayerActions.LightAttack) p1.ChangeHealth(10);
+                if (p2Move == (byte)Player.PlayerActions.Grab) p1.ChangeHealth(10);
+                if (p2Move == (byte)Player.PlayerActions.Parry) p2.ChangeHealth(10);
                 break;
             case (byte)Player.PlayerActions.Parry:
                 if (p2Move == (byte)Player.PlayerActions.LightAttack) p2.ChangeHealth(10);
@@ -195,10 +193,23 @@ public class GameManager : NetworkBehaviour
         }
 
         //Clear moves
-        foreach(var p in Players) p.Value.PlayerAction.Value = (byte)Player.PlayerActions.None;
+        foreach (var p in Players) p.Value.PlayerAction.Value = (byte)Player.PlayerActions.None;
 
         //Start next round
         StartRoundTimerServerRpc();
+    }
+    #endregion
+
+    public bool CheckPlayerHealths()
+    {
+        foreach (Player p in Players.Values)
+        {
+            if (p.Health <= 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

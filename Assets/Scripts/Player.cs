@@ -4,6 +4,25 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
+    public NetworkVariable<ulong> playerId = new NetworkVariable<ulong>();
+    public ulong PlayerId { get { return playerId.Value; } set { playerId.Value = value; } }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer) PlayerId = OwnerClientId;
+        Debug.Log("Spawned player: " + PlayerId);
+        GameManager.AddPlayer(PlayerId, this);
+        health.OnValueChanged += OnHealthChange;
+        if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId) transform.position = new Vector3(-2f, -1f, 0);
+        else { transform.position = new Vector3(2f, -1f, 0); GetComponent<SpriteRenderer>().flipX = true; }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        GameManager.RemovePlayer(PlayerId);
+        health.OnValueChanged -= OnHealthChange;
+    }
+
     #region Actions
     public NetworkVariable<byte> PlayerAction = new(0);
 
@@ -49,26 +68,10 @@ public class Player : NetworkBehaviour
 
     #region Health
     public NetworkVariable<int> health = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone);
-    public NetworkVariable<ulong> playerId = new NetworkVariable<ulong>();
+
 
     public int Health { get { return health.Value; } set { health.Value = value; } }
-    public ulong PlayerId {  get { return playerId.Value; } set { playerId.Value = value; } }
 
-    public override void OnNetworkSpawn()
-    {
-        if (IsServer) PlayerId = OwnerClientId;
-        Debug.Log("Spawned player: " + PlayerId);
-        GameManager.AddPlayer(PlayerId, this);
-        health.OnValueChanged += OnHealthChange;
-        if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId) transform.position = new Vector3(-2f, -1f, 0);
-        else { transform.position = new Vector3(2f, -1f, 0); GetComponent<SpriteRenderer>().flipX = true; }
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        GameManager.RemovePlayer(PlayerId);
-        health.OnValueChanged -= OnHealthChange;
-    }
 
     public void ChangeHealth(int value)
     {
