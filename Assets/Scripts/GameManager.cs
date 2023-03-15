@@ -62,9 +62,9 @@ public class GameManager : NetworkBehaviour
         {
             StatusLabels();
         }
-        if (NetworkManager.Singleton.IsClient)
+        if (NetworkManager.Singleton.IsServer)
         {
-            PlayerActionButtons();
+            //PlayerActionButtons();
             PlayerStatusLabels();
         }
         GUILayout.EndArea();
@@ -89,15 +89,12 @@ public class GameManager : NetworkBehaviour
 
     void PlayerStatusLabels()
     {
-        if (IsServer)
-        {
-            GUILayout.Label("Round Timer: " + RoundTimer);
+        GUILayout.Label("Round Timer: " + RoundTimer);
 
-            foreach (ulong uid in NetworkManager.Singleton.ConnectedClients.Keys)
-            {
-                GUILayout.Label($"Client {uid} move: {Enum.GetName(typeof(Player.PlayerActions), NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().PlayerAction.Value)}");
-                GUILayout.Label($"Client {uid} health: {NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Health}");
-            }
+        foreach (ulong uid in NetworkManager.Singleton.ConnectedClients.Keys)
+        {
+            GUILayout.Label($"Client {uid} move: {Enum.GetName(typeof(Player.PlayerActions), NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().PlayerAction.Value)}");
+            GUILayout.Label($"Client {uid} health: {NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Health}");
         }
     }
 
@@ -124,7 +121,7 @@ public class GameManager : NetworkBehaviour
     #region RoundTimer
 
     public NetworkVariable<float> roundTimer = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone);
-    public float RoundTimer { get { return roundTimer.Value; } set {  roundTimer.Value = value; } }
+    public float RoundTimer { get { return roundTimer.Value; } set { roundTimer.Value = value; } }
 
     [SerializeField]
     private float roundLength;

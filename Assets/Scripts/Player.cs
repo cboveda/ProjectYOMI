@@ -9,12 +9,30 @@ public class Player : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer) PlayerId = OwnerClientId;
-        Debug.Log("Spawned player: " + PlayerId);
+        if (IsServer)
+        {
+            PlayerId = OwnerClientId;
+        }
+
+        if (IsOwner)
+        {
+            UIManager.Instance.RegisterLocalPlayer(this);
+        }
+
         GameManager.AddPlayer(PlayerId, this);
+        Debug.Log("Spawned player: " + PlayerId);
+
+        if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId)
+        {
+            transform.position = new Vector3(-2f, -1f, 0);
+        }
+        else
+        {
+            transform.position = new Vector3(2f, -1f, 0);
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
+
         health.OnValueChanged += OnHealthChange;
-        if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId) transform.position = new Vector3(-2f, -1f, 0);
-        else { transform.position = new Vector3(2f, -1f, 0); GetComponent<SpriteRenderer>().flipX = true; }
     }
 
     public override void OnNetworkDespawn()
@@ -37,32 +55,28 @@ public class Player : NetworkBehaviour
 
     public void LightAttack()
     {
-        Debug.Log("Light Attack");
         SubmitPlayerActionServerRpc(PlayerActions.LightAttack);
     }
 
     public void HeavyAttack()
     {
-        Debug.Log("Heavy Attack");
         SubmitPlayerActionServerRpc(PlayerActions.HeavyAttack);
     }
 
     public void Parry()
     {
-        Debug.Log("Parry");
         SubmitPlayerActionServerRpc(PlayerActions.Parry);
     }
 
     public void Grab()
     {
-        Debug.Log("Grab");
         SubmitPlayerActionServerRpc(PlayerActions.Grab);
     }
 
     [ServerRpc]
     public void SubmitPlayerActionServerRpc(PlayerActions action)
     {
-        PlayerAction.Value = (byte) action;
+        PlayerAction.Value = (byte)action;
     }
     #endregion
 
@@ -75,7 +89,7 @@ public class Player : NetworkBehaviour
         ChangeHealthServerRpc(10);
     }
 
-    [ServerRpc(RequireOwnership =false)]
+    [ServerRpc(RequireOwnership = false)]
     public void ChangeHealthServerRpc(int value)
     {
         Health -= value;

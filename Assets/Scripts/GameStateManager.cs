@@ -49,6 +49,7 @@ public class GameStateManager : NetworkBehaviour
         switch(State)
         {
             case (byte)States.NotReady:
+                Debug.Log("Entered NotReady state");
                 // Display ready UI
                 UIManager.Instance.ShowReadyInterface();
                 // Set player healths
@@ -117,8 +118,6 @@ public class GameStateManager : NetworkBehaviour
 
     private void Update()
     {
-        if (IsClient && !UIManager.Instance.ReadyInterfaceActive) UIManager.Instance.ShowReadyInterface();
-
         if (!IsServer) return;
 
         if (timerActive) timer += Time.unscaledDeltaTime;

@@ -10,6 +10,28 @@ using TMPro;
 public class UIManager : NetworkBehaviour
 {
     public static UIManager Instance;
+
+    [SerializeField]
+    private Player player;
+
+    public Button LightAttackButton;
+    public Button HeavyAttackButton;
+    public Button ParryButton;
+    public Button GrabButton;
+
+    public Slider player1HealthSlider;
+    public Slider player2HealthSlider;
+
+    public Slider RoundTimerSlider;
+    public TMP_Text RoundTimerText;
+
+    public Button ReadyButton;
+    public TMP_Text ReadyText;
+    public Animator Countdown;
+
+    [SerializeField]
+    private float roundLength;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -34,24 +56,41 @@ public class UIManager : NetworkBehaviour
         });
     }
 
+    public void RegisterLocalPlayer(Player player)
+    {
+        this.player = player;
+        LinkPlayerButtons();
+    }
 
-    #region Healthbars
-    public Slider player1HealthSlider;
-    public Slider player2HealthSlider;
+    private void LinkPlayerButtons()
+    {
+        LightAttackButton.onClick.AddListener(() =>
+        {
+            Debug.Log("Light attack"); 
+            player.LightAttack();
+        });
+        HeavyAttackButton.onClick.AddListener(() =>
+        {
+            Debug.Log("Heavy attack"); 
+            player.HeavyAttack();
+        });
+        ParryButton.onClick.AddListener(() =>
+        {
+            Debug.Log("Parry"); 
+            player.Parry();
+        });
+        GrabButton.onClick.AddListener(() =>
+        {
+            Debug.Log("Grab"); 
+            player.Grab();
+        });
+    }
 
     public void UpdateHealth()
     {
         if (GameManager.Instance.Players.Count > 0) player1HealthSlider.value = GameManager.Instance.Players.Values.ElementAt(0).Health;
         if (GameManager.Instance.Players.Count == 2) player2HealthSlider.value = GameManager.Instance.Players.Values.ElementAt(1).Health;
     }
-    #endregion
-
-
-    public Slider RoundTimerSlider;
-    public TMP_Text RoundTimerText;
-
-    [SerializeField]
-    private float roundLength;
 
     public void SetRoundTimer(float newValue)
     {
@@ -59,23 +98,16 @@ public class UIManager : NetworkBehaviour
         RoundTimerText.text = newValue.ToString("0.0");
     }
 
-    public Button ReadyButton;
-    public TMP_Text ReadyText;
-    public Animator Countdown;
-    public bool ReadyInterfaceActive = false;
-
     public void HideReadyInterface()
     {
-        ReadyText.gameObject.SetActive(false);
+        ReadyText.enabled = false;
         ReadyButton.gameObject.SetActive(false);
-        ReadyInterfaceActive = false;
     }
 
     public void ShowReadyInterface()
     {
-        ReadyText.gameObject.SetActive(true);
+        ReadyText.enabled = true;
         ReadyButton.gameObject.SetActive(true);
-        ReadyInterfaceActive = true;
     }
 
     public void StartCountdownAnimation()
@@ -83,4 +115,5 @@ public class UIManager : NetworkBehaviour
         Countdown.gameObject.SetActive(true);
         Countdown.SetTrigger("PlayCountdown");
     }
+
 }
