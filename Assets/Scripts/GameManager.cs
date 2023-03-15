@@ -84,6 +84,7 @@ public class GameManager : NetworkBehaviour
         GUILayout.Label("Transport: " + NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetType().Name);
         GUILayout.Label("Mode: " + mode);
         GUILayout.Label("ClientID: " + NetworkManager.Singleton.LocalClientId);
+        GUILayout.Label("Game State: " + Enum.GetName(typeof(GameStateManager.States), GameStateManager.Instance.State));
     }
 
     void PlayerStatusLabels()
@@ -212,5 +213,18 @@ public class GameManager : NetworkBehaviour
         return false;
     }
 
+    public void ResetPlayerHealths()
+    {
+        ResetPlayerHealthsServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ResetPlayerHealthsServerRpc()
+    {
+        foreach (Player p in Players.Values)
+        {
+            p.Health = 100;
+        }
+    }
 }
 

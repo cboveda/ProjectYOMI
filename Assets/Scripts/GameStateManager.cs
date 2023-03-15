@@ -24,11 +24,12 @@ public class GameStateManager : NetworkBehaviour
 
     public enum States : byte
     {
-        NotReady = 0,
-        StartGame = 1,
-        RoundActive = 2,
-        ResolveRound = 3,
-        EndGame = 4
+        NotConnected = 0,
+        NotReady = 1,
+        StartGame = 2,
+        RoundActive = 3,
+        ResolveRound = 4,
+        EndGame = 5
     }
 
     public override void OnNetworkSpawn()
@@ -49,8 +50,10 @@ public class GameStateManager : NetworkBehaviour
         {
             case (byte)States.NotReady:
                 // Display ready UI
-                // Display game UI
+                UIManager.Instance.ShowReadyInterface();
                 // Set player healths
+                GameManager.Instance.ResetPlayerHealths();
+                // Display game UI
                 if (IsServer)
                 {
                     timerActive = false;
@@ -58,7 +61,9 @@ public class GameStateManager : NetworkBehaviour
                 break;
             case (byte)States.StartGame:
                 // Hide ready UI
+                UIManager.Instance.HideReadyInterface();
                 // Display 3,2,1... Countdown
+                UIManager.Instance.StartCountdownAnimation();
 
                 // (server) start timer
                 if (IsServer)
@@ -112,6 +117,8 @@ public class GameStateManager : NetworkBehaviour
 
     private void Update()
     {
+        if (IsClient && !UIManager.Instance.ReadyInterfaceActive) UIManager.Instance.ShowReadyInterface();
+
         if (!IsServer) return;
 
         if (timerActive) timer += Time.unscaledDeltaTime;
@@ -146,7 +153,6 @@ public class GameStateManager : NetworkBehaviour
                 if (timer >= roundActiveStateDuration)
                 {
                     timer = 0;
-
                     // If a player health < 0, move to EndGame
                     if (GameManager.Instance.CheckPlayerHealths())
                     {
@@ -169,5 +175,16 @@ public class GameStateManager : NetworkBehaviour
                 break;
             default: break;
         }
+    }
+
+    public void PlayerReady()
+    {
+        PlayerReadyServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void PlayerReadyServerRpc()
+    {
+        PlayersReady += 1;
     }
 }

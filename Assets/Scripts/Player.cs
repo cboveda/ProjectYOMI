@@ -68,10 +68,7 @@ public class Player : NetworkBehaviour
 
     #region Health
     public NetworkVariable<int> health = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone);
-
-
     public int Health { get { return health.Value; } set { health.Value = value; } }
-
 
     public void ChangeHealth(int value)
     {

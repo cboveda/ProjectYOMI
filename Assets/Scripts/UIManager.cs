@@ -9,7 +9,6 @@ using TMPro;
 
 public class UIManager : NetworkBehaviour
 {
-
     public static UIManager Instance;
     private void Awake()
     {
@@ -23,6 +22,16 @@ public class UIManager : NetworkBehaviour
         {
             RoundTimerSlider.value = GameManager.Instance.RoundTimer;
         }
+
+        ReadyText.text = $"Players Ready: {GameStateManager.Instance.PlayersReady}/2";
+    }
+    public void Start()
+    {
+        ReadyButton.onClick.AddListener(() =>
+        {
+            GameStateManager.Instance.PlayerReady();
+            ReadyButton.interactable = false;
+        });
     }
 
 
@@ -48,5 +57,30 @@ public class UIManager : NetworkBehaviour
     {
         RoundTimerSlider.value = newValue;
         RoundTimerText.text = newValue.ToString("0.0");
+    }
+
+    public Button ReadyButton;
+    public TMP_Text ReadyText;
+    public Animator Countdown;
+    public bool ReadyInterfaceActive = false;
+
+    public void HideReadyInterface()
+    {
+        ReadyText.gameObject.SetActive(false);
+        ReadyButton.gameObject.SetActive(false);
+        ReadyInterfaceActive = false;
+    }
+
+    public void ShowReadyInterface()
+    {
+        ReadyText.gameObject.SetActive(true);
+        ReadyButton.gameObject.SetActive(true);
+        ReadyInterfaceActive = true;
+    }
+
+    public void StartCountdownAnimation()
+    {
+        Countdown.gameObject.SetActive(true);
+        Countdown.SetTrigger("PlayCountdown");
     }
 }
