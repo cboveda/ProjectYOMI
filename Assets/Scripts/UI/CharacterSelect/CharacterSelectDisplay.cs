@@ -170,7 +170,16 @@ public class CharacterSelectDisplay : NetworkBehaviour
                 players[i].CharacterId,
                 true
             );
+        }
 
+        if (AllPlayersLockedIn())
+        { 
+            foreach(var player in players)
+            {
+                ServerManager.Instance.SetCharacter(player.ClientId, player.CharacterId);
+            }
+
+            ServerManager.Instance.StartGame();
         }
     }
 
