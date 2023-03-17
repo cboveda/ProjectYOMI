@@ -2,37 +2,38 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Player : NetworkBehaviour
+public class PlayerOld : NetworkBehaviour
 {
     public NetworkVariable<ulong> playerId = new NetworkVariable<ulong>();
     public ulong PlayerId { get { return playerId.Value; } set { playerId.Value = value; } }
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            PlayerId = OwnerClientId;
-        }
+        //if (IsServer)
+        //{
+        //    PlayerId = OwnerClientId;
+        //}
 
-        if (IsOwner)
-        {
-            UIManager.Instance.RegisterLocalPlayer(this);
-        }
+        //if (IsOwner)
+        //{
+        //    //UIManager.Instance.RegisterLocalPlayer(this);
+        //}
 
-        GameManager.AddPlayer(PlayerId, this);
-        Debug.Log("Spawned player: " + PlayerId);
+        ////GameManager.AddPlayer(PlayerId, this);
 
-        if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId)
-        {
-            transform.position = new Vector3(-2f, -1f, 0);
-        }
-        else
-        {
-            transform.position = new Vector3(2f, -1f, 0);
-            GetComponent<SpriteRenderer>().flipX = true;
-        }
+        //Debug.Log("Spawned player: " + PlayerId);
 
-        health.OnValueChanged += OnHealthChange;
+        //if (GameManager.Instance.Players.Keys.ElementAt(0) == PlayerId)
+        //{
+        //    transform.position = new Vector3(-2f, -1f, 0);
+        //}
+        //else
+        //{
+        //    transform.position = new Vector3(2f, -1f, 0);
+        //    GetComponent<SpriteRenderer>().flipX = true;
+        //}
+
+        //health.OnValueChanged += OnHealthChange;
     }
 
     public override void OnNetworkDespawn()

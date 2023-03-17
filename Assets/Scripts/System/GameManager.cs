@@ -10,7 +10,9 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
 
-    public Dictionary<ulong, Player> Players = new Dictionary<ulong, Player>();
+    public Dictionary<ulong, PlayerOld> Players = new Dictionary<ulong, PlayerOld>();
+
+    public UIManager UIManager;
 
 
     public NetworkVariable<float> roundTimer = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone);
@@ -32,7 +34,7 @@ public class GameManager : NetworkBehaviour
 
     /* New Round System */
 
-    public static void AddPlayer(ulong uid, Player player)
+    public static void AddPlayer(ulong uid, PlayerOld player)
     {
         Debug.Log("Adding player: " + uid);
         Instance.Players.Add(uid, player);
@@ -114,8 +116,8 @@ public class GameManager : NetworkBehaviour
 
         foreach (ulong uid in NetworkManager.Singleton.ConnectedClients.Keys)
         {
-            GUILayout.Label($"Client {uid} move: {Enum.GetName(typeof(Player.PlayerActions), NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().PlayerAction.Value)}");
-            GUILayout.Label($"Client {uid} health: {NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Health}");
+            GUILayout.Label($"Client {uid} move: {Enum.GetName(typeof(PlayerOld.PlayerActions), NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<PlayerOld>().PlayerAction.Value)}");
+            GUILayout.Label($"Client {uid} health: {NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<PlayerOld>().Health}");
         }
     }
 
@@ -129,7 +131,7 @@ public class GameManager : NetworkBehaviour
 
         if (IsClient)
         {
-            var player = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().GetComponent<Player>();
+            var player = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().GetComponent<PlayerOld>();
             if (GUILayout.Button("Light Attack")) { player.LightAttack(); }
             if (GUILayout.Button("Heavy Attack")) { player.HeavyAttack(); }
             if (GUILayout.Button("Parry")) { player.Parry(); }
@@ -163,8 +165,8 @@ public class GameManager : NetworkBehaviour
         Debug.Log("End of round.");
 
         //Fetch moves and players
-        Player p1 = Players.Values.ElementAt(0);
-        Player p2 = Players.Values.ElementAt(1);
+        PlayerOld p1 = Players.Values.ElementAt(0);
+        PlayerOld p2 = Players.Values.ElementAt(1);
         byte p1Move = p1.PlayerAction.Value;
         byte p2Move = p2.PlayerAction.Value;
 
@@ -173,35 +175,35 @@ public class GameManager : NetworkBehaviour
         //Evaluate combat
         switch (p1Move)
         {
-            case (byte)Player.PlayerActions.None:
-                if (p2Move != (byte)Player.PlayerActions.None) p1.ChangeHealth(10);
+            case (byte)PlayerOld.PlayerActions.None:
+                if (p2Move != (byte)PlayerOld.PlayerActions.None) p1.ChangeHealth(10);
                 break;
-            case (byte)Player.PlayerActions.LightAttack:
-                if (p2Move == (byte)Player.PlayerActions.HeavyAttack) p2.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.Grab) p2.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.Parry) p1.ChangeHealth(10);
+            case (byte)PlayerOld.PlayerActions.LightAttack:
+                if (p2Move == (byte)PlayerOld.PlayerActions.HeavyAttack) p2.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.Grab) p2.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.Parry) p1.ChangeHealth(10);
                 break;
-            case (byte)Player.PlayerActions.HeavyAttack:
-                if (p2Move == (byte)Player.PlayerActions.LightAttack) p1.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.Grab) p1.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.Parry) p2.ChangeHealth(10);
+            case (byte)PlayerOld.PlayerActions.HeavyAttack:
+                if (p2Move == (byte)PlayerOld.PlayerActions.LightAttack) p1.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.Grab) p1.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.Parry) p2.ChangeHealth(10);
                 break;
-            case (byte)Player.PlayerActions.Parry:
-                if (p2Move == (byte)Player.PlayerActions.LightAttack) p2.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.HeavyAttack) p1.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.Grab) p1.ChangeHealth(10);
+            case (byte)PlayerOld.PlayerActions.Parry:
+                if (p2Move == (byte)PlayerOld.PlayerActions.LightAttack) p2.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.HeavyAttack) p1.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.Grab) p1.ChangeHealth(10);
                 break;
-            case (byte)Player.PlayerActions.Grab:
-                if (p2Move == (byte)Player.PlayerActions.LightAttack) p1.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.HeavyAttack) p2.ChangeHealth(10);
-                if (p2Move == (byte)Player.PlayerActions.Parry) p2.ChangeHealth(10);
+            case (byte)PlayerOld.PlayerActions.Grab:
+                if (p2Move == (byte)PlayerOld.PlayerActions.LightAttack) p1.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.HeavyAttack) p2.ChangeHealth(10);
+                if (p2Move == (byte)PlayerOld.PlayerActions.Parry) p2.ChangeHealth(10);
                 break;
             default:
                 break;
         }
 
         //Clear moves
-        foreach (var p in Players) p.Value.PlayerAction.Value = (byte)Player.PlayerActions.None;
+        foreach (var p in Players) p.Value.PlayerAction.Value = (byte)PlayerOld.PlayerActions.None;
 
         //Start next round
         StartRoundTimerServerRpc();
@@ -210,7 +212,7 @@ public class GameManager : NetworkBehaviour
 
     public bool CheckPlayerHealths()
     {
-        foreach (Player p in Players.Values)
+        foreach (PlayerOld p in Players.Values)
         {
             if (p.Health <= 0)
             {
@@ -228,7 +230,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void ResetPlayerHealthsServerRpc()
     {
-        foreach (Player p in Players.Values)
+        foreach (PlayerOld p in Players.Values)
         {
             p.Health = 100;
         }

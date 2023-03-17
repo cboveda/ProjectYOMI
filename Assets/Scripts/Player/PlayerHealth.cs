@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out NetworkClient networkClient)) return;
 
-        if (!networkClient.PlayerObject.TryGetComponent<Player>(out Player player)) return;
+        if (!networkClient.PlayerObject.TryGetComponent<PlayerOld>(out PlayerOld player)) return;
 
         //player.SetPlayerHealthServerRpc(100);
     }

@@ -12,7 +12,7 @@ public class UIManager : NetworkBehaviour
     public static UIManager Instance;
 
     [SerializeField]
-    private Player player;
+    private PlayerOld player;
 
     public Button LightAttackButton;
     public Button HeavyAttackButton;
@@ -56,7 +56,7 @@ public class UIManager : NetworkBehaviour
         });
     }
 
-    public void RegisterLocalPlayer(Player player)
+    public void RegisterLocalPlayer(PlayerOld player)
     {
         this.player = player;
         LinkPlayerButtons();
