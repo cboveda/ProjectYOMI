@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -46,6 +45,11 @@ public class ServerManager : MonoBehaviour
 
         NetworkManager.Singleton.StartHost();
 
+    }
+
+    public void Disconnect()
+    {
+        NetworkManager.Singleton.Shutdown();
     }
 
     public void ApprovalCheck(
@@ -96,6 +100,6 @@ public class ServerManager : MonoBehaviour
     {
         gameHasStarted = true;
 
-        NetworkManager.Singleton.SceneManager.LoadScene(gameplaySceneName, LoadSceneMode.Single);
+        //NetworkManager.Singleton.SceneManager.LoadScene(gameplaySceneName, LoadSceneMode.Single);
     }
 }

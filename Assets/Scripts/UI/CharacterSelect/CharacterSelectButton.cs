@@ -5,6 +5,7 @@ public class CharacterSelectButton : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private Button button;
+    [SerializeField] private Image borderImage;
 
     private CharacterSelectDisplay characterSelect;
     public Character Character { get; private set; }
@@ -20,6 +21,16 @@ public class CharacterSelectButton : MonoBehaviour
     public void SelectCharacter()
     {
         characterSelect.Select(Character);
+    }
+
+    public void ShowSelected()
+    {
+        borderImage.color = Color.cyan;
+    }
+
+    public void ShowUnselected()
+    {
+        borderImage.color = Color.black;
     }
 
     public void SetDisabled()

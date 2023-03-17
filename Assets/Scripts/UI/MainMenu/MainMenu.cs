@@ -1,8 +1,11 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private TMP_Text statusText;
+
     public void StartHost()
     {
         ServerManager.Instance.StartHost();
@@ -16,5 +19,6 @@ public class MainMenu : MonoBehaviour
     public void StartClient()
     {
         NetworkManager.Singleton.StartClient();
+        statusText.text = "Waiting for host...";
     }
 }

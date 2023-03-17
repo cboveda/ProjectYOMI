@@ -79,7 +79,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     public void HandleClientDisconnected(ulong clientId)
     {
-        for (int i = 0; i < players.Count; i++)
+        for (int i = players.Count - 1; i >= 0; i--)
         {
             if (players[i].ClientId == clientId)
             {
@@ -115,6 +115,19 @@ public class CharacterSelectDisplay : NetworkBehaviour
             Destroy(introInstance);
         }
         introInstance = Instantiate(character.IntroPrefab, introSpawnPoint);
+
+        foreach (CharacterSelectButton characterButton in characterButtons)
+        {
+            if (characterButton.Character.Id == character.Id)
+            {
+                characterButton.ShowSelected();
+            }
+            else
+            {
+                characterButton.ShowUnselected();
+            }
+        }
+
         SelectServerRpc(character.Id);
     }
 
