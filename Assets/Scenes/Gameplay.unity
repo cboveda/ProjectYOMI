@@ -132,8 +132,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 32375890}
-  - component: {fileID: 32375892}
   - component: {fileID: 32375891}
+  - component: {fileID: 32375892}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -667,8 +667,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b2fc6be0d9a6844a610330efffd850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startGameStateDuration: 3
-  roundActiveStateDuration: 3
+  startGameStateDuration: 3.5
+  roundActiveStateDuration: 8
   resolveRoundStateDuration: 3
   endGameStateDuration: 3
   timer: 0

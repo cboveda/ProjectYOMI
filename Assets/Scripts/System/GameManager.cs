@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using Unity.Networking.Transport;
 using UnityEngine;
 
 public class GameManager : NetworkBehaviour
@@ -10,6 +11,26 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance;
 
     public Dictionary<ulong, Player> Players = new Dictionary<ulong, Player>();
+
+
+    public NetworkVariable<float> roundTimer = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone);
+    public float RoundTimer { get { return roundTimer.Value; } set { roundTimer.Value = value; } }
+
+    [SerializeField]
+    private float roundLength;
+    public float RoundLength { get; }
+
+    private bool roundTimerEnabled;
+    public bool RoundTimerEnabled { get; private set; }
+
+    /* New Round System */
+
+
+
+
+
+
+    /* New Round System */
 
     public static void AddPlayer(ulong uid, Player player)
     {
@@ -119,17 +140,6 @@ public class GameManager : NetworkBehaviour
     #endregion
 
     #region RoundTimer
-
-    public NetworkVariable<float> roundTimer = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone);
-    public float RoundTimer { get { return roundTimer.Value; } set { roundTimer.Value = value; } }
-
-    [SerializeField]
-    private float roundLength;
-    public float RoundLength { get; }
-
-    private bool roundTimerEnabled;
-    public bool RoundTimerEnabled { get; private set; }
-
     [ServerRpc(RequireOwnership = false)]
     public void StartRoundTimerServerRpc()
     {
