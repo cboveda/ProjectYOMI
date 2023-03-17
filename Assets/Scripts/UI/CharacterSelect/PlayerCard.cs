@@ -8,29 +8,29 @@ public class PlayerCard : MonoBehaviour
     [SerializeField] private GameObject visuals;
     [SerializeField] private Image characterIconImage;
     [SerializeField] private TMP_Text playerNameText;
-    [SerializeField] private TMP_Text characterNameText;
+    [SerializeField] private TMP_Text playerStatusText;
 
     public void UpdateDisplay(CharacterSelectState state)
     {
+        var character = characterDatabase.GetCharacterById(state.CharacterId);
+
         if (state.CharacterId != -1)
         {
-            var character = characterDatabase.GetCharacterById(state.CharacterId);
             characterIconImage.sprite = character.Icon;
-            characterIconImage.enabled = true;
-            characterNameText.text = character.DisplayName;
+        }
 
-        }
-        else
-        {
-            characterIconImage.enabled = false;
-        }
         playerNameText.text = $"Player {state.ClientId}";
-
+        playerStatusText.text = state.IsLockedIn ? "Ready!" : "Picking character...";
         visuals.SetActive(true);
     }
 
     public void DisableDisplay()
     {
         visuals.SetActive(false);
+    }
+
+    public void EnableIcon()
+    {
+        characterIconImage.enabled = true;
     }
 }
