@@ -24,7 +24,7 @@ public class CharacterSpawner : NetworkBehaviour
             if (character != null)
             {
                 var spawnPos = !player1Spawned ?
-                    player1SpawnLocation.transform : 
+                    player1SpawnLocation.transform :
                     player2SpawnLocation.transform;
                 if (!player1Spawned)
                 {
@@ -32,6 +32,18 @@ public class CharacterSpawner : NetworkBehaviour
                 }
                 var characterInstance = Instantiate(character.GameplayPrefab, spawnPos);
                 characterInstance.SpawnAsPlayerObject(client.Value.clientId);
+
+                // Not working... TODO
+                //PlayerControls.Instance.RegisterPlayerClientRpc(
+                //    character.CharacterMoveSet,
+                //    new ClientRpcParams
+                //    {
+                //        Send = new ClientRpcSendParams
+                //        {
+                //            TargetClientIds = new ulong[] { client.Value.clientId }
+                //        }
+                //    }
+                //);
             }
         }
     }

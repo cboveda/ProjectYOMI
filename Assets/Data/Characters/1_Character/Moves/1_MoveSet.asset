@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534a3e90cf1fbd842a55f433df665b4e, type: 3}
+  m_Name: 1_MoveSet
+  m_EditorClassIdentifier: 
+  lightAttack: {fileID: 11400000, guid: 155e3a2af77572342b5058203c22629f, type: 2}
+  heavyAttack: {fileID: 11400000, guid: 1a0d5bc30829e0849b6e258ef13f2d5a, type: 2}
+  parry: {fileID: 11400000, guid: 45ca31310c211c240a4f407368349157, type: 2}
+  grab: {fileID: 11400000, guid: 35f474d1d4e59e54a9ce49e667a1cb6f, type: 2}
+  special: {fileID: 11400000, guid: db053460ea58a02409588a3b8a94a08a, type: 2}

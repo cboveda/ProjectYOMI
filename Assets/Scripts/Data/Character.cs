@@ -10,10 +10,13 @@ public class Character : ScriptableObject
     [SerializeField] private Sprite icon;
     [SerializeField] private GameObject introPrefab;
     [SerializeField] private NetworkObject gameplayPrefab;
+    [SerializeField] private CharacterMoveSet characterMoveSet;
+
 
     public int Id => id;
     public string DisplayName => displayName;
     public Sprite Icon => icon;
     public GameObject IntroPrefab => introPrefab;
     public NetworkObject GameplayPrefab => gameplayPrefab;
+    public CharacterMoveSet CharacterMoveSet => characterMoveSet;
 }
