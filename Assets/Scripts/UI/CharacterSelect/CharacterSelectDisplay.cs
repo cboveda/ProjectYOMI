@@ -1,10 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
 using TMPro;
-using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine.TextCore.Text;
 
 public class CharacterSelectDisplay : NetworkBehaviour
 {
