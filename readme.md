@@ -13,6 +13,7 @@ This project is being built on the Unity Engine, with Unity Netcode for GameObje
 - [Unity Gaming Services](https://unity.com/solutions/gaming-services)
 - [Blender v3.4.1](https://www.blender.org/download/)
 - [Adobe Illustrator](https://www.adobe.com/creativecloud/products/illustrator.html)
+- [Mixamo](https://www.mixamo.com/)
 
 ## Project
 
