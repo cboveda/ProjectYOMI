@@ -15,4 +15,4 @@ MonoBehaviour:
   moveName: Parry Name
   moveType: 2
   defeatsTypes: 00
-  usable: 1
+  usableByDefault: 1

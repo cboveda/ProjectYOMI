@@ -15,4 +15,4 @@ MonoBehaviour:
   moveName: GrabName
   moveType: 3
   defeatsTypes: 0201
-  usable: 1
+  usableByDefault: 1

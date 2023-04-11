@@ -15,4 +15,4 @@ MonoBehaviour:
   moveName: Heavy Attack Name
   moveType: 1
   defeatsTypes: 02
-  usable: 1
+  usableByDefault: 1

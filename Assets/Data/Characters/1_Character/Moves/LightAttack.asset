@@ -15,4 +15,4 @@ MonoBehaviour:
   moveName: Light Attack Name
   moveType: 0
   defeatsTypes: 0103
-  usable: 1
+  usableByDefault: 1

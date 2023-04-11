@@ -13,6 +13,6 @@ public class MoveButton : MonoBehaviour
     {
         nameText.text = move.MoveName;
         typeText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
-        button.interactable = move.UsableByDefault ? true : false;
+        button.interactable = move.UsableByDefault;
     }
 }

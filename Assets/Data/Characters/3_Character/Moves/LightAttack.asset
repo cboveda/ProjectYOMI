@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: LightAttack
   m_EditorClassIdentifier: 
-  moveName: Light Attack
+  moveName: Light Attack Name 3
   moveType: 0
   defeatsTypes: 0103
-  usable: 0
+  usableByDefault: 1

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: Special
   m_EditorClassIdentifier: 
-  moveName: Special
+  moveName: Special Name 3
   moveType: 4
   defeatsTypes: 000103
-  usable: 0
+  usableByDefault: 0

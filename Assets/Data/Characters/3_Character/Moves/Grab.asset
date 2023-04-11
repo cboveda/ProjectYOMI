@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: Grab
   m_EditorClassIdentifier: 
-  moveName: Grab
+  moveName: Grab Name 3
   moveType: 3
   defeatsTypes: 0201
-  usable: 0
+  usableByDefault: 1

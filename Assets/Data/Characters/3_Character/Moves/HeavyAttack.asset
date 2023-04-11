@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: HeavyAttack
   m_EditorClassIdentifier: 
-  moveName: Heavy Attack
+  moveName: Heavy Attack Name 3
   moveType: 1
   defeatsTypes: 02
-  usable: 0
+  usableByDefault: 1

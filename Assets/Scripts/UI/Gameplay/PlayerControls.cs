@@ -5,6 +5,7 @@ public class PlayerControls : NetworkBehaviour
 {
     public static PlayerControls Instance { get; private set; }
 
+    [SerializeField] CharacterDatabase characterDatabase;
     [SerializeField] MoveButton lightAttackButton;
     [SerializeField] MoveButton heavyAttackButton;
     [SerializeField] MoveButton parryButton;
@@ -24,15 +25,22 @@ public class PlayerControls : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void RegisterPlayerClientRpc(CharacterMoveSet moveSet, ClientRpcParams clientRpcParams = default)
+    public void Start()
     {
-        if (!IsOwner) return;
+        ServerManager.Instance.GetCharacterIdByRequestorIdServerRpc();
+    }
 
+    [ClientRpc]
+    public void SetPlayerControlsByCharacterIdClientRpc(int characterId, ClientRpcParams clientRpcParams = default)
+    {
+        var character = characterDatabase.GetCharacterById(characterId);
+        var moveSet = character.CharacterMoveSet;
         lightAttackButton.SetMove(moveSet.LightAttack);
         heavyAttackButton.SetMove(moveSet.HeavyAttack);
         parryButton.SetMove(moveSet.Parry);
         grabButton.SetMove(moveSet.Grab);
         specialButton.SetMove(moveSet.Special);
     }
+
+
 }

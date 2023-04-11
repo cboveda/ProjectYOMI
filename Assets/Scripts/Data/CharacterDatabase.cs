@@ -19,7 +19,6 @@ public class CharacterDatabase : ScriptableObject
 
     public bool IsValidCharacterId(int id)
     {
-        Debug.Log(id + " " + characters.Any(x => x.Id == id));
         return characters.Any(x => x.Id == id);
     }
 }
