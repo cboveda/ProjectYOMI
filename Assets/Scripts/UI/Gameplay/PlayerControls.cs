@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerControls : NetworkBehaviour
+public class PlayerControls : MonoBehaviour
 {
     public static PlayerControls Instance { get; private set; }
 
@@ -12,7 +12,7 @@ public class PlayerControls : NetworkBehaviour
     [SerializeField] MoveButton grabButton;
     [SerializeField] MoveButton specialButton;
 
-    private void Awake()
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -21,17 +21,10 @@ public class PlayerControls : NetworkBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 
-    public void Start()
-    {
-        ServerManager.Instance.GetCharacterIdByRequestorIdServerRpc();
-    }
-
-    [ClientRpc]
-    public void SetPlayerControlsByCharacterIdClientRpc(int characterId, ClientRpcParams clientRpcParams = default)
+    public void RegisterCharacterById(int characterId)
     {
         var character = characterDatabase.GetCharacterById(characterId);
         var moveSet = character.CharacterMoveSet;
@@ -41,6 +34,4 @@ public class PlayerControls : NetworkBehaviour
         grabButton.SetMove(moveSet.Grab);
         specialButton.SetMove(moveSet.Special);
     }
-
-
 }

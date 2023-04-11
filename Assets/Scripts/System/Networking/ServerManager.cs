@@ -3,12 +3,12 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
-public class ServerManager : NetworkBehaviour
+public class ServerManager : MonoBehaviour
 {
     public static ServerManager Instance { get; private set; }
 
     private bool gameHasStarted;
-    [SerializeField] public Dictionary<ulong, ClientData> ClientData { get; private set; }
+    public Dictionary<ulong, ClientData> ClientData { get; private set; }
 
     [SerializeField] private string gameplaySceneName = "Gameplay";
     [SerializeField] private string characterSelectScene = "CharacterSelect";
@@ -101,24 +101,5 @@ public class ServerManager : NetworkBehaviour
         gameHasStarted = true;
 
         NetworkManager.Singleton.SceneManager.LoadScene(gameplaySceneName, LoadSceneMode.Single);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void GetCharacterIdByRequestorIdServerRpc(ServerRpcParams serverRpcParams = default)
-    {
-        Debug.Log("Called by client: " + serverRpcParams.Receive.SenderClientId);
-        var clientId = serverRpcParams.Receive.SenderClientId;
-        if (ClientData.TryGetValue(clientId, out ClientData data))
-        {
-            PlayerControls.Instance.SetPlayerControlsByCharacterIdClientRpc(
-                data.characterId, 
-                new ClientRpcParams
-                {
-                    Send = new ClientRpcSendParams
-                    {
-                        TargetClientIds = new ulong[] { clientId }
-                    }
-                });
-        }
     }
 }

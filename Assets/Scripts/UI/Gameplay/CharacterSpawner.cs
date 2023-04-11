@@ -11,7 +11,7 @@ public class CharacterSpawner : NetworkBehaviour
 
     private bool player1Spawned = false;
 
-    public override void OnNetworkSpawn()
+    public void Start()
     {
         if (!IsServer)
         {

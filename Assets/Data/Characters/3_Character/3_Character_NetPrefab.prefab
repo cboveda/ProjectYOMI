@@ -1329,6 +1329,7 @@ GameObject:
   - component: {fileID: 4884889742116255680}
   - component: {fileID: 744145069173484269}
   - component: {fileID: 3896857865105610499}
+  - component: {fileID: 3346268188094874115}
   m_Layer: 0
   m_Name: 3_Character_NetPrefab
   m_TagString: Untagged
@@ -1391,6 +1392,20 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &3346268188094874115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5224542780197023098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa280297874d93140ac4ca8a538e612d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Character: {fileID: 11400000, guid: 7455dc5d79b2d374f8eeb5dd0adaf9ae, type: 2}
+  registered: 0
 --- !u!1 &5345292073556556126
 GameObject:
   m_ObjectHideFlags: 0
