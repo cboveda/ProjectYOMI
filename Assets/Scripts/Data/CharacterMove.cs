@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,11 +9,13 @@ public class CharacterMove : ScriptableObject, INetworkSerializable
     [SerializeField] private Type moveType;
     [SerializeField] private Type[] defeatsTypes;
     [SerializeField] private bool usableByDefault;
+    [SerializeField] private int id;
 
     public string MoveName => moveName;
     public Type MoveType => moveType;
     public Type[] DefeatsTypes => defeatsTypes;
     public bool UsableByDefault => usableByDefault;
+    public int Id => id;
 
     public bool Defeats(Type other)
     {
@@ -37,5 +37,28 @@ public class CharacterMove : ScriptableObject, INetworkSerializable
         Parry,
         Grab,
         Special
+    }
+
+    public override string ToString()
+    {
+        return $"{moveName} [{Id}] ({moveType})";
+    }
+
+    public override bool Equals(object other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+        if (other is not CharacterMove)
+        {
+            return false;
+        }
+        return this.Id == ((CharacterMove) other).Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return System.HashCode.Combine(base.GetHashCode(), name, id);
     }
 }

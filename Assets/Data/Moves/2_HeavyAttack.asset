@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
-  m_Name: Special
+  m_Name: 2_HeavyAttack
   m_EditorClassIdentifier: 
-  moveName: Special Name 3
-  moveType: 4
-  defeatsTypes: 000103
-  usableByDefault: 0
+  moveName: Heavy Attack Name
+  moveType: 1
+  defeatsTypes: 02
+  usableByDefault: 1
+  id: 2

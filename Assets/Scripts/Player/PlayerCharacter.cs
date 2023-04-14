@@ -3,24 +3,30 @@ using UnityEngine;
 
 public class PlayerCharacter : NetworkBehaviour
 {
-    [SerializeField] private Character Character;
+    [SerializeField] private Character character;
+    [SerializeField] private CharacterMoveDatabase moveDatabase;
 
-    private bool registered = false;
+    public NetworkVariable<int> health = new(100, NetworkVariableReadPermission.Everyone);
+    public int Health { get { return health.Value; } set { health.Value = value; } }
 
-    public override void OnNetworkSpawn()
-    {
-        /* This doesn't work */
-        //if (!IsLocalPlayer) return;
-        //PlayerControls.Instance.RegisterCharacterById(Character.Id);
-    }
+    public NetworkVariable<int> PendingPlayerMoveId = new(-1);
+
+    private bool hasRegisteredWithUI = false;
 
     public void Update()
     {
         if (!IsLocalPlayer) return;
-        if (registered) return;
+        if (hasRegisteredWithUI) return;
         if (PlayerControls.Instance == null) return;
 
-        PlayerControls.Instance.RegisterCharacterById(Character.Id);
-        registered = true;
+        PlayerControls.Instance.RegisterCharacterById(character.Id);
+        hasRegisteredWithUI = true;
+    }
+
+    [ServerRpc]
+    public void SubmitPlayerActionServerRpc(int moveId)
+    {
+        PendingPlayerMoveId.Value = moveId;
+        Debug.Log(moveDatabase.GetMoveById(moveId));
     }
 }

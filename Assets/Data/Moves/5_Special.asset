@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
-  m_Name: Grab
+  m_Name: 5_Special
   m_EditorClassIdentifier: 
-  moveName: Grab Name 3
-  moveType: 3
-  defeatsTypes: 0201
-  usableByDefault: 1
+  moveName: Special Name
+  moveType: 4
+  defeatsTypes: 000103
+  usableByDefault: 0
+  id: 5

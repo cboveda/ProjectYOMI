@@ -196,14 +196,16 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     private void HandlePlayersStateChanged(NetworkListEvent<CharacterSelectState> changeEvent)
     {
-        if (players.Count < 2)
-        {
-            lockInButton.interactable = false;
-        }
-        else
-        {
-            lockInButton.interactable = true;
-        }
+        // Disabled for testing
+        //if (players.Count < 2)
+        //{
+        //    lockInButton.interactable = false;
+        //}
+        //else
+        //{
+        //    lockInButton.interactable = true;
+        //}
+        lockInButton.interactable = true;
 
         for (int i = 0; i < playerCards.Length; i++)
         {            
