@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534a3e90cf1fbd842a55f433df665b4e, type: 3}
   m_Name: 2_MoveSet
   m_EditorClassIdentifier: 
-  lightAttack: {fileID: 11400000, guid: 71e79da1b6013984c90aa5cdeb9cbfd6, type: 2}
-  heavyAttack: {fileID: 11400000, guid: f463a3797d8847c439b12a22c19e3500, type: 2}
-  parry: {fileID: 11400000, guid: 49eb8e6020a77d04199e4907c0a0e417, type: 2}
-  grab: {fileID: 11400000, guid: ba93a87a84f55824797343e700968240, type: 2}
-  special: {fileID: 11400000, guid: 6320dec4c204b3945b51350d628d6335, type: 2}
+  lightAttack: {fileID: 11400000, guid: 155e3a2af77572342b5058203c22629f, type: 2}
+  heavyAttack: {fileID: 11400000, guid: 1a0d5bc30829e0849b6e258ef13f2d5a, type: 2}
+  parry: {fileID: 11400000, guid: 45ca31310c211c240a4f407368349157, type: 2}
+  grab: {fileID: 11400000, guid: 35f474d1d4e59e54a9ce49e667a1cb6f, type: 2}
+  special: {fileID: 11400000, guid: db053460ea58a02409588a3b8a94a08a, type: 2}

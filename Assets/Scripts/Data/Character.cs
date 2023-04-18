@@ -11,6 +11,7 @@ public class Character : ScriptableObject
     [SerializeField] private GameObject introPrefab;
     [SerializeField] private NetworkObject gameplayPrefab;
     [SerializeField] private CharacterMoveSet characterMoveSet;
+    [SerializeField] private int maximumHealth;
 
 
     public int Id => id;
