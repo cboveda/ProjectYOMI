@@ -33,7 +33,7 @@ This repository utilizes trunk-based development to more easily faciliate contin
 
 #### Code standards 
 
-Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) with some modifications
+Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 
 #### Quality policy
 
