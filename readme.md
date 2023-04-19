@@ -2,7 +2,7 @@
 
 ## Vision
 
-An online multiplayer, synchronous turn-based fighting game for iOS/Android/Web with colorful visuals, uniquely stylized characters, and social features such as player profiles, leaderboards, and character customization.
+An online multiplayer, synchronous turn-based fighting game for iOS and Web with colorful visuals, uniquely stylized characters, and social features such as player profiles, leaderboards, and character customization.
 
 ## Tools
 
@@ -17,4 +17,24 @@ This project is being built on the Unity Engine, with Unity Netcode for GameObje
 
 ## Project
 
-The project consists primarily of "thrashing" while learning all of the new tools and technologies and rapidly building proofs of concept for features of the final game. I will be projectizing the efforts through GitHub Projects once I've moved out of this preliminary phase.
+### Management
+
+This project is being tracked through GitHub Projects, [here](https://github.com/users/cboveda/projects/3/views/1).
+
+### Workflow
+
+This repository utilizes trunk-based development to more easily faciliate continuous integration. Even though I am currently the sole developer of this project, rather than committing directly to main, short-lived feature branches and pull requests into main will be used to trigger pre-integration automated build tests and practice what it would be like to work on a larger team.
+
+### Conventions
+
+#### Branch naming syntax
+
+`<work item ID>-<title>`
+
+#### Code standards 
+
+Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) with some modifications
+
+#### Quality policy
+
+All merges to the main branch shall pass automated build testing and unit testing, with a minimum code coverage percentage to be defined once the CI and testing automations have been implemented (see [here](https://github.com/users/cboveda/projects/3/views/1) for related tasks).
