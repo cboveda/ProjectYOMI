@@ -20,4 +20,5 @@ public class Character : ScriptableObject
     public GameObject IntroPrefab => introPrefab;
     public NetworkObject GameplayPrefab => gameplayPrefab;
     public CharacterMoveSet CharacterMoveSet => characterMoveSet;
+    public int MaximumHealth => maximumHealth;
 }

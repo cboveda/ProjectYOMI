@@ -12,8 +12,9 @@ public class GameplayUIManager : MonoBehaviour
     public ProgressBar player1Health;
     public ProgressBar player2Health;
 
-    public ProgressBar roundTimerBar;
-    public TMP_Text roundTimerText;
+    public RoundTimer roundTimer;
+
+    public PlayerControls playerControls;
 
     private void Awake()
     {
@@ -25,6 +26,11 @@ public class GameplayUIManager : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    public void StartRoundTimer(float duration)
+    {
+        roundTimer.StartTimer(duration);
     }
 }
 

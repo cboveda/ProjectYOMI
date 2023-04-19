@@ -18,3 +18,4 @@ MonoBehaviour:
   introPrefab: {fileID: 6408663707308932787, guid: 7af930c9cc2f5774e8cbe5d65f3c57c4, type: 3}
   gameplayPrefab: {fileID: 4555916511642042660, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}
   characterMoveSet: {fileID: 11400000, guid: 26b85bfecca86f14795f5e43670cd028, type: 2}
+  maximumHealth: 100
