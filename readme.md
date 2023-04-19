@@ -37,4 +37,4 @@ Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/cshar
 
 #### Quality policy
 
-All merges to the main branch shall pass automated build testing and unit testing, with a minimum code coverage percentage to be defined once the CI and testing automations have been implemented (see [here](https://github.com/users/cboveda/projects/3/views/1) for related tasks).
+All merges to the main branch shall pass automated build testing and unit testing, with a minimum code coverage percentage to be defined once the CI and testing automations have been implemented (see [here](https://github.com/users/cboveda/projects/3/views/1?filterQuery=milestone%3A%22CI+and+Testing%22) for related tasks).
