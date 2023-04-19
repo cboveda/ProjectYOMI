@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class PlayerCard : MonoBehaviour
 {
-    [SerializeField] private CharacterDatabase characterDatabase;
-    [SerializeField] private GameObject visuals;
-    [SerializeField] private Image characterIconImage;
-    [SerializeField] private TMP_Text playerNameText;
-    [SerializeField] private TMP_Text playerStatusText;
+    [SerializeField] private CharacterDatabase _characterDatabase;
+    [SerializeField] private GameObject _visuals;
+    [SerializeField] private Image _characterIconImage;
+    [SerializeField] private TMP_Text _playerNameText;
+    [SerializeField] private TMP_Text _playerStatusText;
 
     public void UpdateDisplay(CharacterSelectState state)
     {
-        var character = characterDatabase.GetCharacterById(state.CharacterId);
+        var character = _characterDatabase.GetCharacterById(state.CharacterId);
 
         if (state.CharacterId != -1)
         {
-            characterIconImage.sprite = character.Icon;
+            _characterIconImage.sprite = character.Icon;
         }
 
-        playerNameText.text = $"Player {state.ClientId}";
-        playerStatusText.text = state.IsLockedIn ? "Ready!" : "Picking character...";
-        visuals.SetActive(true);
+        _playerNameText.text = $"Player {state.ClientId}";
+        _playerStatusText.text = state.IsLockedIn ? "Ready!" : "Picking character...";
+        _visuals.SetActive(true);
     }
 
     public void DisableDisplay()
     {
-        visuals.SetActive(false);
+        _visuals.SetActive(false);
     }
 
     public void EnableIcon()
     {
-        characterIconImage.enabled = true;
+        _characterIconImage.enabled = true;
     }
 }

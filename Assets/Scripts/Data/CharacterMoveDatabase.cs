@@ -4,13 +4,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Character Move Database", menuName = "Characters/Move Database")]
 public class CharacterMoveDatabase : ScriptableObject
 {
-    [SerializeField] private CharacterMove[] moves = new CharacterMove[0];
+    [SerializeField] private CharacterMove[] _moves = new CharacterMove[0];
 
-    public CharacterMove[] GetAllMoves() => moves;
+    public CharacterMove[] GetAllMoves() => _moves;
     public CharacterMove GetMoveById(int id)
     {
 
-        foreach (var move in moves)
+        foreach (var move in _moves)
         {
             if (move.Id == id) return move;
         }
@@ -19,6 +19,6 @@ public class CharacterMoveDatabase : ScriptableObject
 
     public bool IsValidMoveId(int id)
     {
-        return moves.Any(x => x.Id == id);
+        return _moves.Any(x => x.Id == id);
     }
 }

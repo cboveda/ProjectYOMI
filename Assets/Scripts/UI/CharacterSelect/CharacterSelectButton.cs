@@ -3,38 +3,38 @@ using UnityEngine.UI;
 
 public class CharacterSelectButton : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private Button button;
-    [SerializeField] private Image borderImage;
+    [SerializeField] private Image _iconImage;
+    [SerializeField] private Button _button;
+    [SerializeField] private Image _borderImage;
 
-    private CharacterSelectDisplay characterSelect;
+    private CharacterSelectDisplay _characterSelect;
     public Character Character { get; private set; }
 
     public bool IsDisabled { get; private set; }
     public void SetCharacter(CharacterSelectDisplay characterSelect, Character character)
     {
-        iconImage.sprite = character.Icon;
-        this.characterSelect = characterSelect;
+        _iconImage.sprite = character.Icon;
+        this._characterSelect = characterSelect;
         Character = character;
     }
 
     public void SelectCharacter()
     {
-        characterSelect.Select(Character);
+        _characterSelect.Select(Character);
     }
 
     public void ShowSelected()
     {
-        borderImage.color = Color.cyan;
+        _borderImage.color = Color.cyan;
     }
 
     public void ShowUnselected()
     {
-        borderImage.color = Color.black;
+        _borderImage.color = Color.black;
     }
 
     public void SetDisabled()
     {
-        button.interactable = false;
+        _button.interactable = false;
     }
 }

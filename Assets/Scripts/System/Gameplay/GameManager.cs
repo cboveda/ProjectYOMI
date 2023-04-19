@@ -8,19 +8,19 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [SerializeField] private float notReadyDuration;
-    [SerializeField] private float gameStartDuration;
-    [SerializeField] private float roundActiveDuration;
-    [SerializeField] private float roundResolveDuration;
+    [SerializeField] private float _notReadyDuration;
+    [SerializeField] private float _gameStartDuration;
+    [SerializeField] private float _roundActiveDuration;
+    [SerializeField] private float _roundResolveDuration;
 
-    [SerializeField] private float latencyAdjustment;
+    [SerializeField] private float _latencyAdjustment;
 
-    private bool allPlayersLoaded = false;
+    private bool _allPlayersLoaded = false;
 
-    [SerializeField] private float timer = 0;
-    private float timerMax = 0;
-    private bool timerActive = false;
-    private bool timerComplete = false;
+    [SerializeField] private float _timer = 0;
+    private float _timerMax = 0;
+    private bool _timerActive = false;
+    private bool _timerComplete = false;
 
     void Awake()
     {
@@ -70,21 +70,21 @@ public class GameManager : NetworkBehaviour
 
     private void UpdateTimer()
     {
-        if (!timerActive) return;
-        timer += Time.unscaledDeltaTime;
-        if (timer >= timerMax)
+        if (!_timerActive) return;
+        _timer += Time.unscaledDeltaTime;
+        if (_timer >= _timerMax)
         {
-            timerComplete = true;
-            timerActive = false;
+            _timerComplete = true;
+            _timerActive = false;
         }
     }
 
     private void SetTimer(float max)
     {
-        timer = 0;
-        timerMax = max;
-        timerActive = true;
-        timerComplete = false;
+        _timer = 0;
+        _timerMax = max;
+        _timerActive = true;
+        _timerComplete = false;
     }
 
     private void UpdateState()
@@ -95,13 +95,13 @@ public class GameManager : NetworkBehaviour
             return;
         }
 
-        if (GameState.Instance.State == (byte)GameState.States.NotReady && allPlayersLoaded)
+        if (GameState.Instance.State == (byte)GameState.States.NotReady && _allPlayersLoaded)
         {
             GameState.Instance.AdvanceState();
             return;
         }
 
-        if (timerComplete)
+        if (_timerComplete)
         {
             GameState.Instance.AdvanceState();
             return;
@@ -111,19 +111,19 @@ public class GameManager : NetworkBehaviour
 
     private void HandleNotReady()
     {
-        SetTimer(notReadyDuration);
+        SetTimer(_notReadyDuration);
     }
 
     private void HandleStartGame()
     {
         //display countdown
-        SetTimer(gameStartDuration);
+        SetTimer(_gameStartDuration);
     }
 
     private void HandleRoundActive()
     {
-        GameplayUIManager.Instance.StartRoundTimer(roundActiveDuration - latencyAdjustment);
-        SetTimer(roundActiveDuration);
+        GameplayUIManager.Instance.StartRoundTimer(_roundActiveDuration - _latencyAdjustment);
+        SetTimer(_roundActiveDuration);
     }
 
     private void HandleRoundResolve()
@@ -131,7 +131,7 @@ public class GameManager : NetworkBehaviour
         //read user inputs
         //determine combat outcome
         //interrupt player animations
-        SetTimer(roundResolveDuration);
+        SetTimer(_roundResolveDuration);
     }
 
     private void HandleEndGame()
@@ -144,7 +144,7 @@ public class GameManager : NetworkBehaviour
 
     private void HandleLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
-        allPlayersLoaded = true;
+        _allPlayersLoaded = true;
         Debug.Log("All Players Loaded");
     }
 }

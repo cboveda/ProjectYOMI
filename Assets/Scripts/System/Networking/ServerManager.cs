@@ -7,11 +7,11 @@ public class ServerManager : MonoBehaviour
 {
     public static ServerManager Instance { get; private set; }
 
-    private bool gameHasStarted;
+    private bool _gameHasStarted;
     public Dictionary<ulong, ClientData> ClientData { get; private set; }
 
-    [SerializeField] private string gameplaySceneName = "Gameplay";
-    [SerializeField] private string characterSelectScene = "CharacterSelect";
+    [SerializeField] private string _gameplaySceneName = "Gameplay";
+    [SerializeField] private string _characterSelectScene = "CharacterSelect";
 
     private void Awake()
     {
@@ -56,7 +56,7 @@ public class ServerManager : MonoBehaviour
         NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response)
     {
-        if (ClientData.Count >= 2 || gameHasStarted)
+        if (ClientData.Count >= 2 || _gameHasStarted)
         {
             response.Approved = false;
             return;
@@ -74,7 +74,7 @@ public class ServerManager : MonoBehaviour
     {
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
 
-        NetworkManager.Singleton.SceneManager.LoadScene(characterSelectScene, LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene(_characterSelectScene, LoadSceneMode.Single);
     }
 
     private void OnClientDisconnect(ulong clientId)
@@ -98,8 +98,8 @@ public class ServerManager : MonoBehaviour
 
     public void StartGame()
     {
-        gameHasStarted = true;
+        _gameHasStarted = true;
 
-        NetworkManager.Singleton.SceneManager.LoadScene(gameplaySceneName, LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene(_gameplaySceneName, LoadSceneMode.Single);
     }
 }

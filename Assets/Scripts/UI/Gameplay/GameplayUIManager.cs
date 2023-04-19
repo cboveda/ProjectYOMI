@@ -6,15 +6,15 @@ public class GameplayUIManager : MonoBehaviour
 {
     public static GameplayUIManager Instance;
 
-    public TMP_Text player1Name;
-    public TMP_Text player2Name;
+    [SerializeField] private TMP_Text _player1Name;
+    [SerializeField] private TMP_Text _player2Name;
 
-    public ProgressBar player1Health;
-    public ProgressBar player2Health;
+    [SerializeField] private ProgressBar _player1Health;
+    [SerializeField] private ProgressBar _player2Health;
 
-    public RoundTimer roundTimer;
+    [SerializeField] private RoundTimer _roundTimer;
 
-    public PlayerControls playerControls;
+    [SerializeField] private PlayerControls _playerControls;
 
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class GameplayUIManager : MonoBehaviour
 
     public void StartRoundTimer(float duration)
     {
-        roundTimer.StartTimer(duration);
+        _roundTimer.StartTimer(duration);
     }
 }
 

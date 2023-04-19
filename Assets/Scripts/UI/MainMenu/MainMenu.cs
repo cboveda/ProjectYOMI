@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private TMP_Text statusText;
+    [SerializeField] private TMP_Text _statusText;
 
     public void StartHost()
     {
@@ -19,6 +19,6 @@ public class MainMenu : MonoBehaviour
     public void StartClient()
     {
         NetworkManager.Singleton.StartClient();
-        statusText.text = "Waiting for host...";
+        _statusText.text = "Waiting for host...";
     }
 }

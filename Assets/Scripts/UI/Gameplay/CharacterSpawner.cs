@@ -5,9 +5,9 @@ using Unity.Netcode;
 
 public class CharacterSpawner : NetworkBehaviour
 {
-    [SerializeField] private CharacterDatabase characterDatabase;
-    [SerializeField] private GameObject player1SpawnLocation;
-    [SerializeField] private GameObject player2SpawnLocation;
+    [SerializeField] private CharacterDatabase _characterDatabase;
+    [SerializeField] private GameObject _player1SpawnLocation;
+    [SerializeField] private GameObject _player2SpawnLocation;
 
     private bool player1Spawned = false;
 
@@ -20,12 +20,12 @@ public class CharacterSpawner : NetworkBehaviour
 
         foreach (var client in ServerManager.Instance.ClientData)
         {
-            var character = characterDatabase.GetCharacterById(client.Value.characterId);
+            var character = _characterDatabase.GetCharacterById(client.Value.characterId);
             if (character != null)
             {
                 var spawnPos = !player1Spawned ?
-                    player1SpawnLocation.transform :
-                    player2SpawnLocation.transform;
+                    _player1SpawnLocation.transform :
+                    _player2SpawnLocation.transform;
                 if (!player1Spawned)
                 {
                     player1Spawned = true;

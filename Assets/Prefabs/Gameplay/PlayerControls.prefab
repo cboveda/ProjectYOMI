@@ -187,12 +187,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bebba78af859584193231af02b25519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
-  lightAttackButton: {fileID: 1730976760857963570}
-  heavyAttackButton: {fileID: 7490358251064107608}
-  parryButton: {fileID: 4326828678377916630}
-  grabButton: {fileID: 6280652925804543807}
-  specialButton: {fileID: 3632653042159065370}
+  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _lightAttackButton: {fileID: 1730976760857963570}
+  _heavyAttackButton: {fileID: 7490358251064107608}
+  _parryButton: {fileID: 4326828678377916630}
+  _grabButton: {fileID: 6280652925804543807}
+  _specialButton: {fileID: 3632653042159065370}
 --- !u!1001 &511759059978792262
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -429,6 +429,10 @@ PrefabInstance:
     - target: {fileID: 4637152139101508201, guid: 12907a592773be94d89b1f2dc11ff8b7, type: 3}
       propertyPath: m_Name
       value: MoveButton (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637152139101508201, guid: 12907a592773be94d89b1f2dc11ff8b7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4830886031930498986, guid: 12907a592773be94d89b1f2dc11ff8b7, type: 3}
       propertyPath: m_Pivot.x

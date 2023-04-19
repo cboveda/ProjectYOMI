@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd31e72bebea7e749b17661492b0487e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
-  player1SpawnLocation: {fileID: 5549924436977438012}
-  player2SpawnLocation: {fileID: 7983645134942176123}
+  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _player1SpawnLocation: {fileID: 5549924436977438012}
+  _player2SpawnLocation: {fileID: 7983645134942176123}
 --- !u!114 &258632379866117606
 MonoBehaviour:
   m_ObjectHideFlags: 0

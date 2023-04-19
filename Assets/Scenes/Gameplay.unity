@@ -738,12 +738,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f8b360b7e638441a6fe65f8dc0a630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notReadyDuration: 2
-  gameStartDuration: 2
-  roundActiveDuration: 7
-  roundResolveDuration: 4
-  latencyAdjustment: 0.2
-  timer: 0
+  _notReadyDuration: 2
+  _gameStartDuration: 2
+  _roundActiveDuration: 7
+  _roundResolveDuration: 4
+  _latencyAdjustment: 0.2
+  _timer: 0
 --- !u!1001 &763282022
 PrefabInstance:
   m_ObjectHideFlags: 0

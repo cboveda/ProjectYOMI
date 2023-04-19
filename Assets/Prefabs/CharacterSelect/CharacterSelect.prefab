@@ -47,16 +47,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297b6ec5571fc2345a98b3408af8b4c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterInfoPanel: {fileID: 2143872977986653014}
-  charactersHolder: {fileID: 8567157453205340304}
-  characterNameText: {fileID: 1300399430139182469}
-  characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
-  selectButtonPrefab: {fileID: 1746059112788207870, guid: c49f0350b97833840abc8db2210eb806, type: 3}
-  playerCards:
+  _characterInfoPanel: {fileID: 2143872977986653014}
+  _charactersHolder: {fileID: 8567157453205340304}
+  _characterNameText: {fileID: 1300399430139182469}
+  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _selectButtonPrefab: {fileID: 1746059112788207870, guid: c49f0350b97833840abc8db2210eb806, type: 3}
+  _playerCards:
   - {fileID: 6278631993866465489}
   - {fileID: 3177670796658469138}
-  introSpawnPoint: {fileID: 4798787537408490756}
-  lockInButton: {fileID: 411230418196397563}
+  _introSpawnPoint: {fileID: 4798787537408490756}
+  _lockInButton: {fileID: 411230418196397563}
 --- !u!114 &3201618724512029987
 MonoBehaviour:
   m_ObjectHideFlags: 0

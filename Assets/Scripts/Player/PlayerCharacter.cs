@@ -10,16 +10,16 @@ public class PlayerCharacter : NetworkBehaviour
 
     public NetworkVariable<int> SelectedMove = new(-1);
 
-    private bool hasRegisteredWithUI = false;
+    private bool _hasRegisteredWithUI = false;
 
     public void Update()
     {
         if (!IsLocalPlayer) return;
-        if (hasRegisteredWithUI) return;
+        if (_hasRegisteredWithUI) return;
         if (PlayerControls.Instance == null) return;
 
         PlayerControls.Instance.RegisterCharacterById(character.Id);
-        hasRegisteredWithUI = true;
+        _hasRegisteredWithUI = true;
     }
 
     [ServerRpc]

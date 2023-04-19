@@ -3,22 +3,22 @@ using UnityEngine;
 
 public class RoundTimer : MonoBehaviour
 {
-    [SerializeField] private TMP_Text timerText;
-    [SerializeField] private ProgressBar progressBar;
+    [SerializeField] private TMP_Text _timerText;
+    [SerializeField] private ProgressBar _progressBar;
 
-    [SerializeField] private float maximumTimeSeconds;
-    [SerializeField] private float currentTimeSeconds;
-    private bool timerActive;
+    [SerializeField] private float _maximumTimeSeconds;
+    [SerializeField] private float _currentTimeSeconds;
+    private bool _timerActive;
 
     void Start()
     {
-        progressBar.current = 0;
-        timerText.text = "0.0";
+        _progressBar.current = 0;
+        _timerText.text = "0.0";
     }
 
     void Update()
     {
-        if (timerActive)
+        if (_timerActive)
         {
             UpdateTimer();
             UpdateDisplay();
@@ -27,28 +27,28 @@ public class RoundTimer : MonoBehaviour
 
     void UpdateTimer()
     {
-        currentTimeSeconds -= Time.unscaledDeltaTime;
-        currentTimeSeconds = Mathf.Clamp(currentTimeSeconds, 0, maximumTimeSeconds);
+        _currentTimeSeconds -= Time.unscaledDeltaTime;
+        _currentTimeSeconds = Mathf.Clamp(_currentTimeSeconds, 0, _maximumTimeSeconds);
 
-        if (currentTimeSeconds <= 0f)
+        if (_currentTimeSeconds <= 0f)
         {
-            timerActive = false;
-            timerText.enabled = false;
+            _timerActive = false;
+            _timerText.enabled = false;
         }
     }
 
     void UpdateDisplay()
     {
-        progressBar.current = (int) (currentTimeSeconds * 1000);
-        timerText.text = string.Format("{0:0.0}", currentTimeSeconds);
+        _progressBar.current = (int) (_currentTimeSeconds * 1000);
+        _timerText.text = string.Format("{0:0.0}", _currentTimeSeconds);
     }
 
     public void StartTimer(float duration)
     {
-        maximumTimeSeconds = duration;
-        progressBar.maximum = (int)(maximumTimeSeconds * 1000);
-        currentTimeSeconds = maximumTimeSeconds;
-        timerActive = true;
-        timerText.enabled = true;
+        _maximumTimeSeconds = duration;
+        _progressBar.maximum = (int)(_maximumTimeSeconds * 1000);
+        _currentTimeSeconds = _maximumTimeSeconds;
+        _timerActive = true;
+        _timerText.enabled = true;
     }
 }

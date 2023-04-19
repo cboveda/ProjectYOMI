@@ -50,11 +50,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8013d0d34025f44a129e42331316de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
-  visuals: {fileID: 7968476018154132438}
-  characterIconImage: {fileID: 7528852640482025401}
-  playerNameText: {fileID: 3120039175769114984}
-  playerStatusText: {fileID: 5787826429480387688}
+  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _visuals: {fileID: 7968476018154132438}
+  _characterIconImage: {fileID: 7528852640482025401}
+  _playerNameText: {fileID: 3120039175769114984}
+  _playerStatusText: {fileID: 5787826429480387688}
 --- !u!1 &718231748806384399
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ public class GameState : NetworkBehaviour
 {
     public static GameState Instance { get; private set; }
 
-    NetworkVariable<byte> state = new NetworkVariable<byte>();
+    readonly NetworkVariable<byte> state = new NetworkVariable<byte>();
     public byte State { get { return state.Value; } set { state.Value = value; } }
 
     public enum States : byte

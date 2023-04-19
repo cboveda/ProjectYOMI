@@ -4,13 +4,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Character Database", menuName = "Characters/Database")]
 public class CharacterDatabase : ScriptableObject
 {
-    [SerializeField] private Character[] characters = new Character[0];
+    [SerializeField] private Character[] _characters = new Character[0];
 
-    public Character[] GetAllCharacters () => characters;
+    public Character[] GetAllCharacters () => _characters;
     public Character GetCharacterById(int id)
     {
 
-        foreach(var character in characters)
+        foreach(var character in _characters)
         {
             if (character.Id == id) return character;
         }
@@ -19,6 +19,6 @@ public class CharacterDatabase : ScriptableObject
 
     public bool IsValidCharacterId(int id)
     {
-        return characters.Any(x => x.Id == id);
+        return _characters.Any(x => x.Id == id);
     }
 }

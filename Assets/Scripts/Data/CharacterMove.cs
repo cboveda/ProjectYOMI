@@ -5,29 +5,29 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewCharacterMove", menuName = "Characters/Character Move")]
 public class CharacterMove : ScriptableObject, INetworkSerializable
 {
-    [SerializeField] private string moveName;
-    [SerializeField] private Type moveType;
-    [SerializeField] private Type[] defeatsTypes;
-    [SerializeField] private bool usableByDefault;
-    [SerializeField] private int id;
+    [SerializeField] private string _moveName;
+    [SerializeField] private Type _moveType;
+    [SerializeField] private Type[] _defeatsTypes;
+    [SerializeField] private bool _usableByDefault;
+    [SerializeField] private int _id;
 
-    public string MoveName => moveName;
-    public Type MoveType => moveType;
-    public Type[] DefeatsTypes => defeatsTypes;
-    public bool UsableByDefault => usableByDefault;
-    public int Id => id;
+    public string MoveName => _moveName;
+    public Type MoveType => _moveType;
+    public Type[] DefeatsTypes => _defeatsTypes;
+    public bool UsableByDefault => _usableByDefault;
+    public int Id => _id;
 
     public bool Defeats(Type other)
     {
-        return defeatsTypes.Any<Type>(t => t == other);
+        return _defeatsTypes.Any<Type>(t => t == other);
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        serializer.SerializeValue(ref moveName);
-        serializer.SerializeValue(ref moveType);
-        serializer.SerializeValue(ref defeatsTypes);
-        serializer.SerializeValue(ref usableByDefault);
+        serializer.SerializeValue(ref _moveName);
+        serializer.SerializeValue(ref _moveType);
+        serializer.SerializeValue(ref _defeatsTypes);
+        serializer.SerializeValue(ref _usableByDefault);
     }
 
     public enum Type : byte
@@ -41,7 +41,7 @@ public class CharacterMove : ScriptableObject, INetworkSerializable
 
     public override string ToString()
     {
-        return $"{moveName} [{Id}] ({moveType})";
+        return $"{_moveName} [{Id}] ({_moveType})";
     }
 
     public override bool Equals(object other)
@@ -59,6 +59,6 @@ public class CharacterMove : ScriptableObject, INetworkSerializable
 
     public override int GetHashCode()
     {
-        return System.HashCode.Combine(base.GetHashCode(), name, id);
+        return System.HashCode.Combine(base.GetHashCode(), name, _id);
     }
 }

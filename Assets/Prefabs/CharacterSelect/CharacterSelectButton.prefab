@@ -51,10 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a38c388befba74b80f88b2ba4029ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 5951420944880915425}
-  button: {fileID: 7996993209204027611}
-  borderImage: {fileID: 6837162774002289800}
-  selectParticles: {fileID: 0}
+  _iconImage: {fileID: 5951420944880915425}
+  _button: {fileID: 7996993209204027611}
+  _borderImage: {fileID: 6837162774002289800}
 --- !u!1 &4778896180179237274
 GameObject:
   m_ObjectHideFlags: 0

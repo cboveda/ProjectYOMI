@@ -89,10 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3147b15b7a62a394e847f8720b0baa8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 8837424540368703618}
-  progressBar: {fileID: 8729773720841246481}
-  maximumTimeSeconds: 7
-  currentTimeSeconds: 0
+  _timerText: {fileID: 8837424540368703618}
+  _progressBar: {fileID: 8729773720841246481}
+  _maximumTimeSeconds: 0
+  _currentTimeSeconds: 0
 --- !u!1 &8837424538973602856
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,12 +496,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4b36c5a3ee6c14aaf0234ea084ba87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Name: {fileID: 8837424539243647997}
-  player2Name: {fileID: 8837424538973602854}
-  player1Health: {fileID: 4133994699384865404}
-  player2Health: {fileID: 8729773721058750524}
-  roundTimer: {fileID: 8837424538372492850}
-  playerControls: {fileID: 7263438547670989673}
+  _player1Name: {fileID: 8837424539243647997}
+  _player2Name: {fileID: 8837424538973602854}
+  _player1Health: {fileID: 4133994699384865404}
+  _player2Health: {fileID: 8729773721058750524}
+  _roundTimer: {fileID: 8837424538372492850}
+  _playerControls: {fileID: 7263438547670989673}
 --- !u!1 &8837424539509850905
 GameObject:
   m_ObjectHideFlags: 0

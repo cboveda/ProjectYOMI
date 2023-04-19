@@ -6,23 +6,23 @@ using UnityEngine.UI;
 
 public class MoveButton : MonoBehaviour
 {
-    [SerializeField] TMP_Text nameText;
-    [SerializeField] TMP_Text typeText;
-    [SerializeField] Button button;
-    private CharacterMove move;
+    [SerializeField] TMP_Text _nameText;
+    [SerializeField] TMP_Text _typeText;
+    [SerializeField] Button _button;
+    private CharacterMove _move;
 
     public void SetMove(CharacterMove move)
     {
-        this.move = move;
-        nameText.text = move.MoveName;
-        typeText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
-        button.interactable = move.UsableByDefault;
+        this._move = move;
+        _nameText.text = move.MoveName;
+        _typeText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
+        _button.interactable = move.UsableByDefault;
 
-        button.onClick.AddListener(HandleClick);
+        _button.onClick.AddListener(HandleClick);
     }
 
     private void HandleClick()
     {
-        NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().GetComponent<PlayerCharacter>().SubmitPlayerActionServerRpc(move.Id);
+        NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().GetComponent<PlayerCharacter>().SubmitPlayerActionServerRpc(_move.Id);
     }
 }
