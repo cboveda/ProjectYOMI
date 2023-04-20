@@ -2,7 +2,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameplayUIManager : MonoBehaviour
+public class GameplayUIManager : NetworkBehaviour
 {
     public static GameplayUIManager Instance;
 
@@ -28,7 +28,8 @@ public class GameplayUIManager : MonoBehaviour
         }
     }
 
-    public void StartRoundTimer(float duration)
+    [ClientRpc]
+    public void StartRoundTimerClientRpc(float duration)
     {
         _roundTimer.StartTimer(duration);
     }
