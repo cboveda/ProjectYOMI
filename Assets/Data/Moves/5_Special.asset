@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: 5_Special
   m_EditorClassIdentifier: 
-  moveName: Special Name
-  moveType: 4
-  defeatsTypes: 000103
-  usableByDefault: 0
-  id: 5
+  _moveName: Super Move
+  _moveType: 4
+  _defeatsTypes: 010003
+  _usableByDefault: 1
+  _id: 5

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: 2_HeavyAttack
   m_EditorClassIdentifier: 
-  moveName: Heavy Attack Name
-  moveType: 1
-  defeatsTypes: 02
-  usableByDefault: 1
-  id: 2
+  _moveName: Uppercut
+  _moveType: 1
+  _defeatsTypes: 02
+  _usableByDefault: 1
+  _id: 2

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03bf138825ea14c4f88245b302db6afb, type: 3}
   m_Name: 2_Character
   m_EditorClassIdentifier: 
-  id: 2
-  displayName: Character 2
-  icon: {fileID: 21300000, guid: 14ea083054d8da742b34450029916e3a, type: 3}
-  introPrefab: {fileID: 6408663707308932787, guid: 7af930c9cc2f5774e8cbe5d65f3c57c4, type: 3}
-  gameplayPrefab: {fileID: 4555916511642042660, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}
-  characterMoveSet: {fileID: 11400000, guid: 26b85bfecca86f14795f5e43670cd028, type: 2}
-  maximumHealth: 100
+  _id: 2
+  _displayName: Character2
+  _icon: {fileID: 21300000, guid: 14ea083054d8da742b34450029916e3a, type: 3}
+  _introPrefab: {fileID: 6408663707308932787, guid: 7af930c9cc2f5774e8cbe5d65f3c57c4, type: 3}
+  _gameplayPrefab: {fileID: 4555916511642042660, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}
+  _characterMoveSet: {fileID: 11400000, guid: 26b85bfecca86f14795f5e43670cd028, type: 2}
+  _maximumHealth: 100

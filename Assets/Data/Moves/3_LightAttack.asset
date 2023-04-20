@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: 3_LightAttack
   m_EditorClassIdentifier: 
-  moveName: Light Attack Name
-  moveType: 0
-  defeatsTypes: 0103
-  usableByDefault: 1
-  id: 3
+  _moveName: Jab
+  _moveType: 0
+  _defeatsTypes: 0301
+  _usableByDefault: 1
+  _id: 3

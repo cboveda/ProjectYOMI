@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: 4_Parry
   m_EditorClassIdentifier: 
-  moveName: Parry Name
-  moveType: 2
-  defeatsTypes: 00
-  usableByDefault: 1
-  id: 4
+  _moveName: Quick Counter
+  _moveType: 2
+  _defeatsTypes: 00
+  _usableByDefault: 1
+  _id: 4
