@@ -23,19 +23,20 @@ public class CharacterSpawner : NetworkBehaviour
         {
             var character = _characterDatabase.GetCharacterById(client.Value.characterId);
             if (character != null)
-            {                
+            {   
+                var spawnPos = !_player1Spawned ?
+                    _player1SpawnLocation.transform :
+                    _player2SpawnLocation.transform;
+                var characterInstance = Instantiate(character.GameplayPrefab, spawnPos);
+                characterInstance.SpawnAsPlayerObject(client.Value.clientId);
                 if (!_player1Spawned)
                 {
                     _gameData.ClientIdPlayer1 = client.Value.clientId;
-                    Instantiate(character.GameplayPrefab, _player1SpawnLocation.transform)
-                        .SpawnAsPlayerObject(client.Value.clientId);
                     _player1Spawned = true;
                 }
                 else
                 {
                     _gameData.ClientIdPlayer2 = client.Value.clientId;
-                    Instantiate(character.GameplayPrefab, _player2SpawnLocation.transform)
-                        .SpawnAsPlayerObject(client.Value.clientId);
                 }
             }
         }

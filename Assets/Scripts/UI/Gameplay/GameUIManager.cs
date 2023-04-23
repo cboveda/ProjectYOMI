@@ -3,9 +3,9 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameplayUIManager : NetworkBehaviour
+public class GameUIManager : NetworkBehaviour
 {
-    private static GameplayUIManager _instance;
+    private static GameUIManager _instance;
 
     [SerializeField] private TMP_Text _player1Name;
     [SerializeField] private TMP_Text _player2Name;
@@ -16,12 +16,14 @@ public class GameplayUIManager : NetworkBehaviour
     [SerializeField] private RoundTimer _roundTimer;
 
     [SerializeField] private PlayerControls _playerControls;
+    [SerializeField] private RoundResult _roundResult;
 
     [SerializeField] private GameData _data;
 
-    public GameData Data { get; set; }
 
-    public static GameplayUIManager Instance { get; }
+    public GameData Data { get => _data; set => _data = value; }
+
+    public static GameUIManager Instance { get => _instance; }
 
     private void Awake()
     {
@@ -53,15 +55,26 @@ public class GameplayUIManager : NetworkBehaviour
         _player2Health.SetCurrent(newValue);
     }
 
-    internal void SubmitPlayerAction(int id)
+    public void SubmitPlayerAction(int id)
     {
-        // TODO: Figure out why this isn't working
-        if (Data == null)
-        {
-            Debug.Log("Nope...");
-            return;
-        }
         Data.SubmitPlayerActionServerRpc(id);
+    }
+
+    [ClientRpc]
+    public void DisplayRoundResultClientRpc(string moveNamePlayer1, string moveTypePlayer1, string moveNamePlayer2, string moveTypePlayer2, string result)
+    {
+        _roundResult.MoveNamePlayer1 = moveNamePlayer1;
+        _roundResult.MoveNamePlayer2 = moveNamePlayer2;
+        _roundResult.MoveTypePlayer1 = moveTypePlayer1;
+        _roundResult.MoveTypePlayer2 = moveTypePlayer2;
+        _roundResult.Result = result;
+        _roundResult.gameObject.SetActive(true);
+    }
+
+    [ClientRpc]
+    public void HideRoundResultClientRpc()
+    {
+        _roundResult.gameObject.SetActive(false);
     }
 }
 

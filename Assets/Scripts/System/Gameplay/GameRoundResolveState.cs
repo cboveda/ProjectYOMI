@@ -19,6 +19,7 @@ public class GameRoundResolveState : GameBaseState
         _context.SetTimer(_context.RoundResolveDuration);
         //set time dilation
         //read player inputs
+        GameData.Instance.EvaluateRound();
         //determine combat outcome
         //apply health changes
         //start animations
@@ -26,6 +27,7 @@ public class GameRoundResolveState : GameBaseState
 
     public override void ExitState()
     {
+        GameUIManager.Instance.HideRoundResultClientRpc();
         //reset time dilation
     }
 

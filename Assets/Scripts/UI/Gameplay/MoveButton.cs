@@ -22,6 +22,6 @@ public class MoveButton : MonoBehaviour
 
     private void HandleClick()
     {
-        GameplayUIManager.Instance.SubmitPlayerAction(_move.Id);
+        GameUIManager.Instance.SubmitPlayerAction(_move.Id);
     }
 }
