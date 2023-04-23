@@ -9,7 +9,6 @@ public class MoveButton : MonoBehaviour
     [SerializeField] TMP_Text _typeText;
     [SerializeField] Button _button;
     private CharacterMove _move;
-    [SerializeField] GameplayUIManager _gameplayUIManager;
 
     public void SetMove(CharacterMove move)
     {
@@ -23,6 +22,6 @@ public class MoveButton : MonoBehaviour
 
     private void HandleClick()
     {
-        _gameplayUIManager.SubmitPlayerAction(_move.Id);
+        GameplayUIManager.Instance.SubmitPlayerAction(_move.Id);
     }
 }
