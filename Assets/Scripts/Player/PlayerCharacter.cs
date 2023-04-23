@@ -5,33 +5,17 @@ public class PlayerCharacter : NetworkBehaviour
 {
     [SerializeField] private Character character;
 
-    public NetworkVariable<int> health = new(100, NetworkVariableReadPermission.Everyone);
-    public int Health { get { return health.Value; } set { health.Value = value; } }
-
-    public NetworkVariable<int> SelectedMove = new(-1);
-
-    private bool _hasRegisteredWithUI = false;
+    private bool _hasRegistered = false;
 
     public void Update()
     {
         if (!IsLocalPlayer) return;
-        if (_hasRegisteredWithUI) return;
+        if (_hasRegistered) return;
         if (PlayerControls.Instance == null) return;
+        if (GameData.Instance == null) return;
 
         PlayerControls.Instance.RegisterCharacterById(character.Id);
-        _hasRegisteredWithUI = true;
+        GameData.Instance.InitializeHealthServerRpc(character.MaximumHealth);
+        _hasRegistered = true;
     }
-
-    [ServerRpc]
-    public void SubmitPlayerActionServerRpc(int moveId)
-    {
-        SelectedMove.Value = moveId;
-    }
-
-    public void ResetSelectedMove()
-    {
-        SelectedMove.Value = -1;
-    }
-
-
 }

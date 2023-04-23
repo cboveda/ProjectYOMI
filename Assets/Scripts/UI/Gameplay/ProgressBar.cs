@@ -29,4 +29,9 @@ public class ProgressBar : MonoBehaviour
         mask.fillOrigin = (int) fillDirection;
         fill.color = fillColor;
     }
+
+    public void SetCurrent(int newValue)
+    {
+        current = newValue;
+    }
 }

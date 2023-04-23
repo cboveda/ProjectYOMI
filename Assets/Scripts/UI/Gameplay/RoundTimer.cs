@@ -34,6 +34,7 @@ public class RoundTimer : MonoBehaviour
         {
             _timerActive = false;
             _timerText.enabled = false;
+            _progressBar.gameObject.SetActive(false);
         }
     }
 
@@ -50,5 +51,7 @@ public class RoundTimer : MonoBehaviour
         _currentTimeSeconds = _maximumTimeSeconds;
         _timerActive = true;
         _timerText.enabled = true;
+        _progressBar.gameObject.SetActive(true);
+
     }
 }
