@@ -502,6 +502,7 @@ MonoBehaviour:
   _player2Health: {fileID: 8729773721058750524}
   _roundTimer: {fileID: 8837424538372492850}
   _playerControls: {fileID: 7263438547670989673}
+  _data: {fileID: 0}
 --- !u!1 &8837424539509850905
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +765,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1730976760857963570, guid: 17addbb21e96bb842851322bdb165895, type: 3}
+      propertyPath: _gameplayUIManager
+      value: 
+      objectReference: {fileID: 8837424539488652087}
     - target: {fileID: 3450559217302310813, guid: 17addbb21e96bb842851322bdb165895, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -812,6 +817,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 344
       objectReference: {fileID: 0}
+    - target: {fileID: 3632653042159065370, guid: 17addbb21e96bb842851322bdb165895, type: 3}
+      propertyPath: _gameplayUIManager
+      value: 
+      objectReference: {fileID: 8837424539488652087}
+    - target: {fileID: 4326828678377916630, guid: 17addbb21e96bb842851322bdb165895, type: 3}
+      propertyPath: _gameplayUIManager
+      value: 
+      objectReference: {fileID: 8837424539488652087}
+    - target: {fileID: 6280652925804543807, guid: 17addbb21e96bb842851322bdb165895, type: 3}
+      propertyPath: _gameplayUIManager
+      value: 
+      objectReference: {fileID: 8837424539488652087}
+    - target: {fileID: 7490358251064107608, guid: 17addbb21e96bb842851322bdb165895, type: 3}
+      propertyPath: _gameplayUIManager
+      value: 
+      objectReference: {fileID: 8837424539488652087}
     - target: {fileID: 7523310873440364514, guid: 17addbb21e96bb842851322bdb165895, type: 3}
       propertyPath: m_Name
       value: PlayerControls

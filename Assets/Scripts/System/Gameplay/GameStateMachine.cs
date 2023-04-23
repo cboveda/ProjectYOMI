@@ -15,6 +15,7 @@ public class GameStateMachine : NetworkBehaviour
     private float _timerMax;
     private GameBaseState _currentState;
     private GameStateFactory _states;
+    [SerializeField] private GameplayUIManager _gameUIManager;
 
     public bool AllPlayersLoaded { get { return _allPlayersLoaded; } }
     public bool TimerComplete { get {  return _timerComplete; } }
@@ -22,12 +23,7 @@ public class GameStateMachine : NetworkBehaviour
     public float RoundActiveDuration { get { return _roundActiveDuration; } }
     public float RoundResolveDuration { get { return _roundResolveDuration; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
-    public GameplayUIManager GameplayUI { get { return GameplayUIManager.Instance; } }
-
-    void Awake()
-    {
-
-    }
+    public GameplayUIManager GameplayUI { get { return _gameUIManager; } }
 
     public override void OnNetworkSpawn()
     {
