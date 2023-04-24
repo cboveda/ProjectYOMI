@@ -7,21 +7,22 @@ public class GameUIManager : NetworkBehaviour
 {
     private static GameUIManager _instance;
 
+    [SerializeField] private GameData _data;
+    [SerializeField] private GameObject _player1ComboContainer;
+    [SerializeField] private GameObject _player2ComboContainer;
+    [SerializeField] private PlayerControls _playerControls;
+    [SerializeField] private ProgressBar _player1Health;
+    [SerializeField] private ProgressBar _player2Health;
+    [SerializeField] private ProgressBar _player1SpecialMeter;
+    [SerializeField] private ProgressBar _player2SpecialMeter;
+    [SerializeField] private RoundResult _roundResult;
+    [SerializeField] private RoundTimer _roundTimer;
+    [SerializeField] private TMP_Text _player1ComboCountText;
+    [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player1Name;
     [SerializeField] private TMP_Text _player2Name;
 
-    [SerializeField] private ProgressBar _player1Health;
-    [SerializeField] private ProgressBar _player2Health;
-
-    [SerializeField] private RoundTimer _roundTimer;
-
-    [SerializeField] private PlayerControls _playerControls;
-    [SerializeField] private RoundResult _roundResult;
-
-    [SerializeField] private GameData _data;
-
-
-    public GameData Data { get => _data; set => _data = value; }
+    public GameData Data { get => _data; }
 
     public static GameUIManager Instance { get => _instance; }
 
@@ -37,22 +38,76 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        Data.HealthPlayer1.OnValueChanged += UpdatePlayer1Health;
+        Data.HealthPlayer2.OnValueChanged += UpdatePlayer2Health;
+        Data.ComboCountPlayer1.OnValueChanged += UpdatePlayer1Combo;
+        Data.ComboCountPlayer2.OnValueChanged += UpdatePlayer2Combo;
+        Data.SpecialMeterPlayer1.OnValueChanged += UpdatePlayer1Special;
+        Data.SpecialMeterPlayer2.OnValueChanged += UpdatePlayer2Special;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        Data.HealthPlayer1.OnValueChanged -= UpdatePlayer1Health;
+        Data.HealthPlayer2.OnValueChanged -= UpdatePlayer2Health;
+        Data.ComboCountPlayer1.OnValueChanged -= UpdatePlayer1Combo;
+        Data.ComboCountPlayer2.OnValueChanged -= UpdatePlayer2Combo;
+        Data.SpecialMeterPlayer1.OnValueChanged -= UpdatePlayer1Special;
+        Data.SpecialMeterPlayer2.OnValueChanged -= UpdatePlayer2Special;
+    }
+
     [ClientRpc]
     public void StartRoundTimerClientRpc(float duration)
     {
         _roundTimer.StartTimer(duration);
     }
 
-    [ClientRpc]
-    public void UpdatePlayer1HealthClientRpc(int newValue)
+    public void UpdatePlayer1Health(int oldValue, int newValue)
     {
         _player1Health.SetCurrent(newValue);
     }
     
-    [ClientRpc]
-    public void UpdatePlayer2HealthClientRpc(int newValue)
+    public void UpdatePlayer2Health(int oldValue, int newValue)
     {
         _player2Health.SetCurrent(newValue);
+    }
+
+    public void UpdatePlayer1Special(int oldValue, int newValue)
+    {
+        _player1SpecialMeter.SetCurrent(newValue);
+    }
+
+    public void UpdatePlayer2Special(int oldValue, int newValue)
+    {
+        _player2SpecialMeter.SetCurrent(newValue);
+    }
+
+    public void UpdatePlayer1Combo(int oldValue, int newValue)
+    {
+        if (newValue == 0)
+        {
+            _player1ComboContainer.SetActive(false);
+        }
+        else
+        {
+            _player1ComboCountText.text = $"x{newValue}";
+            _player1ComboContainer.SetActive(true);
+        }
+    }
+
+    public void UpdatePlayer2Combo(int oldValue, int newValue)
+    {
+        if (newValue == 0)
+        {
+            _player2ComboContainer.SetActive(false);
+        }
+        else
+        {
+            _player2ComboCountText.text = $"x{newValue}";
+            _player2ComboContainer.SetActive(true);
+        }
     }
 
     public void SubmitPlayerAction(int id)
@@ -76,5 +131,7 @@ public class GameUIManager : NetworkBehaviour
     {
         _roundResult.gameObject.SetActive(false);
     }
+
+    
 }
 

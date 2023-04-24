@@ -13,6 +13,11 @@ public class GameData : NetworkBehaviour
     [SerializeField] private NetworkVariable<int> _actionPlayer2 = new(-1);
     [SerializeField] private NetworkVariable<int> _healthPlayer1 = new();
     [SerializeField] private NetworkVariable<int> _healthPlayer2 = new();
+    [SerializeField] private NetworkVariable<int> _comboCountPlayer1 = new(0);
+    [SerializeField] private NetworkVariable<int> _comboCountPlayer2 = new(0);
+    [SerializeField] private NetworkVariable<int> _specialMeterPlayer1 = new(0);
+    [SerializeField] private NetworkVariable<int> _specialMeterPlayer2 = new(0);
+
     [SerializeField] private NetworkVariable<int> _roundNumber = new(0);
     [SerializeField] private ulong _clientIdPlayer1;
     [SerializeField] private ulong _clientIdPlayer2;
@@ -20,11 +25,15 @@ public class GameData : NetworkBehaviour
     [SerializeField] private CharacterMoveDatabase _characterMoveDatabase;
 
     public static GameData Instance { get => _instance; }
-    public int ActionPlayer1 { get { return _actionPlayer1.Value; } }
-    public int ActionPlayer2 { get { return _actionPlayer2.Value; } }
-    public int HealthPlayer1 { get { return _healthPlayer1.Value; } }
-    public int HealthPlayer2 { get { return _healthPlayer2.Value; } }
-    public int RoundNumber { get { return _roundNumber.Value; } }
+    public NetworkVariable<int> ActionPlayer1 { get { return _actionPlayer1; } }
+    public NetworkVariable<int> ActionPlayer2 { get { return _actionPlayer2; } }
+    public NetworkVariable<int> HealthPlayer1 { get { return _healthPlayer1; } }
+    public NetworkVariable<int> HealthPlayer2 { get { return _healthPlayer2; } }
+    public NetworkVariable<int> ComboCountPlayer1 { get { return _comboCountPlayer1; } }
+    public NetworkVariable<int> ComboCountPlayer2 { get { return _comboCountPlayer2; } }
+    public NetworkVariable<int> SpecialMeterPlayer1 { get { return _specialMeterPlayer1; } }
+    public NetworkVariable<int> SpecialMeterPlayer2 { get { return _specialMeterPlayer2; } }
+    public NetworkVariable<int> RoundNumber { get { return _roundNumber; } }
     public ulong ClientIdPlayer1 { get { return _clientIdPlayer1; } set { _clientIdPlayer1 = value; } }
     public ulong ClientIdPlayer2 { get { return _clientIdPlayer2; } set { _clientIdPlayer2 = value; } }
 
@@ -44,22 +53,13 @@ public class GameData : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        _roundNumber.OnValueChanged += HandleRoundNumberChanged;
-        _healthPlayer1.OnValueChanged += HandleHealthPlayer1Changed;
-        _healthPlayer2.OnValueChanged += HandleHealthPlayer2Changed;
-        _actionPlayer1.OnValueChanged += HandleActionPlayer1Changed;
-        _actionPlayer2.OnValueChanged += HandleActionPlayer2Changed;
+
     }
 
     public override void OnNetworkDespawn()
     {
         if (!IsServer) return;
 
-        _roundNumber.OnValueChanged -= HandleRoundNumberChanged;
-        _healthPlayer1.OnValueChanged -= HandleHealthPlayer1Changed;
-        _healthPlayer2.OnValueChanged -= HandleHealthPlayer2Changed;
-        _actionPlayer1.OnValueChanged -= HandleActionPlayer1Changed;
-        _actionPlayer2.OnValueChanged -= HandleActionPlayer2Changed;
     }
 
     public void UpdateHealthPlayer1(int delta)
@@ -79,13 +79,11 @@ public class GameData : NetworkBehaviour
         if (clientId == _clientIdPlayer1)
         {
             _healthPlayer1.Value = value;
-            _gameUIManager.UpdatePlayer1HealthClientRpc(value);
             return;
         }
         if (clientId == _clientIdPlayer2)
         {
             _healthPlayer2.Value = value;
-            _gameUIManager.UpdatePlayer2HealthClientRpc(value);
         }
     }
 
@@ -103,31 +101,6 @@ public class GameData : NetworkBehaviour
         {
             _actionPlayer2.Value = moveId;
         }
-    }
-
-    private void HandleActionPlayer2Changed(int previousValue, int newValue)
-    {
-
-    }
-
-    private void HandleActionPlayer1Changed(int previousValue, int newValue)
-    {
-
-    }
-
-    private void HandleHealthPlayer2Changed(int previousValue, int newValue)
-    {
-        _gameUIManager.UpdatePlayer2HealthClientRpc(newValue);
-    }
-
-    private void HandleHealthPlayer1Changed(int previousValue, int newValue)
-    {
-        _gameUIManager.UpdatePlayer1HealthClientRpc(newValue);
-    }
-
-    private void HandleRoundNumberChanged(int previousValue, int newValue)
-    {
-
     }
 
     // This is a mess, but it's just to test functionality
@@ -216,6 +189,9 @@ public class GameData : NetworkBehaviour
 
         if (GUILayout.Button("Update P1 Health")) UpdateHealthPlayer1(10);
         if (GUILayout.Button("Update P2 Health")) UpdateHealthPlayer2(10);
+        if (GUILayout.Button("Increase P1 Combo")) _comboCountPlayer1.Value += 1;
+        if (GUILayout.Button("Reset P1 Combo")) _comboCountPlayer1.Value = 0;
+        if (GUILayout.Button("Increase P1 Special")) _specialMeterPlayer1.Value += 10;
         GUILayout.Label("Player 1 Move: " + _actionPlayer1.Value);
         GUILayout.Label("Player 2 Move: " + _actionPlayer2.Value);
     }
