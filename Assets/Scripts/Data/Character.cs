@@ -12,6 +12,7 @@ public class Character : ScriptableObject
     [SerializeField] private NetworkObject _gameplayPrefab;
     [SerializeField] private CharacterMoveSet _characterMoveSet;
     [SerializeField] private int _maximumHealth;
+    [SerializeField] private CharacterBaseSpecialComponent _specialComponent;
 
 
     public int Id => _id;
@@ -21,4 +22,5 @@ public class Character : ScriptableObject
     public NetworkObject GameplayPrefab => _gameplayPrefab;
     public CharacterMoveSet CharacterMoveSet => _characterMoveSet;
     public int MaximumHealth => _maximumHealth;
+    public CharacterBaseSpecialComponent CharacterBaseSpecialComponent => _specialComponent;
 }

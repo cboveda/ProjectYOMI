@@ -12,6 +12,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private MoveButton _grabButton;
     [SerializeField] private MoveButton _specialButton;
 
+    public MoveButton SpecialButton { get => _specialButton; }
+
     void Awake()
     {
         if (Instance != null && Instance != this)

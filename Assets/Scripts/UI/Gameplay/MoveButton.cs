@@ -10,6 +10,8 @@ public class MoveButton : MonoBehaviour
     [SerializeField] Button _button;
     private CharacterMove _move;
 
+    public Button Button { get { return _button; } }
+
     public void SetMove(CharacterMove move)
     {
         this._move = move;

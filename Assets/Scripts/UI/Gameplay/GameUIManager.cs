@@ -38,6 +38,12 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
+    public void UpdateButtonStates()
+    {
+        //get usable buttons from game data
+        // update all buttons
+    }
+
     public override void OnNetworkSpawn()
     {
         Data.HealthPlayer1.OnValueChanged += UpdatePlayer1Health;
@@ -46,6 +52,7 @@ public class GameUIManager : NetworkBehaviour
         Data.ComboCountPlayer2.OnValueChanged += UpdatePlayer2Combo;
         Data.SpecialMeterPlayer1.OnValueChanged += UpdatePlayer1Special;
         Data.SpecialMeterPlayer2.OnValueChanged += UpdatePlayer2Special;
+
     }
 
     public override void OnNetworkDespawn()

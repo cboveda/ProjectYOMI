@@ -18,12 +18,17 @@ public class GameData : NetworkBehaviour
     [SerializeField] private NetworkVariable<int> _comboCountPlayer2 = new(0);
     [SerializeField] private NetworkVariable<int> _specialMeterPlayer1 = new(0);
     [SerializeField] private NetworkVariable<int> _specialMeterPlayer2 = new(0);
-
     [SerializeField] private NetworkVariable<int> _roundNumber = new(0);
+
+    [SerializeField] private NetworkList<bool> _usableMoveListPlayer1 = new();
+    [SerializeField] private NetworkList<bool> _usableMoveListPlayer2 = new();
+
+
     [SerializeField] private ulong _clientIdPlayer1;
     [SerializeField] private ulong _clientIdPlayer2;
     [SerializeField] private GameUIManager _gameUIManager;
     [SerializeField] private CharacterMoveDatabase _characterMoveDatabase;
+    [SerializeField] private CharacterDatabase _characterDatabase;
     private RoundDataBuilder _roundDataBuilder;
     private List<RoundData> _roundDataList;
 
@@ -36,6 +41,7 @@ public class GameData : NetworkBehaviour
     public NetworkVariable<int> ComboCountPlayer2 { get { return _comboCountPlayer2; } }
     public NetworkVariable<int> SpecialMeterPlayer1 { get { return _specialMeterPlayer1; } }
     public NetworkVariable<int> SpecialMeterPlayer2 { get { return _specialMeterPlayer2; } }
+
     public NetworkVariable<int> RoundNumber { get { return _roundNumber; } }
     public ulong ClientIdPlayer1 { get { return _clientIdPlayer1; } set { _clientIdPlayer1 = value; } }
     public ulong ClientIdPlayer2 { get { return _clientIdPlayer2; } set { _clientIdPlayer2 = value; } }
@@ -127,7 +133,6 @@ public class GameData : NetworkBehaviour
 
         _actionPlayer1.Value = -1;
         _actionPlayer2.Value = -1;
-
 
         // If neither submitted
         if (!player1Move && !player2Move)
