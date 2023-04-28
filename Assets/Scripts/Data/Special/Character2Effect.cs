@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Character2Special : CharacterBaseSpecialComponent
+public class Character2Effect : CharacterBaseEffect
 {
     public override void DoSpecial(GameData context, ulong clientId)
     {
@@ -16,6 +16,25 @@ public class Character2Special : CharacterBaseSpecialComponent
         context.CombatCommands.Add(new UndoLockout(clientId, context.RoundNumber.Value + 2, type));
     }
 
+    public override float GetIncomingDamageModifier(GameData context, ulong clientId)
+    {
+        return 1.0f;
+    }
+
+    public override float GetOutgoingDamageModifier(GameData context, ulong clientId)
+    {
+        return 1.0f;
+    }
+
+    public override float GetSpecialMeterGainModifier(GameData context, ulong clientId)
+    {
+        return 1.0f;
+    }
+
+    public override float GetSpecialMeterGivenModifier(GameData context, ulong clientId)
+    {
+        return 0.75f;
+    }
 
     public class ApplyLockout : CombatCommandBase
     {

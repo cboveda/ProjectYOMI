@@ -19,4 +19,4 @@ MonoBehaviour:
   _gameplayPrefab: {fileID: 3896857865105610499, guid: 1d74e6fe9c214804d8bcf07fff1d2bde, type: 3}
   _characterMoveSet: {fileID: 11400000, guid: fbc28392f5132fe4a9626a8b919f6237, type: 2}
   _maximumHealth: 100
-  _specialComponent: {fileID: 0}
+  _effect: {fileID: -8883395236232909719, guid: 1d74e6fe9c214804d8bcf07fff1d2bde, type: 3}

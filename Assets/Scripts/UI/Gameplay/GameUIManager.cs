@@ -87,22 +87,34 @@ public class GameUIManager : NetworkBehaviour
         _roundTimer.StartTimer(duration);
     }
 
-    public void UpdatePlayer1Health(int oldValue, int newValue)
+    [ClientRpc]
+    public void SetPlayer1MaximumHealthClientRpc(float health)
+    {
+        _player1Health.SetMaximum(health);
+    }
+
+    [ClientRpc]
+    public void SetPlayer2MaximumHealthClientRpc(float health)
+    {
+        _player2Health.SetMaximum(health);
+    }
+
+    public void UpdatePlayer1Health(float oldValue, float newValue)
     {
         _player1Health.SetCurrent(newValue);
     }
     
-    public void UpdatePlayer2Health(int oldValue, int newValue)
+    public void UpdatePlayer2Health(float oldValue, float newValue)
     {
         _player2Health.SetCurrent(newValue);
     }
 
-    public void UpdatePlayer1Special(int oldValue, int newValue)
+    public void UpdatePlayer1Special(float oldValue, float newValue)
     {
         _player1SpecialMeter.SetCurrent(newValue);
     }
 
-    public void UpdatePlayer2Special(int oldValue, int newValue)
+    public void UpdatePlayer2Special(float oldValue, float newValue)
     {
         _player2SpecialMeter.SetCurrent(newValue);
     }
