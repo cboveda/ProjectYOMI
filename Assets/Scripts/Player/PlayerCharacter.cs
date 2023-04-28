@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerCharacter : NetworkBehaviour
 {
-    [SerializeField] private Character character;
+    [SerializeField] private Character _character;
 
     private bool _hasRegistered = false;
 
@@ -13,7 +13,7 @@ public class PlayerCharacter : NetworkBehaviour
         if (_hasRegistered) return;
         if (PlayerControls.Instance == null) return;
 
-        PlayerControls.Instance.RegisterCharacterById(character.Id);
+        PlayerControls.Instance.RegisterCharacterById(_character.Id);
         _hasRegistered = true;
     }
 }
