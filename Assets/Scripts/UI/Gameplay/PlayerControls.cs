@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private MoveButton _parryButton;
     [SerializeField] private MoveButton _grabButton;
     [SerializeField] private MoveButton _specialButton;
+    [SerializeField] private GameObject _helperArrows;
 
     void Awake()
     {
@@ -22,6 +24,20 @@ public class PlayerControls : MonoBehaviour
         {
             Instance = this;
         }
+        
+    }
+
+    public MoveButton GetButtonByType(CharacterMove.Type type)
+    {
+        return type switch
+        {
+            CharacterMove.Type.LightAttack => _lightAttackButton,
+            CharacterMove.Type.HeavyAttack => _heavyAttackButton,
+            CharacterMove.Type.Parry => _parryButton,
+            CharacterMove.Type.Grab => _grabButton,
+            CharacterMove.Type.Special => _specialButton,
+            _ => null,
+        };
     }
 
     public void RegisterCharacterById(int characterId)
@@ -33,5 +49,9 @@ public class PlayerControls : MonoBehaviour
         _parryButton.SetMove(moveSet.Parry);
         _grabButton.SetMove(moveSet.Grab);
         _specialButton.SetMove(moveSet.Special);
+    }
+    public void ToggleHelperArrows()
+    {
+        _helperArrows.SetActive(!_helperArrows.activeSelf);
     }
 }

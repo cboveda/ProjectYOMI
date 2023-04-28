@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
@@ -99,7 +100,12 @@ public class ServerManager : MonoBehaviour
     public void StartGame()
     {
         _gameHasStarted = true;
+        StartCoroutine(DelayedSceneLoad());
+    }
 
+    public IEnumerator DelayedSceneLoad()
+    {
+        yield return new WaitForSeconds(1.5f);
         NetworkManager.Singleton.SceneManager.LoadScene(_gameplaySceneName, LoadSceneMode.Single);
     }
 }

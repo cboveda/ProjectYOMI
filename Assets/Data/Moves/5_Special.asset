@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 5_Special
   m_EditorClassIdentifier: 
   _moveName: Super Move
-  _moveType: 4
-  _defeatsTypes: 01000302
-  _usableByDefault: 1
+  _moveType: 1
+  _defeatsTypes: 04100802
+  _usableByDefault: 0
   _id: 5

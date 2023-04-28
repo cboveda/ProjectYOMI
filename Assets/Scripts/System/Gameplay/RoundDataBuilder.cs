@@ -19,12 +19,12 @@ public class RoundDataBuilder
         _roundData.MoveIdPlayer2 = moveId;
     }
 
-    public void SetDamageToPlayer1(int value = 0)
+    public void SetDamageToPlayer1(float value = 0f)
     {
         _roundData.DamageToPlayer1 = value;
     }
 
-    public void SetDamageToPlayer2(int value = 0)
+    public void SetDamageToPlayer2(float value = 0f)
     {
         _roundData.DamageToPlayer2 = value;
     }

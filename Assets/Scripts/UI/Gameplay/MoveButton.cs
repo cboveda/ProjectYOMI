@@ -9,12 +9,15 @@ public class MoveButton : MonoBehaviour
     [SerializeField] TMP_Text _typeText;
     [SerializeField] Button _button;
     private CharacterMove _move;
+    [SerializeField] private GameObject _highlight;
+
+    public Button Button { get { return _button; } }
 
     public void SetMove(CharacterMove move)
     {
         this._move = move;
-        _nameText.text = move.MoveName;
-        _typeText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
+        _typeText.text = move.MoveName;
+        _nameText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
         _button.interactable = move.UsableByDefault;
 
         _button.onClick.AddListener(HandleClick);
@@ -23,5 +26,10 @@ public class MoveButton : MonoBehaviour
     private void HandleClick()
     {
         GameUIManager.Instance.SubmitPlayerAction(_move.Id);
+    }
+
+    public void SetHighlight(bool value)
+    {
+        _highlight.SetActive(value);
     }
 }

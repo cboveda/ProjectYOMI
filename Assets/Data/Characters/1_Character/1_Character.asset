@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: 1_Character
   m_EditorClassIdentifier: 
   _id: 1
-  _displayName: Character1
+  _displayName: Strength
+  _informationText: 'Passive: Starts with 120 health, grab attack does more damage.<br><br>Special:
+    Heal for a small amount.'
   _icon: {fileID: 21300000, guid: ac1fccc01b32ec948be6be7a7d055bc0, type: 3}
   _introPrefab: {fileID: 1792858871355532953, guid: 7238a05b979115e45a008e26e06b7948, type: 3}
   _gameplayPrefab: {fileID: -4886832200975278714, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
   _characterMoveSet: {fileID: 11400000, guid: ecd433dfba62f7f41b8cc14ef27ab3ad, type: 2}
-  _maximumHealth: 100
+  _maximumHealth: 120
+  _effect: {fileID: 2801655811604510264, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}

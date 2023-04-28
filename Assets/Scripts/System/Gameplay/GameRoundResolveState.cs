@@ -8,18 +8,23 @@ public class GameRoundResolveState : GameBaseState
     {
         if (_context.TimerComplete)
         {
-            //add end game check here
-
-            SwitchState(_factory.RoundActive());
+            if (GameData.Instance.HealthPlayer1.Value <= 0 || GameData.Instance.HealthPlayer2.Value <= 0)
+            {
+                SwitchState(_factory.End());
+            }
+            else
+            {
+                SwitchState(_factory.RoundActive());
+            }
         }
     }
 
     public override void EnterState()
     {
         _context.SetTimer(_context.RoundResolveDuration);
+        GameData.Instance.EvaluateRound();
         //set time dilation
         //read player inputs
-        GameData.Instance.EvaluateRound();
         //determine combat outcome
         //apply health changes
         //start animations

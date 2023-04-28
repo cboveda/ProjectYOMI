@@ -142,6 +142,10 @@ PrefabInstance:
       propertyPath: _gameUIManager
       value: 
       objectReference: {fileID: 1944409255}
+    - target: {fileID: 9136673535173170041, guid: 84432dfb02614cf47a315b5c32c11dd7, type: 3}
+      propertyPath: _roundActiveDuration
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 9136673535173170042, guid: 84432dfb02614cf47a315b5c32c11dd7, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -928,6 +932,10 @@ PrefabInstance:
       propertyPath: _gameData
       value: 
       objectReference: {fileID: 2041224490}
+    - target: {fileID: 258632379866117609, guid: 204824d83bf87f842b922e2fe8f3a705, type: 3}
+      propertyPath: _gameUIManager
+      value: 
+      objectReference: {fileID: 1944409255}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 204824d83bf87f842b922e2fe8f3a705, type: 3}
 --- !u!43 &1183755633
@@ -1741,7 +1749,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4133994699384865404, guid: 58895870a849e964f9e252009d9e1eb7, type: 3}
       propertyPath: current
-      value: 75
+      value: 78.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596436010798172143, guid: 58895870a849e964f9e252009d9e1eb7, type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8837424539488652087, guid: 58895870a849e964f9e252009d9e1eb7, type: 3}
       propertyPath: _data
@@ -1915,6 +1927,10 @@ PrefabInstance:
       propertyPath: _gameUIManager
       value: 
       objectReference: {fileID: 1944409255}
+    - target: {fileID: 5712701981712714839, guid: 9b2f7292ceac0eb4ca73df84f4b7d87a, type: 3}
+      propertyPath: _characterDatabase
+      value: 
+      objectReference: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
     - target: {fileID: 5712701981712714839, guid: 9b2f7292ceac0eb4ca73df84f4b7d87a, type: 3}
       propertyPath: _gameplayUIManager
       value: 

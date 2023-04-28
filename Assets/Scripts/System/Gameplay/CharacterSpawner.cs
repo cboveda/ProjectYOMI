@@ -9,6 +9,7 @@ public class CharacterSpawner : NetworkBehaviour
     [SerializeField] private GameObject _player1SpawnLocation;
     [SerializeField] private GameObject _player2SpawnLocation;
     [SerializeField] private GameData _gameData;
+    [SerializeField] private GameUIManager _gameUIManager;
 
     private bool _player1Spawned = false;
 
@@ -29,14 +30,11 @@ public class CharacterSpawner : NetworkBehaviour
                     _player2SpawnLocation.transform;
                 var characterInstance = Instantiate(character.GameplayPrefab, spawnPos);
                 characterInstance.SpawnAsPlayerObject(client.Value.clientId);
+                _gameData.InitializePlayerCharacter(_player1Spawned ? 2 : 1, client.Value.clientId, client.Value.characterId);
+                _gameUIManager.SubscribeToPlayerSpecificGameDataClientRpc();
                 if (!_player1Spawned)
                 {
-                    _gameData.ClientIdPlayer1 = client.Value.clientId;
                     _player1Spawned = true;
-                }
-                else
-                {
-                    _gameData.ClientIdPlayer2 = client.Value.clientId;
                 }
             }
         }

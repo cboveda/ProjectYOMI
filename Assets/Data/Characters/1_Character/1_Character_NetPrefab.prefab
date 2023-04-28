@@ -332,6 +332,7 @@ GameObject:
   - component: {fileID: 3125037882070321186}
   - component: {fileID: -4886832200975278714}
   - component: {fileID: 4364233307586488421}
+  - component: {fileID: 2801655811604510264}
   m_Layer: 0
   m_Name: 1_Character_NetPrefab
   m_TagString: Untagged
@@ -406,12 +407,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa280297874d93140ac4ca8a538e612d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 11400000, guid: b4a591cc11d396c47a6e53c7f317f5e0, type: 2}
-  moveDatabase: {fileID: 11400000, guid: 2c1b0dd1acd15bc4d813b3033b33f460, type: 2}
-  health:
-    m_InternalValue: 100
-  PendingPlayerMoveId:
-    m_InternalValue: -1
+  _character: {fileID: 11400000, guid: b4a591cc11d396c47a6e53c7f317f5e0, type: 2}
+--- !u!114 &2801655811604510264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792858871355532953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8dd0d9a0618aa847afa28fa47fe054c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1895598232985727677
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,7 @@
-
-using Unity.Netcode;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewCharacterMoveSet", menuName = "Characters/Character Move Set")]
-public class CharacterMoveSet : ScriptableObject, INetworkSerializable
+public class CharacterMoveSet : ScriptableObject
 {
     [SerializeField] private CharacterMove _lightAttack;
     [SerializeField] private CharacterMove _heavyAttack;
@@ -17,12 +15,16 @@ public class CharacterMoveSet : ScriptableObject, INetworkSerializable
     public CharacterMove Grab => _grab;
     public CharacterMove Special => _special;
 
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    public CharacterMove GetMoveByType(CharacterMove.Type type)
     {
-        serializer.SerializeValue(ref _lightAttack);
-        serializer.SerializeValue(ref _heavyAttack);
-        serializer.SerializeValue(ref _parry);
-        serializer.SerializeValue(ref _grab);
-        serializer.SerializeValue(ref _special);
+        return type switch
+        {
+            CharacterMove.Type.LightAttack => _lightAttack,
+            CharacterMove.Type.HeavyAttack => _heavyAttack,
+            CharacterMove.Type.Parry => _parry,
+            CharacterMove.Type.Grab => _grab,
+            CharacterMove.Type.Special => _special,
+            _ => null,
+        };
     }
 }
