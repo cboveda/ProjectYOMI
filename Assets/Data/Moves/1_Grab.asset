@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1_Grab
   m_EditorClassIdentifier: 
   _moveName: Overpower
-  _moveType: 3
-  _defeatsTypes: 0102
+  _moveType: 2
+  _defeatsTypes: 0104
   _usableByDefault: 1
   _id: 1

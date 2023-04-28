@@ -12,10 +12,8 @@ public class PlayerCharacter : NetworkBehaviour
         if (!IsLocalPlayer) return;
         if (_hasRegistered) return;
         if (PlayerControls.Instance == null) return;
-        if (GameData.Instance == null) return;
 
         PlayerControls.Instance.RegisterCharacterById(character.Id);
-        GameData.Instance.InitializeHealthServerRpc(character.MaximumHealth);
         _hasRegistered = true;
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameUIManager : NetworkBehaviour
 {
     private static GameUIManager _instance;
+    public static GameUIManager Instance { get => _instance; }
 
     [SerializeField] private GameData _data;
     [SerializeField] private GameObject _player1ComboContainer;
@@ -24,8 +25,6 @@ public class GameUIManager : NetworkBehaviour
 
     public GameData Data { get => _data; }
 
-    public static GameUIManager Instance { get => _instance; }
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -38,31 +37,48 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
-    public void UpdateButtonStates()
-    {
-        //get usable buttons from game data
-        // update all buttons
-    }
-
     public override void OnNetworkSpawn()
     {
-        Data.HealthPlayer1.OnValueChanged += UpdatePlayer1Health;
-        Data.HealthPlayer2.OnValueChanged += UpdatePlayer2Health;
-        Data.ComboCountPlayer1.OnValueChanged += UpdatePlayer1Combo;
-        Data.ComboCountPlayer2.OnValueChanged += UpdatePlayer2Combo;
-        Data.SpecialMeterPlayer1.OnValueChanged += UpdatePlayer1Special;
-        Data.SpecialMeterPlayer2.OnValueChanged += UpdatePlayer2Special;
-
+        _data.HealthPlayer1.OnValueChanged += UpdatePlayer1Health;
+        _data.HealthPlayer2.OnValueChanged += UpdatePlayer2Health;
+        _data.ComboCountPlayer1.OnValueChanged += UpdatePlayer1Combo;
+        _data.ComboCountPlayer2.OnValueChanged += UpdatePlayer2Combo;
+        _data.SpecialMeterPlayer1.OnValueChanged += UpdatePlayer1Special;
+        _data.SpecialMeterPlayer2.OnValueChanged += UpdatePlayer2Special;
     }
 
     public override void OnNetworkDespawn()
     {
-        Data.HealthPlayer1.OnValueChanged -= UpdatePlayer1Health;
-        Data.HealthPlayer2.OnValueChanged -= UpdatePlayer2Health;
-        Data.ComboCountPlayer1.OnValueChanged -= UpdatePlayer1Combo;
-        Data.ComboCountPlayer2.OnValueChanged -= UpdatePlayer2Combo;
-        Data.SpecialMeterPlayer1.OnValueChanged -= UpdatePlayer1Special;
-        Data.SpecialMeterPlayer2.OnValueChanged -= UpdatePlayer2Special;
+        _data.HealthPlayer1.OnValueChanged -= UpdatePlayer1Health;
+        _data.HealthPlayer2.OnValueChanged -= UpdatePlayer2Health;
+        _data.ComboCountPlayer1.OnValueChanged -= UpdatePlayer1Combo;
+        _data.ComboCountPlayer2.OnValueChanged -= UpdatePlayer2Combo;
+        _data.SpecialMeterPlayer1.OnValueChanged -= UpdatePlayer1Special;
+        _data.SpecialMeterPlayer2.OnValueChanged -= UpdatePlayer2Special;
+        _data.UsableMoveListPlayer1.OnValueChanged -= UpdateUsableMoveButtons;
+        _data.UsableMoveListPlayer2.OnValueChanged -= UpdateUsableMoveButtons;
+    }
+
+    private void UpdateUsableMoveButtons(byte previousValue, byte newValue)
+    {
+        foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
+        {
+            _playerControls.GetButtonByType(type).Button.interactable = (newValue & (byte)type) == (byte)type;
+        }
+    }
+
+    [ClientRpc]
+    public void SubscribeToUsableButtonStateClientRpc()
+    {
+        ulong myId = NetworkManager.Singleton.LocalClientId;
+        if (myId == Data.ClientIdPlayer1.Value)
+        {
+            Data.UsableMoveListPlayer1.OnValueChanged += UpdateUsableMoveButtons;
+        }
+        else if (myId == Data.ClientIdPlayer2.Value) 
+        {
+            Data.UsableMoveListPlayer2.OnValueChanged += UpdateUsableMoveButtons;
+        }
     }
 
     [ClientRpc]
@@ -117,9 +133,18 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
+
+
     public void SubmitPlayerAction(int id)
     {
         Data.SubmitPlayerActionServerRpc(id);
+    }
+
+    [ClientRpc]
+    public void ForceUpdateHealthbarsClientRpc()
+    {
+        _player1Health.SetCurrent(_data.HealthPlayer1.Value);
+        _player2Health.SetCurrent(_data.HealthPlayer2.Value);
     }
 
     [ClientRpc]

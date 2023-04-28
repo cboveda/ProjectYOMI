@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 2_HeavyAttack
   m_EditorClassIdentifier: 
   _moveName: Uppercut
-  _moveType: 1
-  _defeatsTypes: 02
+  _moveType: 8
+  _defeatsTypes: 04
   _usableByDefault: 1
   _id: 2

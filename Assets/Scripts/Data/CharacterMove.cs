@@ -23,11 +23,11 @@ public class CharacterMove : ScriptableObject
 
     public enum Type : byte
     {
-        LightAttack,
-        HeavyAttack,
-        Parry,
-        Grab,
-        Special
+        LightAttack = 16,
+        HeavyAttack = 8,
+        Parry = 4,
+        Grab = 2,
+        Special = 1
     }
 
     public override string ToString()

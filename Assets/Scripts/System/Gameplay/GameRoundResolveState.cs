@@ -17,9 +17,9 @@ public class GameRoundResolveState : GameBaseState
     public override void EnterState()
     {
         _context.SetTimer(_context.RoundResolveDuration);
+        GameData.Instance.EvaluateRound();
         //set time dilation
         //read player inputs
-        GameData.Instance.EvaluateRound();
         //determine combat outcome
         //apply health changes
         //start animations

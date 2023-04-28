@@ -14,7 +14,6 @@ public class Character : ScriptableObject
     [SerializeField] private int _maximumHealth;
     [SerializeField] private CharacterBaseSpecialComponent _specialComponent;
 
-
     public int Id => _id;
     public string DisplayName => _displayName;
     public Sprite Icon => _icon;

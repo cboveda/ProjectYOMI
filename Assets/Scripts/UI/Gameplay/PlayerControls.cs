@@ -12,8 +12,6 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private MoveButton _grabButton;
     [SerializeField] private MoveButton _specialButton;
 
-    public MoveButton SpecialButton { get => _specialButton; }
-
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -24,6 +22,19 @@ public class PlayerControls : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    public MoveButton GetButtonByType(CharacterMove.Type type)
+    {
+        return type switch
+        {
+            CharacterMove.Type.LightAttack => _lightAttackButton,
+            CharacterMove.Type.HeavyAttack => _heavyAttackButton,
+            CharacterMove.Type.Parry => _parryButton,
+            CharacterMove.Type.Grab => _grabButton,
+            CharacterMove.Type.Special => _specialButton,
+            _ => null,
+        };
     }
 
     public void RegisterCharacterById(int characterId)

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 3_LightAttack
   m_EditorClassIdentifier: 
   _moveName: Jab
-  _moveType: 0
-  _defeatsTypes: 0301
+  _moveType: 16
+  _defeatsTypes: 0802
   _usableByDefault: 1
   _id: 3

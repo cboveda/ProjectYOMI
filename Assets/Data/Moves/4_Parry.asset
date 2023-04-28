@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 4_Parry
   m_EditorClassIdentifier: 
   _moveName: Quick Counter
-  _moveType: 2
-  _defeatsTypes: 00
+  _moveType: 4
+  _defeatsTypes: 10
   _usableByDefault: 1
   _id: 4

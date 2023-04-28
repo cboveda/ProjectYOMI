@@ -15,4 +15,16 @@ public class CharacterMoveSet : ScriptableObject
     public CharacterMove Grab => _grab;
     public CharacterMove Special => _special;
 
+    public CharacterMove GetMoveByType(CharacterMove.Type type)
+    {
+        return type switch
+        {
+            CharacterMove.Type.LightAttack => _lightAttack,
+            CharacterMove.Type.HeavyAttack => _heavyAttack,
+            CharacterMove.Type.Parry => _parry,
+            CharacterMove.Type.Grab => _grab,
+            CharacterMove.Type.Special => _special,
+            _ => null,
+        };
+    }
 }
