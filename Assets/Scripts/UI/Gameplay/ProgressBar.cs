@@ -4,8 +4,8 @@ using UnityEngine.UI;
 [ExecuteInEditMode()]
 public class ProgressBar : MonoBehaviour
 {
-    public int maximum;
-    public int current;
+    public float maximum;
+    public float current;
     public Image mask;
     public Image fill;
     public Direction fillDirection;
@@ -24,13 +24,13 @@ public class ProgressBar : MonoBehaviour
 
     void GetCurrentFill()
     {
-        float fillAmount = (float) current / (float) maximum;
+        float fillAmount = current / maximum;
         mask.fillAmount = fillAmount;
         mask.fillOrigin = (int) fillDirection;
         fill.color = fillColor;
     }
 
-    public void SetCurrent(int newValue)
+    public void SetCurrent(float newValue)
     {
         current = newValue;
     }
