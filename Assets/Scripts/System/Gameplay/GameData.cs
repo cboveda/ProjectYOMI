@@ -31,6 +31,7 @@ public class GameData : NetworkBehaviour
     [SerializeField] private NetworkVariable<ulong> _clientIdPlayer2 = new(9999);
     private RoundDataBuilder _roundDataBuilder;
     private List<RoundData> _roundDataList;
+    private List<CombatCommandBase> _combatCommands;
 
     public int CharacterIdPlayer1 { get; set; }
     public int CharacterIdPlayer2 { get; set; }
@@ -47,6 +48,8 @@ public class GameData : NetworkBehaviour
     public NetworkVariable<int> SpecialMeterPlayer2 { get { return _specialMeterPlayer2; } }
     public NetworkVariable<ulong> ClientIdPlayer1 { get { return _clientIdPlayer1; } set { _clientIdPlayer1 = value; } }
     public NetworkVariable<ulong> ClientIdPlayer2 { get { return _clientIdPlayer2; } set { _clientIdPlayer2 = value; } }
+    public List<CombatCommandBase> CombatCommands { get { return _combatCommands; } }
+    public CharacterMoveDatabase CharacterMoveDatabase { get { return _characterMoveDatabase; } }
 
 
     private void Awake()
@@ -68,6 +71,7 @@ public class GameData : NetworkBehaviour
 
         _roundDataBuilder = new RoundDataBuilder();
         _roundDataList = new List<RoundData>();
+        _combatCommands = new List<CombatCommandBase>();
     }
 
     public override void OnNetworkDespawn()
@@ -139,89 +143,116 @@ public class GameData : NetworkBehaviour
     // This is a mess, but it's just to test functionality
     public void EvaluateRound()
     {
+        _roundNumber.Value += 1;
         _roundDataBuilder.StartNewRoundData();
 
-        var player1Move = _characterMoveDatabase.GetMoveById(_actionPlayer1.Value);
-        var player2Move = _characterMoveDatabase.GetMoveById(_actionPlayer2.Value);
+        // Read Inputs
+        var movePlayer1 = _characterMoveDatabase.GetMoveById(_actionPlayer1.Value);
+        var movePlayer2 = _characterMoveDatabase.GetMoveById(_actionPlayer2.Value);
 
-        if (player1Move)
+        // Log and reset moves
+        if (movePlayer1)
         {
-            _roundDataBuilder.SetMoveIdPlayer1(player1Move.Id);
+            _roundDataBuilder.SetMoveIdPlayer1(movePlayer1.Id);
         }
-        if (player2Move)
+        if (movePlayer2)
         {
-            _roundDataBuilder.SetMoveIdPlayer2(player2Move.Id);
+            _roundDataBuilder.SetMoveIdPlayer2(movePlayer2.Id);
         }
 
-        _actionPlayer1.Value = -1;
-        _actionPlayer2.Value = -1;
+
+
+        // Check for Special actions
+        if (movePlayer1 && movePlayer1.MoveType == CharacterMove.Type.Special)
+        {
+            _characterDatabase.GetCharacterById(_characterIdPlayer1).SpecialComponent.DoSpecial(this, _clientIdPlayer1.Value);
+        }
+        if (movePlayer2 && movePlayer2.MoveType == CharacterMove.Type.Special)
+        {
+            _characterDatabase.GetCharacterById(_characterIdPlayer2).SpecialComponent.DoSpecial(this, _clientIdPlayer2.Value);
+        }
+
+        // Execute queued commands
+        foreach (CombatCommandBase command in _combatCommands.Where(c => c.Round == _roundNumber.Value)) 
+        {
+            command.Execute(this);
+        }
+
+        // Clear executed commands
+        var filtered = _combatCommands.Where(c => !c.HasExecuted).ToList();
+        _combatCommands = filtered;
+
 
         // If neither submitted
-        if (!player1Move && !player2Move)
+        if (!movePlayer1 && !movePlayer2)
         {
             _gameUIManager.DisplayRoundResultClientRpc("None selected!", "", "None selected!", "", "Draw!");
             return;
         }
         // If one player submitted and the other didnt
-        else if (player1Move && !player2Move)
+        else if (movePlayer1 && !movePlayer2)
         {
             _gameUIManager.DisplayRoundResultClientRpc(
-                player1Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player1Move.MoveType),
+                movePlayer1.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer1.MoveType),
                 "None selected!",
                 "",
                 "Player 1 wins round");
             _healthPlayer2.Value -= 10;
             _roundDataBuilder.SetDamageToPlayer2(-10);
         }
-        else if (!player1Move && player2Move)
+        else if (!movePlayer1 && movePlayer2)
         {
             _gameUIManager.DisplayRoundResultClientRpc(
                 "None selected!",
                 "",
-                player2Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player2Move.MoveType),
+                movePlayer2.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer2.MoveType),
                 "Player 2 wins round");
             _healthPlayer1.Value -= 10;
             _roundDataBuilder.SetDamageToPlayer1(-10);
 
         }
         // Check defeat types
-        else if (player1Move.Defeats(player2Move.MoveType))
+        else if (movePlayer1.Defeats(movePlayer2.MoveType))
         {
             _gameUIManager.DisplayRoundResultClientRpc(
-                player1Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player1Move.MoveType),
-                player2Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player2Move.MoveType),
+                movePlayer1.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer1.MoveType),
+                movePlayer2.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer2.MoveType),
                 "Player 1 wins round");
             _healthPlayer2.Value -= 10;
             _roundDataBuilder.SetDamageToPlayer2(-10);
 
         }
-        else if (player2Move.Defeats(player1Move.MoveType))
+        else if (movePlayer2.Defeats(movePlayer1.MoveType))
         {
             _gameUIManager.DisplayRoundResultClientRpc(
-                player1Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player1Move.MoveType),
-                player2Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player2Move.MoveType),
+                movePlayer1.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer1.MoveType),
+                movePlayer2.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer2.MoveType),
                 "Player 2 wins round");
             _healthPlayer1.Value -= 10;
             _roundDataBuilder.SetDamageToPlayer1(-10);
 
         }
         // If both players submitted the same move type or neither wins (special case?)
-        else if (player1Move.MoveType == player2Move.MoveType)
+        else if (movePlayer1.MoveType == movePlayer2.MoveType)
         {
             _gameUIManager.DisplayRoundResultClientRpc(
-                player1Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player1Move.MoveType),
-                player2Move.MoveName,
-                Enum.GetName(typeof(CharacterMove.Type), player2Move.MoveType),
+                movePlayer1.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer1.MoveType),
+                movePlayer2.MoveName,
+                Enum.GetName(typeof(CharacterMove.Type), movePlayer2.MoveType),
                 "Draw!");
 
         }
+
+        // Reset moves
+        _actionPlayer1.Value = -1;
+        _actionPlayer2.Value = -1;
 
         _roundDataList.Add(_roundDataBuilder.GetRoundData());
     }
