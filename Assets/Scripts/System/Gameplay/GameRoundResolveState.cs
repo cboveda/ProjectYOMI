@@ -8,9 +8,14 @@ public class GameRoundResolveState : GameBaseState
     {
         if (_context.TimerComplete)
         {
-            //add end game check here
-
-            SwitchState(_factory.RoundActive());
+            if (GameData.Instance.HealthPlayer1.Value <= 0 || GameData.Instance.HealthPlayer2.Value <= 0)
+            {
+                SwitchState(_factory.End());
+            }
+            else
+            {
+                SwitchState(_factory.RoundActive());
+            }
         }
     }
 

@@ -16,8 +16,8 @@ public class MoveButton : MonoBehaviour
     public void SetMove(CharacterMove move)
     {
         this._move = move;
-        _nameText.text = move.MoveName;
-        _typeText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
+        _typeText.text = move.MoveName;
+        _nameText.text = Enum.GetName(typeof(CharacterMove.Type), move.MoveType);
         _button.interactable = move.UsableByDefault;
 
         _button.onClick.AddListener(HandleClick);

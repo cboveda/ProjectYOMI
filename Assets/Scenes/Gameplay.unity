@@ -142,6 +142,10 @@ PrefabInstance:
       propertyPath: _gameUIManager
       value: 
       objectReference: {fileID: 1944409255}
+    - target: {fileID: 9136673535173170041, guid: 84432dfb02614cf47a315b5c32c11dd7, type: 3}
+      propertyPath: _roundActiveDuration
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 9136673535173170042, guid: 84432dfb02614cf47a315b5c32c11dd7, type: 3}
       propertyPath: m_RootOrder
       value: 2

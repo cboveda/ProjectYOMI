@@ -9,6 +9,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private GameObject _characterInfoPanel;
     [SerializeField] private Transform _charactersHolder;
     [SerializeField] private TMP_Text _characterNameText;
+    [SerializeField] private TMP_Text _characterInfoText;
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private CharacterSelectButton _selectButtonPrefab;
     [SerializeField] private PlayerCard[] _playerCards;
@@ -108,6 +109,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
         }
 
         _characterNameText.text = character.DisplayName;
+        _characterInfoText.text = character.InformationText;
         _characterInfoPanel.SetActive(true);
         if (_introInstance != null)
         {
@@ -197,16 +199,14 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     private void HandlePlayersStateChanged(NetworkListEvent<CharacterSelectState> changeEvent)
     {
-        // Disabled for testing
-        //if (players.Count < 2)
-        //{
-        //    lockInButton.interactable = false;
-        //}
-        //else
-        //{
-        //    lockInButton.interactable = true;
-        //}
-        _lockInButton.interactable = true;
+        if (_players.Count < 2)
+        {
+            _lockInButton.interactable = false;
+        }
+        else
+        {
+            _lockInButton.interactable = true;
+        }
 
         for (int i = 0; i < _playerCards.Length; i++)
         {            

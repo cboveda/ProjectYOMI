@@ -33,7 +33,7 @@ public class Character2Effect : CharacterBaseEffect
 
     public override float GetSpecialMeterGivenModifier(GameData context, ulong clientId)
     {
-        return 0.75f;
+        return 0.80f;
     }
 
     public class ApplyLockout : CombatCommandBase

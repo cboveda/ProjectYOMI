@@ -17,6 +17,7 @@ public class GameUIManager : NetworkBehaviour
     [SerializeField] private ProgressBar _player1SpecialMeter;
     [SerializeField] private ProgressBar _player2SpecialMeter;
     [SerializeField] private RoundResult _roundResult;
+    [SerializeField] private GameResult _gameResult;
     [SerializeField] private RoundTimer _roundTimer;
     [SerializeField] private TMP_Text _player1ComboCountText;
     [SerializeField] private TMP_Text _player2ComboCountText;
@@ -153,7 +154,7 @@ public class GameUIManager : NetworkBehaviour
 
     public void UpdatePlayer2Combo(int oldValue, int newValue)
     {
-        if (newValue == 0)
+        if (newValue < 2)
         {
             _player2ComboContainer.SetActive(false);
         }
@@ -187,6 +188,13 @@ public class GameUIManager : NetworkBehaviour
         _roundResult.MoveTypePlayer2 = moveTypePlayer2;
         _roundResult.Result = result;
         _roundResult.gameObject.SetActive(true);
+    }
+
+    [ClientRpc]
+    public void DisplayGameResultClientRpc(string result)
+    {
+        _gameResult.Result = result;
+        _gameResult.gameObject.SetActive(true);
     }
 
     [ClientRpc]
