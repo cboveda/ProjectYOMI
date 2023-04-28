@@ -26,7 +26,7 @@ public class Character3Effect : CharacterBaseEffect
         else
         {
             context.ActionPlayer2.Value = lastMove;
-        }
+    }
         _specialUsed = true;
     }
 
