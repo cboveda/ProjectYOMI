@@ -9,6 +9,7 @@ public class MoveButton : MonoBehaviour
     [SerializeField] TMP_Text _typeText;
     [SerializeField] Button _button;
     private CharacterMove _move;
+    [SerializeField] private GameObject _highlight;
 
     public Button Button { get { return _button; } }
 
@@ -25,5 +26,10 @@ public class MoveButton : MonoBehaviour
     private void HandleClick()
     {
         GameUIManager.Instance.SubmitPlayerAction(_move.Id);
+    }
+
+    public void SetHighlight(bool value)
+    {
+        _highlight.SetActive(value);
     }
 }

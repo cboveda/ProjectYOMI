@@ -57,6 +57,8 @@ public class GameUIManager : NetworkBehaviour
         _data.SpecialMeterPlayer2.OnValueChanged -= UpdatePlayer2Special;
         _data.UsableMoveListPlayer1.OnValueChanged -= UpdateUsableMoveButtons;
         _data.UsableMoveListPlayer2.OnValueChanged -= UpdateUsableMoveButtons;
+        _data.ActionPlayer1.OnValueChanged -= UpdateActiveSelectionButton;
+        _data.ActionPlayer2.OnValueChanged -= UpdateActiveSelectionButton;
     }
 
     private void UpdateUsableMoveButtons(byte previousValue, byte newValue)
@@ -67,17 +69,34 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
+    private void UpdateActiveSelectionButton(int previousValue, int newValue)
+    {
+        var previousMove = _data.CharacterMoveDatabase.GetMoveById(previousValue);
+        if (previousMove != null)
+        {
+            _playerControls.GetButtonByType(previousMove.MoveType).SetHighlight(false);
+        }
+
+        var currentMove = _data.CharacterMoveDatabase.GetMoveById(newValue);
+        if (currentMove != null)
+        {
+            _playerControls.GetButtonByType(currentMove.MoveType).SetHighlight(true);
+        }
+    }
+
     [ClientRpc]
-    public void SubscribeToUsableButtonStateClientRpc()
+    public void SubscribeToPlayerSpecificGameDataClientRpc()
     {
         ulong myId = NetworkManager.Singleton.LocalClientId;
         if (myId == Data.ClientIdPlayer1.Value)
         {
             Data.UsableMoveListPlayer1.OnValueChanged += UpdateUsableMoveButtons;
+            Data.ActionPlayer1.OnValueChanged += UpdateActiveSelectionButton;
         }
         else if (myId == Data.ClientIdPlayer2.Value) 
         {
             Data.UsableMoveListPlayer2.OnValueChanged += UpdateUsableMoveButtons;
+            Data.ActionPlayer2.OnValueChanged += UpdateActiveSelectionButton;
         }
     }
 
@@ -121,7 +140,7 @@ public class GameUIManager : NetworkBehaviour
 
     public void UpdatePlayer1Combo(int oldValue, int newValue)
     {
-        if (newValue == 0)
+        if (newValue < 2)
         {
             _player1ComboContainer.SetActive(false);
         }

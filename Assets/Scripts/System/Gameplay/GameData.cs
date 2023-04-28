@@ -36,6 +36,7 @@ public class GameData : NetworkBehaviour
     private RoundDataBuilder _roundDataBuilder;
     private List<RoundData> _roundDataList;
     private List<CombatCommandBase> _combatCommands;
+    private bool _displayDebugMenu = false;
 
     public int CharacterIdPlayer1 { get; set; }
     public int CharacterIdPlayer2 { get; set; }
@@ -165,6 +166,10 @@ public class GameData : NetworkBehaviour
             {
                 _characterPlayer1.Effect.DoSpecial(this, _clientIdPlayer1.Value);
                 _specialMeterPlayer1.Value = 0f;
+                unchecked
+                {
+                    _usableMoveListPlayer1.Value &= (byte)~(byte)CharacterMove.Type.Special;
+                }
             }
         }
         if (movePlayer2)
@@ -174,8 +179,12 @@ public class GameData : NetworkBehaviour
             {
                 _characterPlayer2.Effect.DoSpecial(this, _clientIdPlayer2.Value);
                 _specialMeterPlayer2.Value = 0f;
+                unchecked
+                {
+                    _usableMoveListPlayer2.Value &= (byte)~(byte)CharacterMove.Type.Special;
+                }
             }
-        }
+        } 
 
         // If neither submitted
         if (!movePlayer1 && !movePlayer2)
@@ -209,6 +218,9 @@ public class GameData : NetworkBehaviour
             special2 *= _characterPlayer1.Effect.GetSpecialMeterGivenModifier(this, _clientIdPlayer1.Value);
             _specialMeterPlayer2.Value += special2 * 0.5f;
 
+            _comboCountPlayer1.Value++;
+            _comboCountPlayer2.Value = 0;
+
             _roundDataBuilder.SetDamageToPlayer2(damage);
         }
         else if (!movePlayer1 && movePlayer2)
@@ -234,6 +246,9 @@ public class GameData : NetworkBehaviour
             special2 *= _characterPlayer2.Effect.GetSpecialMeterGainModifier(this, _clientIdPlayer2.Value);
             special2 *= _characterPlayer1.Effect.GetSpecialMeterGivenModifier(this, _clientIdPlayer1.Value);
             _specialMeterPlayer2.Value += special2;
+
+            _comboCountPlayer1.Value = 0;
+            _comboCountPlayer2.Value++;
 
             _roundDataBuilder.SetDamageToPlayer1(damage);
         }
@@ -263,6 +278,9 @@ public class GameData : NetworkBehaviour
             special2 *= _characterPlayer1.Effect.GetSpecialMeterGivenModifier(this, _clientIdPlayer1.Value);
             _specialMeterPlayer2.Value += special2 * 0.5f;
 
+            _comboCountPlayer1.Value++;
+            _comboCountPlayer2.Value = 0;
+
             _roundDataBuilder.SetDamageToPlayer2(damage);
         }
         else if (movePlayer2.Defeats(movePlayer1.MoveType))
@@ -288,6 +306,10 @@ public class GameData : NetworkBehaviour
             special2 *= _characterPlayer2.Effect.GetSpecialMeterGainModifier(this, _clientIdPlayer2.Value);
             special2 *= _characterPlayer1.Effect.GetSpecialMeterGivenModifier(this, _clientIdPlayer1.Value);
             _specialMeterPlayer2.Value += special2;
+
+            _comboCountPlayer1.Value = 0;
+            _comboCountPlayer2.Value++;
+
             _roundDataBuilder.SetDamageToPlayer1(damage);
         }
 
@@ -310,9 +332,16 @@ public class GameData : NetworkBehaviour
             special2 *= _characterPlayer2.Effect.GetSpecialMeterGainModifier(this, _clientIdPlayer2.Value);
             special2 *= _characterPlayer1.Effect.GetSpecialMeterGivenModifier(this, _clientIdPlayer1.Value);
             _specialMeterPlayer2.Value += special2 * 0.5f;
+
+            var damage = _baseDamage * 0.5f;
+            _healthPlayer1.Value -= damage;
+            _healthPlayer2.Value -= damage;
+            _roundDataBuilder.SetDamageToPlayer1(damage);
+            _roundDataBuilder.SetDamageToPlayer2(damage);
+
         }
 
-        // Check if enable specials
+        // Check if specials should be enabled
         if (_specialMeterPlayer1.Value >= 100f)
         {
             _usableMoveListPlayer1.Value |= (byte)CharacterMove.Type.Special;
@@ -340,17 +369,27 @@ public class GameData : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        GUILayout.BeginArea(new Rect(10, 10, 200, 400), GUI.skin.box);
-        GUILayout.Label($"Round Number: {RoundNumber.Value}");
-        foreach(RoundData round in _roundDataList)
-        {
-            GUILayout.Label(
-                "P1 move: " +
-                _characterMoveDatabase.GetMoveById(round.MoveIdPlayer1).MoveName +
-                ", P2 move: " +
-                _characterMoveDatabase.GetMoveById(round.MoveIdPlayer2).MoveName);
-        }
 
-        GUILayout.EndArea();
+
+        if (_displayDebugMenu)
+        {
+            GUILayout.BeginArea(new Rect(10, 10, 200, 400), GUI.skin.box);
+            if (GUILayout.Button("Hide Debug")) _displayDebugMenu = false;
+            GUILayout.Label($"Round Number: {RoundNumber.Value}");
+            foreach (RoundData round in _roundDataList)
+            {
+                GUILayout.Label(
+                    "P1: " +
+                    Enum.GetName(typeof(CharacterMove.Type), _characterMoveDatabase.GetMoveById(round.MoveIdPlayer1).MoveType) +
+                    ", P2: " +
+                    Enum.GetName(typeof(CharacterMove.Type), _characterMoveDatabase.GetMoveById(round.MoveIdPlayer2).MoveType));
+            }
+
+            GUILayout.EndArea();
+        }
+        else
+        {
+            if (GUILayout.Button("Display Debug")) _displayDebugMenu = true;
+        }
     }
 }
