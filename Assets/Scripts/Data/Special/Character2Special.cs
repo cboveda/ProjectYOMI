@@ -1,12 +1,15 @@
+using System;
 using UnityEngine;
 
 public class Character2Special : CharacterBaseSpecialComponent
 {
     public override void DoSpecial(GameData context, ulong clientId)
     {
-        int actionSelection = (clientId == context.ClientIdPlayer1.Value) ? context.ActionPlayer1.Value : context.ActionPlayer2.Value;
-        CharacterMove opponentMove = context.CharacterMoveDatabase.GetMoveById(actionSelection);
-        CharacterMove.Type type = opponentMove ? opponentMove.MoveType : CharacterMove.Type.LightAttack; //What to do if the player didn't select?
+        int opponentActionSelection = (clientId == context.ClientIdPlayer1.Value) ? context.ActionPlayer2.Value : context.ActionPlayer1.Value;
+        CharacterMove opponentMove = context.CharacterMoveDatabase.GetMoveById(opponentActionSelection);
+        CharacterMove.Type type = opponentMove ? opponentMove.MoveType : CharacterMove.Type.LightAttack; //What to do if the player didn't select? Picks LightAttack
+
+        Debug.Log($"Special called by {clientId}. Opponent selected {opponentActionSelection}. Locking out {Enum.GetName(typeof(CharacterMove.Type), type)} until Round {context.RoundNumber.Value + 2}");
 
         context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber.Value, type));
         context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber.Value + 1, type));

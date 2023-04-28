@@ -52,6 +52,7 @@ public class GameData : NetworkBehaviour
     public CharacterMoveDatabase CharacterMoveDatabase { get { return _characterMoveDatabase; } }
 
 
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -262,7 +263,7 @@ public class GameData : NetworkBehaviour
         if (!IsServer) return;
 
         GUILayout.BeginArea(new Rect(10, 10, 200, 400), GUI.skin.box);
-
+        GUILayout.Label($"Round Number: {RoundNumber.Value}");
         GUILayout.Label("Player1 usable moves: " + Convert.ToString(_usableMoveListPlayer1.Value, 2));
         foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
         {
