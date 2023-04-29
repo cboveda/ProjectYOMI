@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveName: Overpower
   _moveType: 2
-  _defeatsTypes: 0104
+  _defeatsTypes: 0804
   _usableByDefault: 1
   _id: 1
