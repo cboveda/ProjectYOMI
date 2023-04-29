@@ -15,6 +15,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private PlayerCard[] _playerCards;
     [SerializeField] private Transform _introSpawnPoint;
     [SerializeField] private Button _lockInButton;
+    [SerializeField] private TMP_Text _joinCodeText;
+    [SerializeField] private GameObject _joinCodeObject;
 
     private GameObject _introInstance;
     private List<CharacterSelectButton> _characterButtons;
@@ -53,6 +55,12 @@ public class CharacterSelectDisplay : NetworkBehaviour
             {
                 HandleClientConnected(client.ClientId);
             }
+        }
+
+        if (IsHost)
+        {
+            _joinCodeObject.SetActive(true);
+            _joinCodeText.text = ServerManager.Instance.JoinCode;
         }
 
 
