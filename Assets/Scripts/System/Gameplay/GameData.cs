@@ -13,49 +13,50 @@ public class GameData : NetworkBehaviour
 
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private CharacterMoveDatabase _characterMoveDatabase;
-    [SerializeField] private GameUIManager _gameUIManager;
+    [SerializeField] private CharacterSpawner _characterSpawner;
     [SerializeField] private float _baseDamage = 10f;
     [SerializeField] private float _baseSpecialGain = 25f;
-    private int _characterIdPlayer1;
-    private int _characterIdPlayer2;
+    [SerializeField] private GameUIManager _gameUIManager;
+    private bool _displayDebugMenu = false;
     private Character _characterPlayer1;
     private Character _characterPlayer2;
+    private int _characterIdPlayer1;
+    private int _characterIdPlayer2;
+    private List<CombatCommandBase> _combatCommands;
+    private List<RoundData> _roundDataList;
     private NetworkVariable<byte> _usableMoveListPlayer1 = new(0);
     private NetworkVariable<byte> _usableMoveListPlayer2 = new(0);
+    private NetworkVariable<float> _healthPlayer1 = new(0);
+    private NetworkVariable<float> _healthPlayer2 = new(0);
+    private NetworkVariable<float> _specialMeterPlayer1 = new(0);
+    private NetworkVariable<float> _specialMeterPlayer2 = new(0);
     private NetworkVariable<int> _actionPlayer1 = new(-1);
     private NetworkVariable<int> _actionPlayer2 = new(-1);
     private NetworkVariable<int> _comboCountPlayer1 = new(0);
     private NetworkVariable<int> _comboCountPlayer2 = new(0);
-    private NetworkVariable<float> _healthPlayer1 = new();
-    private NetworkVariable<float> _healthPlayer2 = new();
     private NetworkVariable<int> _roundNumber = new(0);
-    private NetworkVariable<float> _specialMeterPlayer1 = new(0);
-    private NetworkVariable<float> _specialMeterPlayer2 = new(0);
     private NetworkVariable<ulong> _clientIdPlayer1 = new(9999);
     private NetworkVariable<ulong> _clientIdPlayer2 = new(9999);
     private RoundDataBuilder _roundDataBuilder;
-    private List<RoundData> _roundDataList;
-    private List<CombatCommandBase> _combatCommands;
-    private bool _displayDebugMenu = false;
 
+    public CharacterMoveDatabase CharacterMoveDatabase { get { return _characterMoveDatabase; } }
     public int CharacterIdPlayer1 { get; set; }
     public int CharacterIdPlayer2 { get; set; }
+    public List<CombatCommandBase> CombatCommands { get { return _combatCommands; } }
+    public List<RoundData> RoundDataList { get { return _roundDataList; } }
     public NetworkVariable<byte> UsableMoveListPlayer1 { get { return _usableMoveListPlayer1; } }
     public NetworkVariable<byte> UsableMoveListPlayer2 { get { return _usableMoveListPlayer2; } }
+    public NetworkVariable<float> HealthPlayer1 { get { return _healthPlayer1; } }
+    public NetworkVariable<float> HealthPlayer2 { get { return _healthPlayer2; } }
+    public NetworkVariable<float> SpecialMeterPlayer1 { get { return _specialMeterPlayer1; } }
+    public NetworkVariable<float> SpecialMeterPlayer2 { get { return _specialMeterPlayer2; } }
     public NetworkVariable<int> ActionPlayer1 { get { return _actionPlayer1; } }
     public NetworkVariable<int> ActionPlayer2 { get { return _actionPlayer2; } }
     public NetworkVariable<int> ComboCountPlayer1 { get { return _comboCountPlayer1; } }
     public NetworkVariable<int> ComboCountPlayer2 { get { return _comboCountPlayer2; } }
-    public NetworkVariable<float> HealthPlayer1 { get { return _healthPlayer1; } }
-    public NetworkVariable<float> HealthPlayer2 { get { return _healthPlayer2; } }
     public NetworkVariable<int> RoundNumber { get { return _roundNumber; } }
-    public NetworkVariable<float> SpecialMeterPlayer1 { get { return _specialMeterPlayer1; } }
-    public NetworkVariable<float> SpecialMeterPlayer2 { get { return _specialMeterPlayer2; } }
     public NetworkVariable<ulong> ClientIdPlayer1 { get { return _clientIdPlayer1; } set { _clientIdPlayer1 = value; } }
     public NetworkVariable<ulong> ClientIdPlayer2 { get { return _clientIdPlayer2; } set { _clientIdPlayer2 = value; } }
-    public List<CombatCommandBase> CombatCommands { get { return _combatCommands; } }
-    public CharacterMoveDatabase CharacterMoveDatabase { get { return _characterMoveDatabase; } }
-    public List<RoundData> RoundDataList { get { return _roundDataList; } }
 
     private void Awake()
     {
@@ -73,6 +74,7 @@ public class GameData : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
+        Debug.Log("GameData OnNetworkSpawn");
 
         _roundDataBuilder = new RoundDataBuilder();
         _roundDataList = new List<RoundData>();

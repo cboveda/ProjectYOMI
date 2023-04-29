@@ -19,6 +19,7 @@ public class CharacterSpawner : NetworkBehaviour
         {
             return;
         }
+        Debug.Log("CharacterSpawner OnNetworkSpawn");
 
         foreach (var client in ServerManager.Instance.ClientData)
         {
