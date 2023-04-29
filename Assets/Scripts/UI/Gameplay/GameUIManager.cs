@@ -119,6 +119,18 @@ public class GameUIManager : NetworkBehaviour
         _player2Health.SetMaximum(health);
     }
 
+    [ClientRpc]
+    public void SetPlayer1NameClientRpc(string name)
+    {
+        _player1Name.text = $"Player 1 [{name}]";
+    }
+
+    [ClientRpc]
+    public void SetPlayer2NameClientRpc(string name)
+    {
+        _player2Name.text = $"Player 2 [{name}]";
+    }
+
     public void UpdatePlayer1Health(float oldValue, float newValue)
     {
         _player1Health.SetCurrent(newValue);
@@ -165,8 +177,6 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
-
-
     public void SubmitPlayerAction(int id)
     {
         Data.SubmitPlayerActionServerRpc(id);
@@ -195,6 +205,14 @@ public class GameUIManager : NetworkBehaviour
     {
         _gameResult.Result = result;
         _gameResult.gameObject.SetActive(true);
+        if (IsServer)
+        {
+            _gameResult.RestartButton.SetActive(true);
+        }
+        else
+        {
+            _gameResult.RestartText.SetActive(true);
+        }
     }
 
     [ClientRpc]

@@ -1,3 +1,5 @@
+using Unity.Netcode;
+
 public class GameEndState : GameBaseState
 {
     public GameEndState(GameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
