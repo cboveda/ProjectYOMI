@@ -1,9 +1,14 @@
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine;
-using Unity.Netcode;
-using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
+using Unity.Netcode;
+using Unity.Networking.Transport.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Services.Relay;
+using UnityEngine.SceneManagement;
+using UnityEngine;
+using Unity.Netcode.Transports.UTP;
 
 public class ServerManager : MonoBehaviour
 {
@@ -14,6 +19,7 @@ public class ServerManager : MonoBehaviour
 
     [SerializeField] private string _gameplaySceneName = "Gameplay";
     [SerializeField] private string _characterSelectScene = "CharacterSelect";
+    public string JoinCode { get; private set; }
 
     private void Awake()
     {
@@ -28,18 +34,32 @@ public class ServerManager : MonoBehaviour
         }
     }
 
-    public void StartServer()
+    public async void StartHost()
     {
-        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-        NetworkManager.Singleton.OnServerStarted += OnNetworkReady;
+        Allocation allocation;
+        try
+        {
+            allocation = await RelayService.Instance.CreateAllocationAsync(2);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Relay create allocation request failed, {e.Message}");
+            throw;
+        }
 
-        ClientData = new Dictionary<ulong, ClientData>();
+        try
+        {
+            JoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Relay get join code request failed {e.Message}");
+            throw;
+        }
 
-        NetworkManager.Singleton.StartServer();
-    }
+        var relayServerData = new RelayServerData(allocation, "dtls");
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
-    public void StartHost()
-    {
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += OnNetworkReady;
 

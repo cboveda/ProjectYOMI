@@ -757,11 +757,11 @@ PlayerSettings:
   apiCompatibilityLevel: 3
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: 204cb702-8148-412b-bf02-fa05b258b92c
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: Project YOMI
+  organizationId: cboveda
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
