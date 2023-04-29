@@ -1,3 +1,5 @@
+#if (UNITY_EDITOR) 
+
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -15,6 +17,9 @@ using UnityEditor.SceneManagement;
 /// http://forum.unity3d.com/threads/157502-Executing-first-scene-in-build-settings-when-pressing-play-button-in-editor
 /// Credit to: PeterWitham (GrfxGuru)
 /// </description>
+/// 
+
+
 [InitializeOnLoad]
 static class SceneAutoLoader
 {
@@ -130,3 +135,5 @@ static class SceneAutoLoader
         set { EditorPrefs.SetString(cEditorPrefPreviousScene, value); }
     }
 }
+
+#endif

@@ -19,7 +19,7 @@ public class PlayerCard : MonoBehaviour
             _characterIconImage.sprite = character.Icon;
         }
 
-        _playerNameText.text = $"Player {state.ClientId}";
+        _playerNameText.text = $"Player {state.ClientId + 1}";
         _playerStatusText.text = state.IsLockedIn ? "Ready!" : "Picking character...";
         _visuals.SetActive(true);
     }

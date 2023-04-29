@@ -108,6 +108,7 @@ public class GameData : NetworkBehaviour
             {
                 _healthPlayer1.Value = _characterPlayer1.MaximumHealth;
                 _gameUIManager.SetPlayer1MaximumHealthClientRpc(_characterPlayer1.MaximumHealth);
+                _gameUIManager.SetPlayer1NameClientRpc(_characterPlayer1.DisplayName);
                 foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
                 {
                     byte isUsable = (byte) (_characterPlayer1.CharacterMoveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
@@ -124,6 +125,7 @@ public class GameData : NetworkBehaviour
             {
                 _healthPlayer2.Value = _characterPlayer2.MaximumHealth;
                 _gameUIManager.SetPlayer2MaximumHealthClientRpc(_characterPlayer2.MaximumHealth);
+                _gameUIManager.SetPlayer2NameClientRpc(_characterPlayer2.DisplayName);
                 foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
                 {
                     byte isUsable = (byte)(_characterPlayer2.CharacterMoveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
@@ -375,6 +377,7 @@ public class GameData : NetworkBehaviour
         {
             GUILayout.BeginArea(new Rect(10, 10, 200, 400), GUI.skin.box);
             if (GUILayout.Button("Hide Debug")) _displayDebugMenu = false;
+            if (GUILayout.Button("End Game")) _healthPlayer2.Value = 0f;
             GUILayout.Label($"Round Number: {RoundNumber.Value}");
             foreach (RoundData round in _roundDataList)
             {

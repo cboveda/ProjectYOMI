@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class ServerManager : MonoBehaviour
 {
@@ -45,7 +46,6 @@ public class ServerManager : MonoBehaviour
         ClientData = new Dictionary<ulong, ClientData>();
 
         NetworkManager.Singleton.StartHost();
-
     }
 
     public void Disconnect()
@@ -108,4 +108,21 @@ public class ServerManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         NetworkManager.Singleton.SceneManager.LoadScene(_gameplaySceneName, LoadSceneMode.Single);
     }
+
+    public void ResetGame()
+    {
+        foreach (ClientData data in ClientData.Values)
+        {
+            data.characterId = -1;
+        }
+
+        foreach (NetworkObject obj in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values.ToList<NetworkObject>())
+        {
+            obj.Despawn();
+        }
+
+        NetworkManager.Singleton.SceneManager.LoadScene(_characterSelectScene, LoadSceneMode.Single);
+    }
 }
+
+
