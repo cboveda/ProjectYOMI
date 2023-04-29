@@ -128,7 +128,7 @@ public class GameUIManager : NetworkBehaviour
     [ClientRpc]
     public void SetPlayer2NameClientRpc(string name)
     {
-        _player2Name.text = $"[{name}] Player 2";
+        _player2Name.text = $"Player 2 [{name}]";
     }
 
     public void UpdatePlayer1Health(float oldValue, float newValue)
