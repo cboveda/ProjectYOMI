@@ -1,6 +1,6 @@
-public class GameRoundActiveState : GameBaseState
+public class GameTurnActiveState : GameBaseState
 {
-    public GameRoundActiveState(GameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
+    public GameTurnActiveState(GameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
     {
     }
 
@@ -8,7 +8,7 @@ public class GameRoundActiveState : GameBaseState
     {
         if (_context.TimerComplete)
         {
-            SwitchState(_factory.RoundResolve());
+            SwitchState(_factory.TurnResolve());
         }
     }
 

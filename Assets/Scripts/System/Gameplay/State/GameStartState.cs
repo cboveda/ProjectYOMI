@@ -8,14 +8,13 @@ public class GameStartState : GameBaseState
     {
         if(_context.TimerComplete)
         {
-            SwitchState(_factory.RoundActive());
+            SwitchState(_factory.TurnActive());
         }
     }
 
     public override void EnterState()
     {
         _context.SetTimer(_context.GameStartDuration);
-        GameUIManager.Instance.ForceUpdateHealthbarsClientRpc();
         //show start countdown
     }
 

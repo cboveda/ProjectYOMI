@@ -1,19 +1,12 @@
-using System.Linq;
 using UnityEngine;
 
 public class Character1Effect : CharacterBaseEffect
 {
+    [SerializeField] private float _healAmountOnSpecial = 15;
+
     public override void DoSpecial(GameData context, ulong clientId)
     {
-        bool isPlayer1 = clientId == context.ClientIdPlayer1.Value;
-        if (isPlayer1)
-        {
-            context.HealthPlayer1.Value += 15;
-        }
-        else
-        {
-            context.HealthPlayer2.Value += 15;
-        }
+        _playerCharacter.Health += _healAmountOnSpecial;
     }
 
     public override float GetIncomingDamageModifier(GameData context, ulong clientId)
@@ -23,14 +16,11 @@ public class Character1Effect : CharacterBaseEffect
 
     public override float GetOutgoingDamageModifier(GameData context, ulong clientId)
     {
-        bool isPlayer1 = clientId == context.ClientIdPlayer1.Value;
-        var myMove = context.CharacterMoveDatabase.GetMoveById(isPlayer1 ? context.ActionPlayer1.Value : context.ActionPlayer2.Value);
-        if (myMove != null)
+        var myMoveId = _playerCharacter.Action;
+        var myMove = context.CharacterMoveDatabase.GetMoveById(myMoveId);
+        if (myMove != null && myMove.MoveType == CharacterMove.Type.Grab)
         {
-            if (myMove.MoveType == CharacterMove.Type.Grab)
-            {
-                return 1.5f;
-            }
+            return 1.5f;
         }
         return 1.0f;
     }

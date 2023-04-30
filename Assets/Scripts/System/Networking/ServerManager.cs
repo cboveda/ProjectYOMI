@@ -100,12 +100,20 @@ public class ServerManager : MonoBehaviour
 
     private void OnClientDisconnect(ulong clientId)
     {
-        if (ClientData.ContainsKey(clientId))
+        try
         {
-            if (ClientData.Remove(clientId))
+            if (ClientData.ContainsKey(clientId))
             {
-                Debug.Log($"Removed client {clientId}");
+                if (ClientData.Remove(clientId))
+                {
+                    Debug.Log($"Removed client {clientId}");
+                }
             }
+        }
+        catch 
+        {
+            Debug.LogError("Error when removing client");
+            throw;
         }
     }
 

@@ -1,9 +1,21 @@
 using System.Linq;
 using UnityEngine;
+using Unity.Netcode;
 
 [CreateAssetMenu(fileName = "NewCharacterMove", menuName = "Characters/Character Move")]
 public class CharacterMove : ScriptableObject
 {
+    public static readonly int NO_MOVE = -1;
+
+    public enum Type : byte
+    {
+        LightAttack = 16,
+        HeavyAttack = 8,
+        Parry = 4,
+        Grab = 2,
+        Special = 1
+    }
+
     [SerializeField] private string _moveName;
     [SerializeField] private Type _moveType;
     [SerializeField] private Type[] _defeatsTypes;
@@ -19,15 +31,6 @@ public class CharacterMove : ScriptableObject
     public bool Defeats(Type other)
     {
         return _defeatsTypes.Any<Type>(t => t == other);
-    }
-
-    public enum Type : byte
-    {
-        LightAttack = 16,
-        HeavyAttack = 8,
-        Parry = 4,
-        Grab = 2,
-        Special = 1
     }
 
     public override string ToString()

@@ -12,7 +12,7 @@ public class GameEndState : GameBaseState
 
     public override void EnterState()
     {
-        string result = (GameData.Instance.HealthPlayer1.Value <= 0) ? "Player 2 wins!" : "Player 1 wins!";
+        string result = "Game Over!";
         GameUIManager.Instance.DisplayGameResultClientRpc(result);
     }
 

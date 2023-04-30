@@ -66,12 +66,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2747cae1430670a4f99ba30de62c7f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _gameUIManager: {fileID: 6346495220142219102}
   _characterMoveDatabase: {fileID: 11400000, guid: 2c1b0dd1acd15bc4d813b3033b33f460, type: 2}
-  _characterSpawner: {fileID: 1392871768440727446}
+  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
   _baseDamage: 10
   _baseSpecialGain: 25
-  _gameUIManager: {fileID: 6346495220142219102}
+  _chipDamageModifier: 0.5
+  _specialGainOnLossModifier: 0.35
 --- !u!114 &4808603526597705746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,8 +86,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameStartDuration: 3
-  _roundActiveDuration: 8
-  _roundResolveDuration: 5
+  _roundActiveDuration: 7
+  _roundResolveDuration: 3
   _timer: 0
   _gameUIManager: {fileID: 6346495220142219102}
 --- !u!114 &6346495220142219102
@@ -104,17 +105,17 @@ MonoBehaviour:
   _data: {fileID: 2046045532550530828}
   _player1ComboContainer: {fileID: 1000905880199938529}
   _player2ComboContainer: {fileID: 3402007012660589590}
+  _gameResult: {fileID: 1634927369112202182}
   _playerControls: {fileID: 2664796269131360072}
   _player1Health: {fileID: 3078376556297747457}
-  _player2Health: {fileID: 7692169740761271873}
   _player1SpecialMeter: {fileID: 2325100053949072714}
+  _player2Health: {fileID: 7692169740761271873}
   _player2SpecialMeter: {fileID: 8335035956172947285}
   _roundResult: {fileID: 5420172140006227797}
-  _gameResult: {fileID: 1634927369112202182}
   _roundTimer: {fileID: 7584809054794018895}
   _player1ComboCountText: {fileID: 1670353688537363615}
-  _player2ComboCountText: {fileID: 8043245136111834542}
   _player1Name: {fileID: 7584809054084181376}
+  _player2ComboCountText: {fileID: 8043245136111834542}
   _player2Name: {fileID: 7584809054354881115}
 --- !u!114 &1392871768440727446
 MonoBehaviour:
@@ -129,10 +130,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _gameUIManager: {fileID: 6346495220142219102}
+  _gameData: {fileID: 2046045532550530828}
   _player1SpawnLocation: {fileID: 2297270336208122488}
   _player2SpawnLocation: {fileID: 4336785153204943935}
-  _gameData: {fileID: 2046045532550530828}
-  _gameUIManager: {fileID: 6346495220142219102}
 --- !u!1001 &1433958247469596285
 PrefabInstance:
   m_ObjectHideFlags: 0
