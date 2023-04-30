@@ -709,7 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bebba78af859584193231af02b25519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
+  _moveDatabase: {fileID: 11400000, guid: 2c1b0dd1acd15bc4d813b3033b33f460, type: 2}
   _lightAttackButton: {fileID: 2590624949621037236}
   _heavyAttackButton: {fileID: 4491796867989172825}
   _parryButton: {fileID: 3996889674821960168}

@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerData : ScriptableObject
+public class PlayerData : ScriptableObject, INetworkSerializable
 {
     private float _health;
     private float _specialMeter;
@@ -12,12 +13,11 @@ public class PlayerData : ScriptableObject
     public int Action { get => _action; set => _action = value; }
     public int ComboCount { get => _comboCount; set => _comboCount = value; }
 
-    public (float health, float specialMeter, int action, int comboCount) GetPlayerDataTuple()
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        return (
-            health: _health,
-            specialMeter: _specialMeter,
-            action: _action,
-            comboCount: _comboCount);
+        serializer.SerializeValue(ref _health);
+        serializer.SerializeValue(ref _specialMeter);
+        serializer.SerializeValue(ref _action);
+        serializer.SerializeValue(ref _comboCount);
     }
 }

@@ -420,6 +420,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8dd0d9a0618aa847afa28fa47fe054c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerCharacter: {fileID: 4364233307586488421}
+  _healAmountOnSpecial: 15
 --- !u!1 &1895598232985727677
 GameObject:
   m_ObjectHideFlags: 0

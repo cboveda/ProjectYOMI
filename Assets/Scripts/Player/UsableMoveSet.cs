@@ -1,7 +1,8 @@
 using UnityEngine;
 using System;
+using Unity.Netcode;
 
-public class UsableMoveSet : ScriptableObject
+public class UsableMoveSet : ScriptableObject, INetworkSerializable
 {
     private byte _moves;
     public byte Moves { get => _moves; }
@@ -32,5 +33,10 @@ public class UsableMoveSet : ScriptableObject
     {
         byte mask = (byte) type;
         return (_moves & mask) == mask;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref _moves);
     }
 }

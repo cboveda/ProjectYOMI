@@ -40,26 +40,12 @@ public class GameUIManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        _data.HealthPlayer1.OnValueChanged += UpdatePlayer1Health;
-        _data.HealthPlayer2.OnValueChanged += UpdatePlayer2Health;
-        _data.ComboCountPlayer1.OnValueChanged += UpdatePlayer1Combo;
-        _data.ComboCountPlayer2.OnValueChanged += UpdatePlayer2Combo;
-        _data.SpecialMeterPlayer1.OnValueChanged += UpdatePlayer1Special;
-        _data.SpecialMeterPlayer2.OnValueChanged += UpdatePlayer2Special;
+
     }
 
     public override void OnNetworkDespawn()
     {
-        _data.HealthPlayer1.OnValueChanged -= UpdatePlayer1Health;
-        _data.HealthPlayer2.OnValueChanged -= UpdatePlayer2Health;
-        _data.ComboCountPlayer1.OnValueChanged -= UpdatePlayer1Combo;
-        _data.ComboCountPlayer2.OnValueChanged -= UpdatePlayer2Combo;
-        _data.SpecialMeterPlayer1.OnValueChanged -= UpdatePlayer1Special;
-        _data.SpecialMeterPlayer2.OnValueChanged -= UpdatePlayer2Special;
-        _data.UsableMoveListPlayer1.OnValueChanged -= UpdateUsableMoveButtons;
-        _data.UsableMoveListPlayer2.OnValueChanged -= UpdateUsableMoveButtons;
-        _data.ActionPlayer1.OnValueChanged -= UpdateActiveSelectionButton;
-        _data.ActionPlayer2.OnValueChanged -= UpdateActiveSelectionButton;
+
     }
 
     private void UpdateUsableMoveButtons(byte previousValue, byte newValue)
@@ -88,17 +74,17 @@ public class GameUIManager : NetworkBehaviour
     [ClientRpc]
     public void SubscribeToPlayerSpecificGameDataClientRpc()
     {
-        ulong myId = NetworkManager.Singleton.LocalClientId;
-        if (myId == Data.ClientIdPlayer1.Value)
-        {
-            Data.UsableMoveListPlayer1.OnValueChanged += UpdateUsableMoveButtons;
-            Data.ActionPlayer1.OnValueChanged += UpdateActiveSelectionButton;
-        }
-        else if (myId == Data.ClientIdPlayer2.Value) 
-        {
-            Data.UsableMoveListPlayer2.OnValueChanged += UpdateUsableMoveButtons;
-            Data.ActionPlayer2.OnValueChanged += UpdateActiveSelectionButton;
-        }
+        //ulong myId = NetworkManager.Singleton.LocalClientId;
+        //if (myId == Data.ClientIdPlayer1.Value)
+        //{
+        //    Data.UsableMoveListPlayer1.OnValueChanged += UpdateUsableMoveButtons;
+        //    Data.ActionPlayer1.OnValueChanged += UpdateActiveSelectionButton;
+        //}
+        //else if (myId == Data.ClientIdPlayer2.Value) 
+        //{
+        //    Data.UsableMoveListPlayer2.OnValueChanged += UpdateUsableMoveButtons;
+        //    Data.ActionPlayer2.OnValueChanged += UpdateActiveSelectionButton;
+        //}
     }
 
     [ClientRpc]
@@ -185,8 +171,8 @@ public class GameUIManager : NetworkBehaviour
     [ClientRpc]
     public void ForceUpdateHealthbarsClientRpc()
     {
-        _player1Health.SetCurrent(_data.HealthPlayer1.Value);
-        _player2Health.SetCurrent(_data.HealthPlayer2.Value);
+        //_player1Health.SetCurrent(_data.HealthPlayer1.Value);
+        //_player2Health.SetCurrent(_data.HealthPlayer2.Value);
     }
 
     [ClientRpc]
@@ -221,6 +207,41 @@ public class GameUIManager : NetworkBehaviour
         _roundResult.gameObject.SetActive(false);
     }
 
+
+    public void RegisterPlayerCharacter(ulong clientId)
+    {
+        var playerCharacter = _data.GetPlayerCharacterByClientId(clientId);
+        if (playerCharacter == null)
+        {
+            return;
+        }
+        var moveSet = playerCharacter.Character.CharacterMoveSet;
+        var clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new[] { clientId },
+            }
+        };
+        SetUpLocalActionButtonsClientRpc(
+            lightId: moveSet.LightAttack.Id,
+            heavyId: moveSet.HeavyAttack.Id,
+            parryId: moveSet.Parry.Id,
+            grabId: moveSet.Grab.Id,
+            specialId: moveSet.Special.Id,
+            clientRpcParams: clientRpcParams);
+    }
+
+    [ClientRpc]
+    public void SetUpLocalActionButtonsClientRpc(int lightId, int heavyId, int parryId, int grabId, int specialId, ClientRpcParams clientRpcParams = default)
+    { 
+        _playerControls.RegisterCharacterMoveSet(
+            lightId: lightId,
+            heavyId: heavyId,
+            parryId: parryId,
+            grabId: grabId,
+            specialId: specialId);
+    }
     
 }
 

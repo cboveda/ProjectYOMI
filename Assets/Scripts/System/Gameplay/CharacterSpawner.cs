@@ -1,17 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Unity.Netcode;
+
 
 public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
+    [SerializeField] private GameUIManager _gameUIManager;
+    [SerializeField] private GameData _gameData;
     [SerializeField] private GameObject _player1SpawnLocation;
     [SerializeField] private GameObject _player2SpawnLocation;
-    [SerializeField] private GameData _gameData;
-    [SerializeField] private GameUIManager _gameUIManager;
 
-    private bool _player1Spawned = false;
+    private bool _hasSpawnedPlayer1 = false;
 
     public override void OnNetworkSpawn()
     {
@@ -19,25 +19,40 @@ public class CharacterSpawner : NetworkBehaviour
         {
             return;
         }
-        Debug.Log("CharacterSpawner OnNetworkSpawn");
 
         foreach (var client in ServerManager.Instance.ClientData)
         {
-            var character = _characterDatabase.GetCharacterById(client.Value.characterId);
-            if (character != null)
-            {   
-                var spawnPos = !_player1Spawned ?
-                    _player1SpawnLocation.transform :
-                    _player2SpawnLocation.transform;
-                var characterInstance = Instantiate(character.GameplayPrefab, spawnPos);
-                characterInstance.SpawnAsPlayerObject(client.Value.clientId);
-                _gameData.InitializePlayerCharacter(_player1Spawned ? 2 : 1, client.Value.clientId, client.Value.characterId);
-                _gameUIManager.SubscribeToPlayerSpecificGameDataClientRpc();
-                if (!_player1Spawned)
-                {
-                    _player1Spawned = true;
-                }
+            var clientId = client.Value.clientId;
+            var characterId = client.Value.characterId;
+            var character = _characterDatabase.GetCharacterById(characterId);
+            if (character == null)
+            {
+                throw new Exception($"Error getting character from database. characterId: {client.Value.characterId}");
             }
+            SpawnPlayerObjectForGivenClientId(clientId, character, out var instance);
+            if (!instance.TryGetComponent<PlayerCharacter>(out var playerCharacter))
+            {
+                throw new Exception("Error getting PlayerCharacter component of player object");
+            }
+            playerCharacter.ClientId = clientId;
+            playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
+            RegisterPlayerObjectWithSystems(clientId, playerCharacter);
+
+            _hasSpawnedPlayer1 = true;
         }
+    }
+
+    private void SpawnPlayerObjectForGivenClientId(ulong clientId, Character character, out NetworkObject instance)
+    {
+        var spawnPos = _hasSpawnedPlayer1 ? _player2SpawnLocation.transform : _player1SpawnLocation.transform;
+        var characterInstance = Instantiate(character.GameplayPrefab, spawnPos);
+        characterInstance.SpawnAsPlayerObject(clientId);
+        instance = characterInstance;
+    }
+
+    private void RegisterPlayerObjectWithSystems(ulong clientId, PlayerCharacter playerCharacter)
+    {
+        _gameData.RegisterPlayerCharacter(_hasSpawnedPlayer1 ? 2 : 1, clientId, playerCharacter);
+        _gameUIManager.RegisterPlayerCharacter(clientId);
     }
 }

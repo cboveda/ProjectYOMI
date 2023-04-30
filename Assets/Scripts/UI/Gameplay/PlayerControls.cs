@@ -6,7 +6,8 @@ public class PlayerControls : MonoBehaviour
 {
     public static PlayerControls Instance { get; private set; }
 
-    [SerializeField] private CharacterDatabase _characterDatabase;
+    [SerializeField] private CharacterMoveDatabase _moveDatabase;
+
     [SerializeField] private MoveButton _lightAttackButton;
     [SerializeField] private MoveButton _heavyAttackButton;
     [SerializeField] private MoveButton _parryButton;
@@ -40,16 +41,15 @@ public class PlayerControls : MonoBehaviour
         };
     }
 
-    public void RegisterCharacterById(int characterId)
+    public void RegisterCharacterMoveSet(int lightId, int heavyId, int parryId, int grabId, int specialId)
     {
-        var character = _characterDatabase.GetCharacterById(characterId);
-        var moveSet = character.CharacterMoveSet;
-        _lightAttackButton.SetMove(moveSet.LightAttack);
-        _heavyAttackButton.SetMove(moveSet.HeavyAttack);
-        _parryButton.SetMove(moveSet.Parry);
-        _grabButton.SetMove(moveSet.Grab);
-        _specialButton.SetMove(moveSet.Special);
+        _lightAttackButton.SetMove(_moveDatabase.GetMoveById(lightId));
+        _heavyAttackButton.SetMove(_moveDatabase.GetMoveById(heavyId));
+        _parryButton.SetMove(_moveDatabase.GetMoveById(parryId));
+        _grabButton.SetMove(_moveDatabase.GetMoveById(grabId));
+        _specialButton.SetMove(_moveDatabase.GetMoveById(specialId));
     }
+
     public void ToggleHelperArrows()
     {
         _helperArrows.SetActive(!_helperArrows.activeSelf);

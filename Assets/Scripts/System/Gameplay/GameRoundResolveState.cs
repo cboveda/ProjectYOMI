@@ -8,7 +8,7 @@ public class GameRoundResolveState : GameBaseState
     {
         if (_context.TimerComplete)
         {
-            if (GameData.Instance.HealthPlayer1.Value <= 0 || GameData.Instance.HealthPlayer2.Value <= 0)
+            if (GameData.Instance.GameShouldEnd())
             {
                 SwitchState(_factory.End());
             }
