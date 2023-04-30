@@ -8,22 +8,26 @@ using System.Collections.Generic;
 
 public class GameData : NetworkBehaviour
 {
+    #region properties
+    //Singleton
     private static GameData _instance;
     public static GameData Instance { get => _instance; }
 
+    //Dependencies
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private CharacterMoveDatabase _characterMoveDatabase;
     [SerializeField] private CharacterSpawner _characterSpawner;
+    [SerializeField] private GameUIManager _gameUIManager;
+
+    //Game Configuration
     [SerializeField] private float _baseDamage = 10f;
     [SerializeField] private float _baseSpecialGain = 25f;
-    [SerializeField] private GameUIManager _gameUIManager;
-    private bool _displayDebugMenu = false;
+
+    //Character/Player information
     private Character _characterPlayer1;
     private Character _characterPlayer2;
     private int _characterIdPlayer1;
     private int _characterIdPlayer2;
-    private List<CombatCommandBase> _combatCommands;
-    private List<RoundData> _roundDataList;
     private NetworkVariable<byte> _usableMoveListPlayer1 = new(0);
     private NetworkVariable<byte> _usableMoveListPlayer2 = new(0);
     private NetworkVariable<float> _healthPlayer1 = new(0);
@@ -34,11 +38,17 @@ public class GameData : NetworkBehaviour
     private NetworkVariable<int> _actionPlayer2 = new(-1);
     private NetworkVariable<int> _comboCountPlayer1 = new(0);
     private NetworkVariable<int> _comboCountPlayer2 = new(0);
-    private NetworkVariable<int> _roundNumber = new(0);
     private NetworkVariable<ulong> _clientIdPlayer1 = new(9999);
     private NetworkVariable<ulong> _clientIdPlayer2 = new(9999);
+    
+    //General data
     private RoundDataBuilder _roundDataBuilder;
+    private List<CombatCommandBase> _combatCommands;
+    private List<RoundData> _roundDataList;
+    private NetworkVariable<int> _roundNumber = new(0);
+    private bool _displayDebugMenu = false;
 
+    //Getters and Setters
     public CharacterMoveDatabase CharacterMoveDatabase { get { return _characterMoveDatabase; } }
     public int CharacterIdPlayer1 { get; set; }
     public int CharacterIdPlayer2 { get; set; }
@@ -57,7 +67,9 @@ public class GameData : NetworkBehaviour
     public NetworkVariable<int> RoundNumber { get { return _roundNumber; } }
     public NetworkVariable<ulong> ClientIdPlayer1 { get { return _clientIdPlayer1; } set { _clientIdPlayer1 = value; } }
     public NetworkVariable<ulong> ClientIdPlayer2 { get { return _clientIdPlayer2; } set { _clientIdPlayer2 = value; } }
+    #endregion
 
+    #region lifecycle methods
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -68,13 +80,13 @@ public class GameData : NetworkBehaviour
         {
             _instance = this;
         }
-
-        if (!IsServer) return;
     }
     public override void OnNetworkSpawn()
     {
-        if (!IsServer) return;
-        Debug.Log("GameData OnNetworkSpawn");
+        if (!IsServer)
+        {
+            return;
+        }
 
         _roundDataBuilder = new RoundDataBuilder();
         _roundDataList = new List<RoundData>();
@@ -83,24 +95,19 @@ public class GameData : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (!IsServer) return;
+        if (!IsServer)
+        {
+            return;
+        }
 
         _roundDataList.Clear();
     }
+    #endregion
 
-    public void UpdateHealthPlayer1(int delta)
-    {
-        _healthPlayer1.Value -= delta;
-    }
-
-    public void UpdateHealthPlayer2(int delta)
-    {
-        _healthPlayer2.Value -= delta;
-    }
-
+    #region player initialization and setters
     public void InitializePlayerCharacter(int playerNumber, ulong clientId, int characterId)
     {
-        Debug.Log("Called " +  playerNumber + " " + clientId);
+        Debug.Log("Called " + playerNumber + " " + clientId);
         if (playerNumber == 1)
         {
             _clientIdPlayer1.Value = clientId;
@@ -113,8 +120,8 @@ public class GameData : NetworkBehaviour
                 _gameUIManager.SetPlayer1NameClientRpc(_characterPlayer1.DisplayName);
                 foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
                 {
-                    byte isUsable = (byte) (_characterPlayer1.CharacterMoveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
-                    _usableMoveListPlayer1.Value |= (byte)((byte) type * isUsable);
+                    byte isUsable = (byte)(_characterPlayer1.CharacterMoveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
+                    _usableMoveListPlayer1.Value |= (byte)((byte)type * isUsable);
                 }
             }
         }
@@ -136,6 +143,15 @@ public class GameData : NetworkBehaviour
             }
         }
     }
+    public void UpdateHealthPlayer1(int delta)
+    {
+        _healthPlayer1.Value -= delta;
+    }
+
+    public void UpdateHealthPlayer2(int delta)
+    {
+        _healthPlayer2.Value -= delta;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void SubmitPlayerActionServerRpc(int moveId, ServerRpcParams serverRpcParams = default)
@@ -150,7 +166,9 @@ public class GameData : NetworkBehaviour
             _actionPlayer2.Value = moveId;
         }
     }
+    #endregion
 
+    #region combat evaluation
     // This is a mess, but it's just to test functionality
     // Major refactoring opportunity!
     public void EvaluateRound()
@@ -368,12 +386,13 @@ public class GameData : NetworkBehaviour
         // Log combat
         _roundDataList.Add(_roundDataBuilder.GetRoundData());
     }
+    #endregion
+
+    #region debug UI
 
     private void OnGUI()
     {
         if (!IsServer) return;
-
-
 
         if (_displayDebugMenu)
         {
@@ -385,9 +404,9 @@ public class GameData : NetworkBehaviour
             {
                 GUILayout.Label(
                     "P1: " +
-                    Enum.GetName(typeof(CharacterMove.Type), _characterMoveDatabase.GetMoveById(round.MoveIdPlayer1).MoveType) +
+                    Enum.GetName(typeof(CharacterMove.Type), _characterMoveDatabase.GetMoveById(round.MoveIdPlayer1)?.MoveType) +
                     ", P2: " +
-                    Enum.GetName(typeof(CharacterMove.Type), _characterMoveDatabase.GetMoveById(round.MoveIdPlayer2).MoveType));
+                    Enum.GetName(typeof(CharacterMove.Type), _characterMoveDatabase.GetMoveById(round.MoveIdPlayer2)?.MoveType));
             }
 
             GUILayout.EndArea();
@@ -397,4 +416,5 @@ public class GameData : NetworkBehaviour
             if (GUILayout.Button("Display Debug")) _displayDebugMenu = true;
         }
     }
+    #endregion
 }
