@@ -8,7 +8,7 @@ public class GameStartState : GameBaseState
     {
         if(_context.TimerComplete)
         {
-            SwitchState(_factory.RoundActive());
+            SwitchState(_factory.TurnActive());
         }
     }
 

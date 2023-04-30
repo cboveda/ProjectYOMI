@@ -161,7 +161,7 @@ public class GameData : NetworkBehaviour
     #endregion
 
     #region combat evaluation
-    public void EvaluateRound()
+    public void EvaluateTurnCombat()
     {
         _turnNumber += 1;
 

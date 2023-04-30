@@ -1,6 +1,6 @@
-public class GameRoundResolveState : GameBaseState
+public class GameTurnResolveState : GameBaseState
 {
-    public GameRoundResolveState(GameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
+    public GameTurnResolveState(GameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
     {
     }
 
@@ -14,7 +14,7 @@ public class GameRoundResolveState : GameBaseState
             }
             else
             {
-                SwitchState(_factory.RoundActive());
+                SwitchState(_factory.TurnActive());
             }
         }
     }
@@ -22,7 +22,7 @@ public class GameRoundResolveState : GameBaseState
     public override void EnterState()
     {
         _context.SetTimer(_context.RoundResolveDuration);
-        GameData.Instance.EvaluateRound();
+        GameData.Instance.EvaluateTurnCombat();
         //set time dilation
         //read player inputs
         //determine combat outcome

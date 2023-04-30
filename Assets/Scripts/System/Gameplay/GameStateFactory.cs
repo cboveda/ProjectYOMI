@@ -19,14 +19,14 @@ public class GameStateFactory
         return new GameStartState(_context, this);
     }
 
-    public GameBaseState RoundActive()
+    public GameBaseState TurnActive()
     {
-        return new GameRoundActiveState(_context, this);
+        return new GameTurnActiveState(_context, this);
     }
 
-    public GameBaseState RoundResolve()
+    public GameBaseState TurnResolve()
     {
-        return new GameRoundResolveState(_context, this);
+        return new GameTurnResolveState(_context, this);
     }
 
     public GameBaseState End()
