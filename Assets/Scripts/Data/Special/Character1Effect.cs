@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class Character1Effect : CharacterBaseEffect
@@ -7,7 +6,7 @@ public class Character1Effect : CharacterBaseEffect
 
     public override void DoSpecial(GameData context, ulong clientId)
     {
-        _playerCharacter.PlayerData.Health += _healAmountOnSpecial;
+        _playerCharacter.Health += _healAmountOnSpecial;
     }
 
     public override float GetIncomingDamageModifier(GameData context, ulong clientId)
@@ -17,7 +16,7 @@ public class Character1Effect : CharacterBaseEffect
 
     public override float GetOutgoingDamageModifier(GameData context, ulong clientId)
     {
-        var myMoveId = _playerCharacter.PlayerData.Action;
+        var myMoveId = _playerCharacter.Action;
         var myMove = context.CharacterMoveDatabase.GetMoveById(myMoveId);
         if (myMove != null && myMove.MoveType == CharacterMove.Type.Grab)
         {

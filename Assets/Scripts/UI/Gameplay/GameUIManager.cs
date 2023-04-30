@@ -11,18 +11,19 @@ public class GameUIManager : NetworkBehaviour
     [SerializeField] private GameData _data;
     [SerializeField] private GameObject _player1ComboContainer;
     [SerializeField] private GameObject _player2ComboContainer;
+    [SerializeField] private GameResult _gameResult;
     [SerializeField] private PlayerControls _playerControls;
     [SerializeField] private ProgressBar _player1Health;
-    [SerializeField] private ProgressBar _player2Health;
     [SerializeField] private ProgressBar _player1SpecialMeter;
+    [SerializeField] private ProgressBar _player2Health;
     [SerializeField] private ProgressBar _player2SpecialMeter;
     [SerializeField] private RoundResult _roundResult;
-    [SerializeField] private GameResult _gameResult;
     [SerializeField] private RoundTimer _roundTimer;
     [SerializeField] private TMP_Text _player1ComboCountText;
-    [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player1Name;
+    [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player2Name;
+    private PlayerCharacter _localPlayerCharacter;
 
     public GameData Data { get => _data; }
 
@@ -40,12 +41,48 @@ public class GameUIManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-
+        _data.TurnDataList.OnListChanged += HandleTurnData;
     }
 
     public override void OnNetworkDespawn()
     {
+        _data.TurnDataList.OnListChanged -= HandleTurnData;
+        _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged += UpdateUsableMoveButtons;
+    }
 
+    private void HandleTurnData(NetworkListEvent<TurnData> changeEvent)
+    {
+        Debug.Log(changeEvent.Value.ToString());
+
+        var turnData = changeEvent.Value;
+        var playerData1 = turnData.PlayerData1;
+        var playerData2 = turnData.PlayerData2;
+        UpdatePlayer1Health(playerData1.Health);
+        UpdatePlayer2Health(playerData2.Health);
+        UpdatePlayer1Special(playerData1.SpecialMeter);
+        UpdatePlayer2Special(playerData2.SpecialMeter);
+        UpdatePlayer1Combo(playerData1.ComboCount);
+        UpdatePlayer2Combo(playerData2.ComboCount);
+        DisplayRoundResult(turnData);
+    }
+
+    public void DisplayRoundResult(TurnData turnData)
+    {
+        var playerData1 = turnData.PlayerData1;
+        var playerData2 = turnData.PlayerData2;       
+        var movePlayer1 = _data.CharacterMoveDatabase.GetMoveById(playerData1.Action);
+        var movePlayer2 = _data.CharacterMoveDatabase.GetMoveById(playerData2.Action);
+
+        _roundResult.MoveNamePlayer1 = (movePlayer1) ? movePlayer1.MoveName : "None selected";
+        _roundResult.MoveNamePlayer2 = (movePlayer2) ? movePlayer2.MoveName : "None selected";
+        _roundResult.MoveTypePlayer1 = (movePlayer1) ?
+            Enum.GetName(typeof(CharacterMove.Type), movePlayer1.MoveType) : "";
+        _roundResult.MoveTypePlayer2 = (movePlayer2) ?
+            Enum.GetName(typeof(CharacterMove.Type), movePlayer2.MoveType) : "";
+        _roundResult.DamageToPlayer1 = GetDamageString(turnData.DamageToPlayer1);
+        _roundResult.DamageToPlayer2 = GetDamageString(turnData.DamageToPlayer2);
+        _roundResult.Result = turnData.Summary.ToString();
+        _roundResult.gameObject.SetActive(true);
     }
 
     private void UpdateUsableMoveButtons(byte previousValue, byte newValue)
@@ -56,7 +93,8 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
-    private void UpdateActiveSelectionButton(int previousValue, int newValue)
+    [ClientRpc]
+    public void UpdateActiveSelectionButtonClientRpc(int previousValue, int newValue, ClientRpcParams clientRpcParams = default)
     {
         var previousMove = _data.CharacterMoveDatabase.GetMoveById(previousValue);
         if (previousMove != null)
@@ -72,72 +110,49 @@ public class GameUIManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SubscribeToPlayerSpecificGameDataClientRpc()
-    {
-        //ulong myId = NetworkManager.Singleton.LocalClientId;
-        //if (myId == Data.ClientIdPlayer1.Value)
-        //{
-        //    Data.UsableMoveListPlayer1.OnValueChanged += UpdateUsableMoveButtons;
-        //    Data.ActionPlayer1.OnValueChanged += UpdateActiveSelectionButton;
-        //}
-        //else if (myId == Data.ClientIdPlayer2.Value) 
-        //{
-        //    Data.UsableMoveListPlayer2.OnValueChanged += UpdateUsableMoveButtons;
-        //    Data.ActionPlayer2.OnValueChanged += UpdateActiveSelectionButton;
-        //}
-    }
-
-    [ClientRpc]
     public void StartRoundTimerClientRpc(float duration)
     {
         _roundTimer.StartTimer(duration);
     }
 
     [ClientRpc]
-    public void SetPlayer1MaximumHealthClientRpc(float health)
+    private void InitializePlayerClientRpc(int playerNumber, float health, string name)
     {
-        _player1Health.SetMaximum(health);
+        if (playerNumber == 1)
+        {
+            _player1Health.SetMaximum(health);
+            _player1Health.SetCurrent(health);
+            _player1Name.text = $"Player 1 [{name}]";
+        }
+        else if (playerNumber == 2)
+        {
+            _player2Health.SetMaximum(health);
+            _player2Health.SetCurrent(health);
+            _player2Name.text = $"Player 2 [{name}]";
+        }
     }
 
-    [ClientRpc]
-    public void SetPlayer2MaximumHealthClientRpc(float health)
-    {
-        _player2Health.SetMaximum(health);
-    }
-
-    [ClientRpc]
-    public void SetPlayer1NameClientRpc(string name)
-    {
-        _player1Name.text = $"Player 1 [{name}]";
-    }
-
-    [ClientRpc]
-    public void SetPlayer2NameClientRpc(string name)
-    {
-        _player2Name.text = $"Player 2 [{name}]";
-    }
-
-    public void UpdatePlayer1Health(float oldValue, float newValue)
+    public void UpdatePlayer1Health(float newValue)
     {
         _player1Health.SetCurrent(newValue);
     }
     
-    public void UpdatePlayer2Health(float oldValue, float newValue)
+    public void UpdatePlayer2Health(float newValue)
     {
         _player2Health.SetCurrent(newValue);
     }
 
-    public void UpdatePlayer1Special(float oldValue, float newValue)
+    public void UpdatePlayer1Special(float newValue)
     {
         _player1SpecialMeter.SetCurrent(newValue);
     }
 
-    public void UpdatePlayer2Special(float oldValue, float newValue)
+    public void UpdatePlayer2Special(float newValue)
     {
         _player2SpecialMeter.SetCurrent(newValue);
     }
 
-    public void UpdatePlayer1Combo(int oldValue, int newValue)
+    public void UpdatePlayer1Combo(int newValue)
     {
         if (newValue < 2)
         {
@@ -150,7 +165,7 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
-    public void UpdatePlayer2Combo(int oldValue, int newValue)
+    public void UpdatePlayer2Combo(int newValue)
     {
         if (newValue < 2)
         {
@@ -168,23 +183,6 @@ public class GameUIManager : NetworkBehaviour
         Data.SubmitPlayerActionServerRpc(id);
     }
 
-    [ClientRpc]
-    public void ForceUpdateHealthbarsClientRpc()
-    {
-        //_player1Health.SetCurrent(_data.HealthPlayer1.Value);
-        //_player2Health.SetCurrent(_data.HealthPlayer2.Value);
-    }
-
-    [ClientRpc]
-    public void DisplayRoundResultClientRpc(string moveNamePlayer1, string moveTypePlayer1, string moveNamePlayer2, string moveTypePlayer2, string result)
-    {
-        _roundResult.MoveNamePlayer1 = moveNamePlayer1;
-        _roundResult.MoveNamePlayer2 = moveNamePlayer2;
-        _roundResult.MoveTypePlayer1 = moveTypePlayer1;
-        _roundResult.MoveTypePlayer2 = moveTypePlayer2;
-        _roundResult.Result = result;
-        _roundResult.gameObject.SetActive(true);
-    }
 
     [ClientRpc]
     public void DisplayGameResultClientRpc(string result)
@@ -208,14 +206,17 @@ public class GameUIManager : NetworkBehaviour
     }
 
 
-    public void RegisterPlayerCharacter(ulong clientId)
+    public void RegisterPlayerCharacter(int playerNumber, ulong clientId)
     {
         var playerCharacter = _data.GetPlayerCharacterByClientId(clientId);
-        if (playerCharacter == null)
+        if (playerCharacter == null) 
         {
-            return;
+            throw new Exception("Failed to get player character");
         }
-        var moveSet = playerCharacter.Character.CharacterMoveSet;
+        var maximumHealth = playerCharacter.Character.MaximumHealth;
+        var displayName = playerCharacter.Character.DisplayName;
+        InitializePlayerClientRpc(playerNumber, maximumHealth, displayName);
+
         var clientRpcParams = new ClientRpcParams
         {
             Send = new ClientRpcSendParams
@@ -223,25 +224,35 @@ public class GameUIManager : NetworkBehaviour
                 TargetClientIds = new[] { clientId },
             }
         };
-        SetUpLocalActionButtonsClientRpc(
+        SetUpLocalActionButtonsClientRpc(clientRpcParams: clientRpcParams);
+    }
+
+    [ClientRpc]
+    public void SetUpLocalActionButtonsClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+        _localPlayerCharacter = playerObject.GetComponent<PlayerCharacter>();
+        var moveSet = _localPlayerCharacter.Character.CharacterMoveSet;
+        _playerControls.RegisterCharacterMoveSet(
             lightId: moveSet.LightAttack.Id,
             heavyId: moveSet.HeavyAttack.Id,
             parryId: moveSet.Parry.Id,
             grabId: moveSet.Grab.Id,
-            specialId: moveSet.Special.Id,
-            clientRpcParams: clientRpcParams);
+            specialId: moveSet.Special.Id);
+        _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged += UpdateUsableMoveButtons;
     }
 
-    [ClientRpc]
-    public void SetUpLocalActionButtonsClientRpc(int lightId, int heavyId, int parryId, int grabId, int specialId, ClientRpcParams clientRpcParams = default)
-    { 
-        _playerControls.RegisterCharacterMoveSet(
-            lightId: lightId,
-            heavyId: heavyId,
-            parryId: parryId,
-            grabId: grabId,
-            specialId: specialId);
+    private string GetDamageString(float damageToPlayer1)
+    {
+        if (damageToPlayer1 > 0)
+        {
+            return $"-{damageToPlayer1:#.#}";
+        }
+        else if (damageToPlayer1 < 0)
+        {
+            return $"+{damageToPlayer1:#.#}";
+        }
+        return "";
     }
-    
 }
 

@@ -15,7 +15,6 @@ public class GameStartState : GameBaseState
     public override void EnterState()
     {
         _context.SetTimer(_context.GameStartDuration);
-        GameUIManager.Instance.ForceUpdateHealthbarsClientRpc();
         //show start countdown
     }
 

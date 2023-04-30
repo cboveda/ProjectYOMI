@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using Unity.Netcode;
 
-
 public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
@@ -52,7 +51,7 @@ public class CharacterSpawner : NetworkBehaviour
 
     private void RegisterPlayerObjectWithSystems(ulong clientId, PlayerCharacter playerCharacter)
     {
-        _gameData.RegisterPlayerCharacter(_hasSpawnedPlayer1 ? 2 : 1, clientId, playerCharacter);
-        _gameUIManager.RegisterPlayerCharacter(clientId);
+        _gameData.RegisterPlayerCharacter(playerCharacter.PlayerNumber, clientId, playerCharacter);
+        _gameUIManager.RegisterPlayerCharacter(playerCharacter.PlayerNumber, clientId);
     }
 }

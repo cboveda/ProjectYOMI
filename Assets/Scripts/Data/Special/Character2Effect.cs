@@ -1,6 +1,3 @@
-using System;
-using UnityEngine;
-
 public class Character2Effect : CharacterBaseEffect
 {
     public override void DoSpecial(GameData context, ulong clientId)

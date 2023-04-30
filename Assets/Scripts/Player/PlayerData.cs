@@ -1,23 +1,37 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerData : ScriptableObject, INetworkSerializable
+public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
 {
-    private float _health;
-    private float _specialMeter;
-    private int _action;
-    private int _comboCount;
+    public float Health;
+    public float SpecialMeter;
+    public int Action;
+    public int ComboCount;
 
-    public float Health { get => _health; set => _health = value; }
-    public float SpecialMeter { get => _specialMeter; set => _specialMeter = value; }
-    public int Action { get => _action; set => _action = value; }
-    public int ComboCount { get => _comboCount; set => _comboCount = value; }
+    public PlayerData(float health, float specialMeter = 0, int action = -1, int comboCount = 0)
+    {
+        Health = health;
+        SpecialMeter = specialMeter;
+        Action = action;
+        ComboCount = comboCount;
+    }
+
+    public bool Equals(PlayerData other)
+    {
+        return this.GetHashCode() == other.GetHashCode();
+    }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        serializer.SerializeValue(ref _health);
-        serializer.SerializeValue(ref _specialMeter);
-        serializer.SerializeValue(ref _action);
-        serializer.SerializeValue(ref _comboCount);
+        serializer.SerializeValue(ref Health);
+        serializer.SerializeValue(ref SpecialMeter);
+        serializer.SerializeValue(ref Action);
+        serializer.SerializeValue(ref ComboCount);
+    }
+
+    public override string ToString()
+    {
+        return $"{{He: {Health}, Sp: {SpecialMeter}, Ac: {Action}, Cm: {ComboCount}}}";
     }
 }
