@@ -37,6 +37,8 @@ public class UsableMoveSetTest
     [Test, Order(1)]
     public void InitializesCorrectly()
     {
+        var moveSet = _testObject.GetComponent<PlayerCharacter>().Character.CharacterMoveSet;
+        _usableMoveSet.InitializeMoveSet(moveSet);
         Assert.AreEqual(_initialCheckByte, _usableMoveSet.Moves.Value);
     }
 

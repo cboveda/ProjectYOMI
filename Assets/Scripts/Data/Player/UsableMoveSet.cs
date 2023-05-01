@@ -9,6 +9,11 @@ public class UsableMoveSet : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         var moveSet = GetComponent<PlayerCharacter>().Character.CharacterMoveSet;
+        InitializeMoveSet(moveSet); 
+    }
+
+    public void InitializeMoveSet(CharacterMoveSet moveSet)
+    {
         foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
         {
             byte isUsable = (byte)(moveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
