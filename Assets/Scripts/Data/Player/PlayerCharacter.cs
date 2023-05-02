@@ -90,7 +90,6 @@ public class PlayerCharacter : NetworkBehaviour
                     TargetClientIds = new[] { _clientId },
                 }
             };
-            Debug.Log(_gameUIManager);
             _gameUIManager.UpdateActiveSelectionButtonClientRpc(previous, value, clientRpcParams);
         }
     }

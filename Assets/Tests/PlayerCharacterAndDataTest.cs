@@ -5,7 +5,7 @@ using UnityEngine.TestTools;
 using Unity.Netcode;
 using System;
 using Moq;
-
+using System.Linq;
 
 public class PlayerCharacterAndDataTest
 {
@@ -73,14 +73,18 @@ public class PlayerCharacterAndDataTest
     }
 
     [Test]
-    [Ignore("Needs moq/zenject setup")]
     [TestCase(-1, -1)]
     [TestCase(1, 1)]
     [TestCase(2, 2)]
     public void SetActionCorrectlyAndSendsRpc(int value, int expected)
     {
+        var mock = new Mock<IGameUIManager>();
+        mock.Setup(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(clientRpcParam, _playerCharacter.ClientId))))
+            .Verifiable();
+        _playerCharacter.GameUIManager = mock.Object;
         _playerCharacter.Action = value;
         Assert.AreEqual(_playerCharacter.Action, expected);
+        mock.Verify(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ClientRpcParams>()), Times.Once());
     }
 
     [Test]
@@ -94,6 +98,17 @@ public class PlayerCharacterAndDataTest
         Assert.AreEqual(_playerCharacter.ComboCount, expected);
     }
 
+    [Test]
+    public void ResetActionCorrectlyAndSendsRpc()
+    {
+        var mock = new Mock<IGameUIManager>();
+        mock.Setup(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(clientRpcParam, _playerCharacter.ClientId))))
+            .Verifiable();
+        _playerCharacter.GameUIManager = mock.Object;
+        _playerCharacter.ResetAction();
+        Assert.AreEqual(_playerCharacter.Action, CharacterMove.NO_MOVE);
+        mock.Verify(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ClientRpcParams>()), Times.Once());
+    }
 
     [OneTimeTearDown]
     public void TearDown()
@@ -101,5 +116,10 @@ public class PlayerCharacterAndDataTest
         _networkManager.GetComponent<NetworkManager>().Shutdown();
         GameObject.Destroy(_networkManager.gameObject);
         GameObject.Destroy(_testObject);
+    }
+
+    public bool HasCorrectTargetClientId(ClientRpcParams clientRpcParams, ulong targetClientId)
+    {
+        return clientRpcParams.Send.TargetClientIds.All<ulong>(id => id == targetClientId);
     }
 }
