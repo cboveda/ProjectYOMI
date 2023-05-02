@@ -19,7 +19,10 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
 
     public bool Equals(PlayerData other)
     {
-        return this.GetHashCode() == other.GetHashCode();
+        return Health == other.Health && 
+            SpecialMeter == other.SpecialMeter && 
+            Action == other.Action && 
+            ComboCount == other.ComboCount;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter

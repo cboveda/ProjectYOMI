@@ -25,6 +25,7 @@ public class PlayerCharacter : NetworkBehaviour
         }
         set
         {
+            value = Mathf.Clamp(value, 0, _character.MaximumHealth);
             _playerData = new PlayerData
             {
                 Health = value,
@@ -43,6 +44,7 @@ public class PlayerCharacter : NetworkBehaviour
         }
         set
         {
+            value = Mathf.Clamp(value, 0, 100);
             _playerData = new PlayerData
             {
                 Health = _playerData.Health,
@@ -88,6 +90,7 @@ public class PlayerCharacter : NetworkBehaviour
         }
         set
         {
+            value = Mathf.Clamp(value, 0, int.MaxValue);
             _playerData = new PlayerData
             {
                 Health = _playerData.Health,
