@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerCharacter : NetworkBehaviour
 {
+    private IGameUIManager _gameUIManager;
     [SerializeField] private Character _character;
     private CharacterBaseEffect _characterBaseEffect;
     private int _playerNumber;

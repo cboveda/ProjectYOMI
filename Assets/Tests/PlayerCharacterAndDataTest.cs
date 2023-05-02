@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Unity.Netcode;
 using System;
+using Moq;
+
 
 public class PlayerCharacterAndDataTest
 {
@@ -70,7 +72,27 @@ public class PlayerCharacterAndDataTest
         Assert.AreEqual(_playerCharacter.SpecialMeter, expected);
     }
 
+    [Test]
+    [Ignore("Needs moq/zenject setup")]
+    [TestCase(-1, -1)]
+    [TestCase(1, 1)]
+    [TestCase(2, 2)]
+    public void SetActionCorrectlyAndSendsRpc(int value, int expected)
+    {
+        _playerCharacter.Action = value;
+        Assert.AreEqual(_playerCharacter.Action, expected);
+    }
 
+    [Test]
+    [TestCase(-1, 0)]
+    [TestCase(0, 0)]
+    [TestCase(1, 1)]
+    [TestCase(2, 2)]
+    public void SetComboCountCorrectly(int value, int expected)
+    {
+        _playerCharacter.ComboCount = value;
+        Assert.AreEqual(_playerCharacter.ComboCount, expected);
+    }
 
 
     [OneTimeTearDown]
