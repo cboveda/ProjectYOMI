@@ -8,18 +8,34 @@ using System;
 
 public class UsableMoveSetTest
 {
-    GameObject _networkManager;
+    NetworkManager _networkManager;
     GameObject _testObject;
     UsableMoveSet _usableMoveSet;
     byte _initialCheckByte;
+    bool _initialized = false;
 
-    [OneTimeSetUp]
-    public void SetUp()
+    [UnitySetUp]
+    public IEnumerator SetUp()
     {
-        _networkManager = (GameObject) MonoBehaviour.Instantiate(Resources.Load("TestPrefabs/NetworkManagerTester"));
-        _testObject = (GameObject) MonoBehaviour.Instantiate(Resources.Load("TestPrefabs/UsableMoveSetTester"));
-        _usableMoveSet = _testObject.GetComponent<UsableMoveSet>();
+        if (!_initialized)
+        {
+            _initialized = true;
+            var networkManagerPrefab = Resources.Load("TestPrefabs/NetworkManagerTester");
+            var testObjectPrefab = (GameObject)Resources.Load("TestPrefabs/UsableMoveSetTester");
+            var networkManagerObject = (GameObject)MonoBehaviour.Instantiate(networkManagerPrefab);
+            _networkManager = networkManagerObject.GetComponent<NetworkManager>();
+            _networkManager.StartHost();
+            _networkManager.AddNetworkPrefab(testObjectPrefab);
+            _testObject = (GameObject)MonoBehaviour.Instantiate(testObjectPrefab);
+            _testObject.GetComponent<NetworkObject>().Spawn();
+            _usableMoveSet = _testObject.GetComponent<UsableMoveSet>();
+            InitializeCheckByte();
+            yield return null;
+        }
+    }
 
+    private void InitializeCheckByte()
+    {
         var moveSet = _testObject.GetComponent<PlayerCharacter>().Character.CharacterMoveSet;
         var moveTypeList = Enum.GetValues(typeof(CharacterMove.Type));
         _initialCheckByte = 0;
@@ -29,16 +45,13 @@ public class UsableMoveSetTest
             byte typeAsByte = (byte)type;
             _initialCheckByte |= (byte)(typeAsByte * isUsable);
         }
-
-        var manager = _networkManager.GetComponent<NetworkManager>();
-        manager.StartHost();
     }
 
     [Test, Order(1)]
     public void InitializesCorrectly()
     {
         var moveSet = _testObject.GetComponent<PlayerCharacter>().Character.CharacterMoveSet;
-        _usableMoveSet.InitializeMoveSet(moveSet);
+        //_usableMoveSet.InitializeMoveSet(moveSet);
         Assert.AreEqual(_initialCheckByte, _usableMoveSet.Moves.Value);
     }
 
@@ -85,7 +98,7 @@ public class UsableMoveSetTest
     public void TearDown()
     {
         _networkManager.GetComponent<NetworkManager>().Shutdown();
-        GameObject.Destroy(_networkManager);
+        GameObject.Destroy(_networkManager.gameObject);
         GameObject.Destroy(_testObject);
     }
 }
