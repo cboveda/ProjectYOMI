@@ -230,6 +230,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [ClientRpc]
     public void SetUpLocalActionButtonsClientRpc(ClientRpcParams clientRpcParams = default)
     {
+
         var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
         _localPlayerCharacter = playerObject.GetComponent<PlayerCharacter>();
         var moveSet = _localPlayerCharacter.Character.CharacterMoveSet;

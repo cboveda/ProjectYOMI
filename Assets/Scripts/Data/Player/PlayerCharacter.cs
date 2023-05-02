@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using Zenject;
 
 public class PlayerCharacter : NetworkBehaviour
 {
@@ -17,6 +18,16 @@ public class PlayerCharacter : NetworkBehaviour
     public PlayerData PlayerData { get => _playerData; set => _playerData = value; }
     public ulong ClientId { get => _clientId; set => _clientId = value; }
     public UsableMoveSet UsableMoveSet { get => _usableMoveSet; }
+    public IGameUIManager GameUIManager { set => _gameUIManager = value; }
+
+
+
+    void Awake()
+    {
+        _playerData = new PlayerData(health: _character.MaximumHealth);
+        _usableMoveSet = GetComponent<UsableMoveSet>();
+        _characterBaseEffect = GetComponent<CharacterBaseEffect>();
+    }
 
     public float Health
     {
@@ -79,7 +90,8 @@ public class PlayerCharacter : NetworkBehaviour
                     TargetClientIds = new[] { _clientId },
                 }
             };
-            GameUIManager.Instance.UpdateActiveSelectionButtonClientRpc(previous, value, clientRpcParams);
+            Debug.Log(_gameUIManager);
+            _gameUIManager.UpdateActiveSelectionButtonClientRpc(previous, value, clientRpcParams);
         }
     }
 
@@ -100,13 +112,6 @@ public class PlayerCharacter : NetworkBehaviour
                 ComboCount = value
             };
         }
-    }
-
-    void Awake()
-    {
-        _playerData = new PlayerData(health: _character.MaximumHealth);
-        _usableMoveSet = GetComponent<UsableMoveSet>();
-        _characterBaseEffect = GetComponent<CharacterBaseEffect>();
     }
 
     public void ResetAction()
