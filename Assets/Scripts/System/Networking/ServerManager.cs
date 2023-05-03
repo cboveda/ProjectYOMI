@@ -10,10 +10,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using Unity.Netcode.Transports.UTP;
 
-public class ServerManager : MonoBehaviour
+public class ServerManager : MonoBehaviour, IServerManager
 {
-    public static ServerManager Instance { get; private set; }
-
     private bool _gameHasStarted;
     public Dictionary<ulong, ClientData> ClientData { get; private set; }
 
@@ -21,17 +19,9 @@ public class ServerManager : MonoBehaviour
     [SerializeField] private string _characterSelectScene = "CharacterSelect";
     public string JoinCode { get; private set; }
 
-    private void Awake()
+    void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        DontDestroyOnLoad(this);
     }
 
     public async void StartHost()
@@ -110,7 +100,7 @@ public class ServerManager : MonoBehaviour
                 }
             }
         }
-        catch 
+        catch
         {
             Debug.LogError("Error when removing client");
             throw;

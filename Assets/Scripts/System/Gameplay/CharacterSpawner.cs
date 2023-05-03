@@ -1,16 +1,25 @@
 using System;
 using UnityEngine;
 using Unity.Netcode;
+using Zenject;
 
 public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
-    [SerializeField] private GameUIManager _gameUIManager;
     [SerializeField] private GameData _gameData;
     [SerializeField] private GameObject _player1SpawnLocation;
     [SerializeField] private GameObject _player2SpawnLocation;
 
+    private IGameUIManager _gameUIManager;
+    private IServerManager _serverManager;
     private bool _hasSpawnedPlayer1 = false;
+
+    [Inject]
+    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager)
+    {
+        _gameUIManager = gameUIManager;
+        _serverManager = serverManager;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -19,7 +28,7 @@ public class CharacterSpawner : NetworkBehaviour
             return;
         }
 
-        foreach (var client in ServerManager.Instance.ClientData)
+        foreach (var client in _serverManager.ClientData)
         {
             var clientId = client.Value.clientId;
             var characterId = client.Value.characterId;
@@ -33,6 +42,7 @@ public class CharacterSpawner : NetworkBehaviour
             {
                 throw new Exception("Error getting PlayerCharacter component of player object");
             }
+            playerCharacter.GameUIManager = _gameUIManager;
             playerCharacter.ClientId = clientId;
             playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
             RegisterPlayerObjectWithSystems(clientId, playerCharacter);

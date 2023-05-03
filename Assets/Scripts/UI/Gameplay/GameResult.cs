@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using Zenject;
 
 public class GameResult : MonoBehaviour
 {
@@ -12,9 +13,17 @@ public class GameResult : MonoBehaviour
     public GameObject RestartButton { get { return _restartButton; } }
     public GameObject RestartText { get { return _restartText; } }
 
+    private IServerManager _serverManager;
+
+    [Inject]
+    public void Construct(IServerManager serverManager)
+    {
+        _serverManager = serverManager;
+    }
+
     public void Reset()
     {
         if (!NetworkManager.Singleton.IsServer) return;
-        ServerManager.Instance.ResetGame();
+        _serverManager.ResetGame();
     }
 }

@@ -3,7 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameUIManager : NetworkBehaviour
+public class GameUIManager : NetworkBehaviour, IGameUIManager
 {
     private static GameUIManager _instance;
     public static GameUIManager Instance { get => _instance; }
@@ -69,7 +69,7 @@ public class GameUIManager : NetworkBehaviour
     public void DisplayRoundResult(TurnData turnData)
     {
         var playerData1 = turnData.PlayerData1;
-        var playerData2 = turnData.PlayerData2;       
+        var playerData2 = turnData.PlayerData2;
         var movePlayer1 = _data.CharacterMoveDatabase.GetMoveById(playerData1.Action);
         var movePlayer2 = _data.CharacterMoveDatabase.GetMoveById(playerData2.Action);
 
@@ -136,7 +136,7 @@ public class GameUIManager : NetworkBehaviour
     {
         _player1Health.SetCurrent(newValue);
     }
-    
+
     public void UpdatePlayer2Health(float newValue)
     {
         _player2Health.SetCurrent(newValue);
@@ -209,7 +209,7 @@ public class GameUIManager : NetworkBehaviour
     public void RegisterPlayerCharacter(int playerNumber, ulong clientId)
     {
         var playerCharacter = _data.GetPlayerCharacterByClientId(clientId);
-        if (playerCharacter == null) 
+        if (playerCharacter == null)
         {
             throw new Exception("Failed to get player character");
         }
