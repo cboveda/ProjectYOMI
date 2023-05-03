@@ -20,8 +20,8 @@ public class PlayerCharacterAndDataTest
         if (!_initialized)
         {
             _initialized = true;
-            var networkManagerPrefab = Resources.Load("TestPrefabs/NetworkManagerTester");
-            var testObjectPrefab = (GameObject)Resources.Load("TestPrefabs/PlayerCharacterAndDataTester");
+            var networkManagerPrefab = Resources.Load("Tests/NetworkManagerTester");
+            var testObjectPrefab = (GameObject)Resources.Load("Tests/PlayerCharacterAndDataTester");
             var networkManagerObject = (GameObject)MonoBehaviour.Instantiate(networkManagerPrefab);
             _networkManager = networkManagerObject.GetComponent<NetworkManager>();
             _networkManager.StartHost();

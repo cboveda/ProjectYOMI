@@ -3,27 +3,42 @@ using Unity.Netcode;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Zenject;
 
 public class CharacterSelectDisplay : NetworkBehaviour
 {
-    [SerializeField] private GameObject _characterInfoPanel;
-    [SerializeField] private Transform _charactersHolder;
-    [SerializeField] private TMP_Text _characterNameText;
-    [SerializeField] private TMP_Text _characterInfoText;
+    [SerializeField] private Button _lockInButton;
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private CharacterSelectButton _selectButtonPrefab;
-    [SerializeField] private PlayerCard[] _playerCards;
-    [SerializeField] private Transform _introSpawnPoint;
-    [SerializeField] private Button _lockInButton;
-    [SerializeField] private TMP_Text _joinCodeText;
+    [SerializeField] private GameObject _characterInfoPanel;
     [SerializeField] private GameObject _joinCodeObject;
-
+    [SerializeField] private PlayerCard[] _playerCards;
+    [SerializeField] private TMP_Text _characterInfoText;
+    [SerializeField] private TMP_Text _characterNameText;
+    [SerializeField] private TMP_Text _joinCodeText;
+    [SerializeField] private Transform _charactersHolder;
+    [SerializeField] private Transform _introSpawnPoint;
     private GameObject _introInstance;
+    private IServerManager _serverManager;
     private List<CharacterSelectButton> _characterButtons;
-
     private NetworkList<CharacterSelectState> _players;
 
-    private void Awake()
+#if UNITY_INCLUDE_TESTS
+    public CharacterDatabase CharacterDatabase { get => _characterDatabase; set => _characterDatabase = value; }
+    public GameObject CharacterInfoPanel { get => _characterInfoPanel; set => _characterInfoPanel = value; }
+    public GameObject IntroInstance { get => _introInstance; set => _introInstance = value; }
+    public List<CharacterSelectButton> CharacterButtons { get => _characterButtons; set => _characterButtons = value; }
+    public NetworkList<CharacterSelectState> Players { get => _players; set => _players = value; }
+    public PlayerCard[] PlayerCards { get => _playerCards; set => _playerCards = value; }
+#endif
+
+    [Inject]
+    public void Construct(IServerManager serverManager)
+    {
+        _serverManager = serverManager;
+    }
+
+    void Awake()
     {
         _players = new();
         _characterButtons = new();
@@ -60,7 +75,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
         if (IsHost)
         {
             _joinCodeObject.SetActive(true);
-            _joinCodeText.text = ServerManager.Instance.JoinCode;
+            _joinCodeText.text = _serverManager.JoinCode;
         }
 
 
@@ -98,33 +113,23 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     public void Select(Character character)
     {
-        for (int i = 0; i < _players.Count; i++)
+        if (!CanSelect(character.Id))
         {
-            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId)
-            {
-                continue;
-            }
-
-            if (_players[i].IsLockedIn)
-            {
-                return;
-            }
-
-            if (_players[i].CharacterId == character.Id)
-            {
-                return;
-            }
+            return;
         }
+        UpdateCharacterInfoDisplay(character);
+        StartIntroAnimationForSelectedCharacter(character);
+        UpdateSelectionButtons(character);
+        SelectServerRpc(character.Id);
+    }
 
-        _characterNameText.text = character.DisplayName;
-        _characterInfoText.text = character.InformationText;
-        _characterInfoPanel.SetActive(true);
-        if (_introInstance != null)
-        {
-            Destroy(_introInstance);
-        }
-        _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint);
+    public void LockIn()
+    {
+        LockInServerRpc();
+    }
 
+    private void UpdateSelectionButtons(Character character)
+    {
         foreach (CharacterSelectButton characterButton in _characterButtons)
         {
             if (characterButton.Character.Id == character.Id)
@@ -136,8 +141,43 @@ public class CharacterSelectDisplay : NetworkBehaviour
                 characterButton.ShowUnselected();
             }
         }
+    }
 
-        SelectServerRpc(character.Id);
+    private void StartIntroAnimationForSelectedCharacter(Character character)
+    {
+        if (_introInstance != null)
+        {
+            Destroy(_introInstance);
+        }
+        _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint);
+    }
+    private void UpdateCharacterInfoDisplay(Character character)
+    {
+        _characterNameText.text = character.DisplayName;
+        _characterInfoText.text = character.InformationText;
+        _characterInfoPanel.SetActive(true);
+    }
+
+    private bool CanSelect(int characterId)
+    {
+        for (int i = 0; i < _players.Count; i++)
+        {
+            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId)
+            {
+                continue;
+            }
+
+            if (_players[i].IsLockedIn)
+            {
+                return false;
+            }
+
+            if (_players[i].CharacterId == characterId)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -166,17 +206,31 @@ public class CharacterSelectDisplay : NetworkBehaviour
         }
     }
 
-    public void LockIn()
-    {
-        LockInServerRpc();
-    }
-
     [ServerRpc(RequireOwnership = false)]
     private void LockInServerRpc(ServerRpcParams serverRpcParams = default)
     {
+        LockInCharacterSelectState(serverRpcParams.Receive.SenderClientId);
+        if (!AllPlayersLockedIn())
+        {
+            return;
+        }
+        SetAllCharacters();
+        _serverManager.StartGame();
+    }
+
+    private void SetAllCharacters()
+    {
+        foreach (var player in _players)
+        {
+            _serverManager.SetCharacter(player.ClientId, player.CharacterId);
+        }
+    }
+
+    private void LockInCharacterSelectState(ulong clientId)
+    {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId)
+            if (_players[i].ClientId != clientId)
             {
                 continue;
             }
@@ -193,47 +247,18 @@ public class CharacterSelectDisplay : NetworkBehaviour
                 true
             );
         }
-
-        if (AllPlayersLockedIn())
-        { 
-            foreach(var player in _players)
-            {
-                ServerManager.Instance.SetCharacter(player.ClientId, player.CharacterId);
-            }
-
-            ServerManager.Instance.StartGame();
-        }
     }
 
     private void HandlePlayersStateChanged(NetworkListEvent<CharacterSelectState> changeEvent)
     {
-        if (_players.Count < 2)
-        {
-            _lockInButton.interactable = false;
-        }
-        else
-        {
-            _lockInButton.interactable = true;
-        }
+        UpdateLockInButtonForPlayerCount();
+        UpdateLockInButtonForSelectState();
+        UpdatePlayerCards();
+    }
 
-        for (int i = 0; i < _playerCards.Length; i++)
-        {            
-            if (_players.Count > i)
-            {
-                _playerCards[i].UpdateDisplay(_players[i]);
-
-                if (AllPlayersLockedIn())
-                {
-                    _playerCards[i].EnableIcon();
-                }
-            }
-            else
-            {
-                _playerCards[i].DisableDisplay();
-            }
-        }
-
-        foreach(var player in _players)
+    private void UpdateLockInButtonForSelectState()
+    {
+        foreach (var player in _players)
         {
             if (player.ClientId != NetworkManager.Singleton.LocalClientId)
             {
@@ -253,7 +278,39 @@ public class CharacterSelectDisplay : NetworkBehaviour
                 }
                 break;
             }
-        }        
+        }
+    }
+
+    private void UpdatePlayerCards()
+    {
+        for (int i = 0; i < _playerCards.Length; i++)
+        {
+            if (_players.Count > i)
+            {
+                _playerCards[i].UpdateDisplay(_players[i]);
+
+                if (AllPlayersLockedIn())
+                {
+                    _playerCards[i].EnableIcon();
+                }
+            }
+            else
+            {
+                _playerCards[i].DisableDisplay();
+            }
+        }
+    }
+
+    private void UpdateLockInButtonForPlayerCount()
+    {
+        if (_players.Count < 2)
+        {
+            _lockInButton.interactable = false;
+        }
+        else
+        {
+            _lockInButton.interactable = true;
+        }
     }
 
     private bool AllPlayersLockedIn()

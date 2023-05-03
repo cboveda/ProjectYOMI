@@ -19,8 +19,8 @@ public class UsableMoveSetTest
         if (!_initialized)
         {
             _initialized = true;
-            var networkManagerPrefab = Resources.Load("TestPrefabs/NetworkManagerTester");
-            var testObjectPrefab = (GameObject)Resources.Load("TestPrefabs/UsableMoveSetTester");
+            var networkManagerPrefab = Resources.Load("Tests/NetworkManagerTester");
+            var testObjectPrefab = (GameObject)Resources.Load("Tests/UsableMoveSetTester");
             var networkManagerObject = (GameObject)MonoBehaviour.Instantiate(networkManagerPrefab);
             _networkManager = networkManagerObject.GetComponent<NetworkManager>();
             _networkManager.StartHost();
