@@ -9,15 +9,23 @@ using Unity.Services.Relay;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using Unity.Netcode.Transports.UTP;
+using Zenject;
 
 public class ServerManager : MonoBehaviour, IServerManager
 {
+    private NetworkManager _networkManager;
     private bool _gameHasStarted;
     public Dictionary<ulong, ClientData> ClientData { get; private set; }
 
     [SerializeField] private string _gameplaySceneName = "Gameplay";
     [SerializeField] private string _characterSelectScene = "CharacterSelect";
     public string JoinCode { get; private set; }
+
+    [Inject]
+    public void Construct(NetworkManager networkManager)
+    {
+        _networkManager = networkManager;
+    }
 
     void Awake()
     {
@@ -48,19 +56,19 @@ public class ServerManager : MonoBehaviour, IServerManager
         }
 
         var relayServerData = new RelayServerData(allocation, "dtls");
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+        _networkManager.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
-        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-        NetworkManager.Singleton.OnServerStarted += OnNetworkReady;
+        _networkManager.ConnectionApprovalCallback += ApprovalCheck;
+        _networkManager.OnServerStarted += OnNetworkReady;
 
         ClientData = new Dictionary<ulong, ClientData>();
 
-        NetworkManager.Singleton.StartHost();
+        _networkManager.StartHost();
     }
 
     public void Disconnect()
     {
-        NetworkManager.Singleton.Shutdown();
+        _networkManager.Shutdown();
     }
 
     public void ApprovalCheck(
@@ -83,9 +91,9 @@ public class ServerManager : MonoBehaviour, IServerManager
 
     private void OnNetworkReady()
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+        _networkManager.OnClientDisconnectCallback += OnClientDisconnect;
 
-        NetworkManager.Singleton.SceneManager.LoadScene(_characterSelectScene, LoadSceneMode.Single);
+        _networkManager.SceneManager.LoadScene(_characterSelectScene, LoadSceneMode.Single);
     }
 
     private void OnClientDisconnect(ulong clientId)
@@ -124,7 +132,7 @@ public class ServerManager : MonoBehaviour, IServerManager
     public IEnumerator DelayedSceneLoad()
     {
         yield return new WaitForSeconds(1.5f);
-        NetworkManager.Singleton.SceneManager.LoadScene(_gameplaySceneName, LoadSceneMode.Single);
+        _networkManager.SceneManager.LoadScene(_gameplaySceneName, LoadSceneMode.Single);
     }
 
     public void ResetGame()
@@ -134,12 +142,12 @@ public class ServerManager : MonoBehaviour, IServerManager
             data.characterId = -1;
         }
 
-        foreach (NetworkObject obj in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values.ToList<NetworkObject>())
+        foreach (NetworkObject obj in _networkManager.SpawnManager.SpawnedObjects.Values.ToList<NetworkObject>())
         {
             obj.Despawn();
         }
 
-        NetworkManager.Singleton.SceneManager.LoadScene(_characterSelectScene, LoadSceneMode.Single);
+        _networkManager.SceneManager.LoadScene(_characterSelectScene, LoadSceneMode.Single);
     }
 }
 
