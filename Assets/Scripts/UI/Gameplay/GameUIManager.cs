@@ -26,13 +26,15 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [SerializeField] private TMP_Text _player2Name;
     private PlayerCharacter _localPlayerCharacter;
     private NetworkManager _networkManager;
+    private Database _database;
 
     public GameData Data { get => _data; }
 
     [Inject]
-    public void Construct(NetworkManager networkManager)
+    public void Construct(NetworkManager networkManager, Database database)
     {
         _networkManager = networkManager;
+        _database = database;
     }
 
     private void Awake()
@@ -78,8 +80,8 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     {
         var playerData1 = turnData.PlayerData1;
         var playerData2 = turnData.PlayerData2;
-        var movePlayer1 = _data.CharacterMoveDatabase.GetMoveById(playerData1.Action);
-        var movePlayer2 = _data.CharacterMoveDatabase.GetMoveById(playerData2.Action);
+        var movePlayer1 = _database.MoveDB.GetMoveById(playerData1.Action);
+        var movePlayer2 = _database.MoveDB.GetMoveById(playerData2.Action);
 
         _roundResult.MoveNamePlayer1 = (movePlayer1) ? movePlayer1.MoveName : "None selected";
         _roundResult.MoveNamePlayer2 = (movePlayer2) ? movePlayer2.MoveName : "None selected";
@@ -104,13 +106,13 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [ClientRpc]
     public void UpdateActiveSelectionButtonClientRpc(int previousValue, int newValue, ClientRpcParams clientRpcParams = default)
     {
-        var previousMove = _data.CharacterMoveDatabase.GetMoveById(previousValue);
+        var previousMove = _database.MoveDB.GetMoveById(previousValue);
         if (previousMove != null)
         {
             _playerControls.GetButtonByType(previousMove.MoveType).SetHighlight(false);
         }
 
-        var currentMove = _data.CharacterMoveDatabase.GetMoveById(newValue);
+        var currentMove = _database.MoveDB.GetMoveById(newValue);
         if (currentMove != null)
         {
             _playerControls.GetButtonByType(currentMove.MoveType).SetHighlight(true);

@@ -1,12 +1,13 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class PlayerControls : MonoBehaviour
 {
     public static PlayerControls Instance { get; private set; }
 
-    [SerializeField] private CharacterMoveDatabase _moveDatabase;
+    private Database _database;
 
     [SerializeField] private MoveButton _lightAttackButton;
     [SerializeField] private MoveButton _heavyAttackButton;
@@ -14,6 +15,12 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private MoveButton _grabButton;
     [SerializeField] private MoveButton _specialButton;
     [SerializeField] private GameObject _helperArrows;
+
+    [Inject]
+    public void Construct(Database database)
+    {
+        _database = database;
+    }
 
     void Awake()
     {
@@ -43,11 +50,11 @@ public class PlayerControls : MonoBehaviour
 
     public void RegisterCharacterMoveSet(int lightId, int heavyId, int parryId, int grabId, int specialId)
     {
-        _lightAttackButton.SetMove(_moveDatabase.GetMoveById(lightId));
-        _heavyAttackButton.SetMove(_moveDatabase.GetMoveById(heavyId));
-        _parryButton.SetMove(_moveDatabase.GetMoveById(parryId));
-        _grabButton.SetMove(_moveDatabase.GetMoveById(grabId));
-        _specialButton.SetMove(_moveDatabase.GetMoveById(specialId));
+        _lightAttackButton.SetMove(_database.MoveDB.GetMoveById(lightId));
+        _heavyAttackButton.SetMove(_database.MoveDB.GetMoveById(heavyId));
+        _parryButton.SetMove(_database.MoveDB.GetMoveById(parryId));
+        _grabButton.SetMove(_database.MoveDB.GetMoveById(grabId));
+        _specialButton.SetMove(_database.MoveDB.GetMoveById(specialId));
     }
 
     public void ToggleHelperArrows()

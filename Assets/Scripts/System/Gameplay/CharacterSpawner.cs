@@ -5,20 +5,21 @@ using Zenject;
 
 public class CharacterSpawner : NetworkBehaviour
 {
-    [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private GameData _gameData;
     [SerializeField] private GameObject _player1SpawnLocation;
     [SerializeField] private GameObject _player2SpawnLocation;
 
     private IGameUIManager _gameUIManager;
     private IServerManager _serverManager;
+    private Database _database;
     private bool _hasSpawnedPlayer1 = false;
 
     [Inject]
-    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager)
+    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database)
     {
         _gameUIManager = gameUIManager;
         _serverManager = serverManager;
+        _database = database;
     }
 
     public override void OnNetworkSpawn()
@@ -32,7 +33,7 @@ public class CharacterSpawner : NetworkBehaviour
         {
             var clientId = client.Value.clientId;
             var characterId = client.Value.characterId;
-            var character = _characterDatabase.GetCharacterById(characterId);
+            var character = _database.CharacterDB.GetCharacterById(characterId);
             if (character == null)
             {
                 throw new Exception($"Error getting character from database. characterId: {client.Value.characterId}");

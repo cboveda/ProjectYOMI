@@ -79,7 +79,7 @@ public class PlayerCharacterAndDataTest
     public void SetActionCorrectlyAndSendsRpc(int value, int expected)
     {
         var mock = new Mock<IGameUIManager>();
-        mock.Setup(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(clientRpcParam, _playerCharacter.ClientId))))
+        mock.Setup(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.Is<int>(v => v == value), It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(clientRpcParam, _playerCharacter.ClientId))))
             .Verifiable();
         _playerCharacter.GameUIManager = mock.Object;
         _playerCharacter.Action = value;

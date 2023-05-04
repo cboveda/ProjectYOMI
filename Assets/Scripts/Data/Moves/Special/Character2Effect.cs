@@ -4,7 +4,7 @@ public class Character2Effect : CharacterBaseEffect
     {
         var opponentPlayerCharacter = context.GetPlayerCharacterByOpponentClientId(clientId);
         var opponentMoveId = opponentPlayerCharacter.PlayerData.Action;
-        var opponentMove = context.CharacterMoveDatabase.GetMoveById(opponentMoveId);
+        var opponentMove = _database.MoveDB.GetMoveById(opponentMoveId);
         var type = opponentMove ? opponentMove.MoveType : CharacterMove.Type.LightAttack; //What to do if the player didn't select? Picks LightAttack
 
         context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber, type));

@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Unity.Collections;
+using Zenject;
 
 public class GameData : NetworkBehaviour
 {
@@ -13,9 +14,7 @@ public class GameData : NetworkBehaviour
     public static GameData Instance { get => _instance; }
 
     //Dependencies
-    [SerializeField] private GameUIManager _gameUIManager;
-    [SerializeField] private CharacterMoveDatabase _characterMoveDatabase;
-    [SerializeField] private CharacterDatabase _characterDatabase;
+    private Database _database;
 
     //Game Configuration
     [SerializeField] private float _baseDamage = 10f;
@@ -35,7 +34,6 @@ public class GameData : NetworkBehaviour
     private NetworkList<TurnData> _turnDataList;
 
     //Getters and Setters
-    public CharacterMoveDatabase CharacterMoveDatabase { get { return _characterMoveDatabase; } }
     public int RoundNumber { get { return _turnNumber; } }
     public List<CombatCommandBase> CombatCommands { get { return _combatCommands; } }
     public NetworkList<TurnData> TurnDataList { get { return _turnDataList; } }
@@ -43,6 +41,12 @@ public class GameData : NetworkBehaviour
     public ulong ClientIdPlayer2 { get => _clientIdPlayer2; set => _clientIdPlayer2 = value; }
 
     #endregion
+
+    [Inject]
+    public void Construct(Database database)
+    {
+        _database = database;
+    }
 
     #region lifecycle methods
     private void Awake()
@@ -176,8 +180,8 @@ public class GameData : NetworkBehaviour
         // Read Inputs
         var action1 = playerCharacter1.PlayerData.Action;
         var action2 = playerCharacter2.PlayerData.Action;
-        var movePlayer1 = _characterMoveDatabase.GetMoveById(action1);
-        var movePlayer2 = _characterMoveDatabase.GetMoveById(action2);
+        var movePlayer1 = _database.MoveDB.GetMoveById(action1);
+        var movePlayer2 = _database.MoveDB.GetMoveById(action2);
         var player1Wins = (movePlayer2 == null) ||
             (movePlayer1 && movePlayer1.Defeats(movePlayer2.MoveType));
         var player2Wins = (movePlayer1 == null) ||

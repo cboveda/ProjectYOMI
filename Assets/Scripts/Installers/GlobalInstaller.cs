@@ -15,5 +15,10 @@ public class GlobalInstaller : MonoInstaller
             .FromComponentInNewPrefabResource("ServerManager")
             .AsSingle()
             .NonLazy();
+
+        Container.Bind<Database>()
+            .FromComponentInNewPrefabResource("Database")
+            .AsSingle()
+            .NonLazy();
     }
 }
