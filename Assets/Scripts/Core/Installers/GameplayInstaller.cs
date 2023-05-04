@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Zenject;
 
 public class GameplayInstaller : MonoInstaller
@@ -8,6 +9,10 @@ public class GameplayInstaller : MonoInstaller
             .To<GameUIManager>()
             .FromComponentInHierarchy()
             .AsSingle()
+            .NonLazy();
+
+        Container.Bind<PlayerDataCollection>()
+            .FromNew()
             .NonLazy();
     }
 }
