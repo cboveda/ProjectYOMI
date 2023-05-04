@@ -14,16 +14,18 @@ public class GameResult : MonoBehaviour
     public GameObject RestartText { get { return _restartText; } }
 
     private IServerManager _serverManager;
+    private NetworkManager _networkManager;
 
     [Inject]
-    public void Construct(IServerManager serverManager)
+    public void Construct(NetworkManager networkManager, IServerManager serverManager)
     {
         _serverManager = serverManager;
+        _networkManager = networkManager;
     }
 
     public void Reset()
     {
-        if (!NetworkManager.Singleton.IsServer) return;
+        if (!_networkManager.IsServer) return;
         _serverManager.ResetGame();
     }
 }

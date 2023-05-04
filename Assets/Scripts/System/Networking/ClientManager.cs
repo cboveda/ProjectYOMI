@@ -5,9 +5,19 @@ using Unity.Networking.Transport.Relay;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
+using Zenject;
 
 public class ClientManager : MonoBehaviour, IClientManager
 {
+    private NetworkManager _networkManager;
+
+    [Inject]
+    public void Construct(NetworkManager networkManager)
+    {
+        _networkManager = networkManager;
+    }
+
+
     public async void StartClient(string joinCode)
     {
         JoinAllocation allocation;
@@ -23,8 +33,8 @@ public class ClientManager : MonoBehaviour, IClientManager
         }
 
         var relayServerData = new RelayServerData(allocation, "dtls");
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+        _networkManager.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
-        NetworkManager.Singleton.StartClient();
+        _networkManager.StartClient();
     }
 }

@@ -20,8 +20,6 @@ public class PlayerCharacter : NetworkBehaviour
     public UsableMoveSet UsableMoveSet { get => _usableMoveSet; }
     public IGameUIManager GameUIManager { set => _gameUIManager = value; }
 
-
-
     void Awake()
     {
         _playerData = new PlayerData(health: _character.MaximumHealth);

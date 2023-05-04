@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 public class GameStateMachine : NetworkBehaviour
 {
@@ -15,7 +16,8 @@ public class GameStateMachine : NetworkBehaviour
     private float _timerMax;
     private GameBaseState _currentState;
     private GameStateFactory _states;
-    [SerializeField] private GameUIManager _gameUIManager;
+    private IGameUIManager _gameUIManager;
+    private NetworkManager _networkManager;
 
     public bool AllPlayersLoaded { get { return _allPlayersLoaded; } }
     public bool TimerComplete { get {  return _timerComplete; } }
@@ -23,13 +25,20 @@ public class GameStateMachine : NetworkBehaviour
     public float RoundActiveDuration { get { return _roundActiveDuration; } }
     public float RoundResolveDuration { get { return _roundResolveDuration; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
-    public GameUIManager GameplayUI { get { return _gameUIManager; } }
+    public IGameUIManager GameplayUI { get { return _gameUIManager; } }
+
+    [Inject]
+    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager)
+    {
+        _networkManager = networkManager;
+        _gameUIManager = gameUIManager;
+    }
 
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
 
-        NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += HandleLoadEventCompleted;
+        _networkManager.SceneManager.OnLoadEventCompleted += HandleLoadEventCompleted;
 
         _states = new GameStateFactory(this);
         _currentState = _states.NotReady();
@@ -40,7 +49,7 @@ public class GameStateMachine : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= HandleLoadEventCompleted;
+        _networkManager.SceneManager.OnLoadEventCompleted -= HandleLoadEventCompleted;
     }
 
     void Update()

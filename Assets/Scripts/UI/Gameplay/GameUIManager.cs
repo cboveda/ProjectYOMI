@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using Zenject;
 
 public class GameUIManager : NetworkBehaviour, IGameUIManager
 {
@@ -24,8 +25,15 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player2Name;
     private PlayerCharacter _localPlayerCharacter;
+    private NetworkManager _networkManager;
 
     public GameData Data { get => _data; }
+
+    [Inject]
+    public void Construct(NetworkManager networkManager)
+    {
+        _networkManager = networkManager;
+    }
 
     private void Awake()
     {
@@ -230,7 +238,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [ClientRpc]
     public void SetUpLocalActionButtonsClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+        var playerObject = _networkManager.SpawnManager.GetLocalPlayerObject();
         _localPlayerCharacter = playerObject.GetComponent<PlayerCharacter>();
         var moveSet = _localPlayerCharacter.Character.CharacterMoveSet;
         _playerControls.RegisterCharacterMoveSet(

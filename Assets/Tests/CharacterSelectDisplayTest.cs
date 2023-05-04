@@ -32,7 +32,7 @@ public class CharacterSelectDisplayTest
             _serverManager.Setup(m => m.JoinCode).Returns("JOIN");
             _serverManager.Setup(m => m.SetCharacter(It.IsAny<ulong>(), It.IsAny<int>())).Verifiable();
             _serverManager.Setup(m => m.StartGame()).Verifiable();
-            _characterSelectDisplay.Construct(_serverManager.Object);
+            _characterSelectDisplay.Construct(_networkManager, _serverManager.Object);
 
             _testObject.GetComponent<NetworkObject>().Spawn();
             yield return null;

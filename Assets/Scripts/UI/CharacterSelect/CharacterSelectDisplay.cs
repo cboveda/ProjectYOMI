@@ -20,6 +20,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private Transform _introSpawnPoint;
     private GameObject _introInstance;
     private IServerManager _serverManager;
+    private NetworkManager _networkManager;
     private List<CharacterSelectButton> _characterButtons;
     private NetworkList<CharacterSelectState> _players;
 
@@ -33,9 +34,10 @@ public class CharacterSelectDisplay : NetworkBehaviour
 #endif
 
     [Inject]
-    public void Construct(IServerManager serverManager)
+    public void Construct(NetworkManager networkManager, IServerManager serverManager)
     {
         _serverManager = serverManager;
+        _networkManager = networkManager;
     }
 
     void Awake()
@@ -63,10 +65,10 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
         if (IsServer)
         {
-            NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnected;
+            _networkManager.OnClientConnectedCallback += HandleClientConnected;
+            _networkManager.OnClientDisconnectCallback += HandleClientDisconnected;
 
-            foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+            foreach (NetworkClient client in _networkManager.ConnectedClientsList)
             {
                 HandleClientConnected(client.ClientId);
             }
@@ -85,8 +87,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         if (IsServer)
         {
-            NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnected;
+            _networkManager.OnClientConnectedCallback -= HandleClientConnected;
+            _networkManager.OnClientDisconnectCallback -= HandleClientDisconnected;
         }
 
         if (IsClient)
@@ -162,7 +164,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId)
+            if (_players[i].ClientId != _networkManager.LocalClientId)
             {
                 continue;
             }
@@ -260,7 +262,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         foreach (var player in _players)
         {
-            if (player.ClientId != NetworkManager.Singleton.LocalClientId)
+            if (player.ClientId != _networkManager.LocalClientId)
             {
                 continue;
             }
