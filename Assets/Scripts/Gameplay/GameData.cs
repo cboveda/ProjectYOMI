@@ -16,19 +16,21 @@ public class GameData : NetworkBehaviour
     //Dependencies
     private Database _database;
 
-    //Game Configuration
+    //Combat evaluation
     [SerializeField] private float _baseDamage = 10f;
     [SerializeField] private float _baseSpecialGain = 25f;
     [SerializeField] private float _chipDamageModifier = 0.5f;
     [SerializeField] private float _specialGainOnLossModifier = 0.35f;
 
-    //Character/Player information
+    //player data storage
     private ulong _clientIdPlayer2;
     private ulong _clientIdPlayer1;
     private Dictionary<ulong, PlayerCharacter> _playerCharacters;
 
-    //General data
+    //Debugging
     private bool _displayDebugMenu = false;
+
+    //combat evaluation
     private int _turnNumber = 0;
     private List<CombatCommandBase> _combatCommands;
     private NetworkList<TurnData> _turnDataList;
@@ -82,7 +84,7 @@ public class GameData : NetworkBehaviour
     }
     #endregion
 
-    #region player initialization and setters
+    #region player data storage and access
     public void RegisterPlayerCharacter(int playerNumber, ulong clientId, PlayerCharacter playerCharacter)
     {
         if (playerNumber == 1)
@@ -180,26 +182,26 @@ public class GameData : NetworkBehaviour
         // Read Inputs
         var action1 = playerCharacter1.PlayerData.Action;
         var action2 = playerCharacter2.PlayerData.Action;
-        var movePlayer1 = _database.MoveDB.GetMoveById(action1);
-        var movePlayer2 = _database.MoveDB.GetMoveById(action2);
+        var movePlayer1 = _database.Moves.GetMoveById(action1);
+        var movePlayer2 = _database.Moves.GetMoveById(action2);
         var player1Wins = (movePlayer2 == null) ||
             (movePlayer1 && movePlayer1.Defeats(movePlayer2.MoveType));
         var player2Wins = (movePlayer1 == null) ||
             (movePlayer2 && movePlayer2.Defeats(movePlayer1.MoveType));
 
         // Check for specials   
-        if ((movePlayer1 != null) && (movePlayer1.MoveType == CharacterMove.Type.Special))
+        if ((movePlayer1 != null) && (movePlayer1.MoveType == Move.Type.Special))
         {
             playerCharacter1.Effect.DoSpecial(this, ClientIdPlayer1);
             playerCharacter1.SpecialMeter = 0f;
-            playerCharacter1.UsableMoveSet.DisableMoveByType(CharacterMove.Type.Special);
+            playerCharacter1.UsableMoveSet.DisableMoveByType(Move.Type.Special);
         }
 
-        if ((movePlayer2 != null) && (movePlayer2.MoveType == CharacterMove.Type.Special))
+        if ((movePlayer2 != null) && (movePlayer2.MoveType == Move.Type.Special))
         {
             playerCharacter2.Effect.DoSpecial(this, ClientIdPlayer2);
             playerCharacter2.SpecialMeter = 0f;
-            playerCharacter2.UsableMoveSet.DisableMoveByType(CharacterMove.Type.Special);
+            playerCharacter2.UsableMoveSet.DisableMoveByType(Move.Type.Special);
         }
 
         // Preliminary damage and special calculations
@@ -257,11 +259,11 @@ public class GameData : NetworkBehaviour
         // Check if specials should be enabled
         if (playerCharacter1.SpecialMeter >= 100f)
         {
-            playerCharacter1.UsableMoveSet.EnableMoveByType(CharacterMove.Type.Special);
+            playerCharacter1.UsableMoveSet.EnableMoveByType(Move.Type.Special);
         }
         if (playerCharacter2.SpecialMeter >= 100f)
         {
-            playerCharacter2.UsableMoveSet.EnableMoveByType(CharacterMove.Type.Special);
+            playerCharacter2.UsableMoveSet.EnableMoveByType(Move.Type.Special);
         }
 
         // Execute queued commands
@@ -306,8 +308,8 @@ public class GameData : NetworkBehaviour
     }
     #endregion
 
-    #region debug UI
 
+    #region debugging
     private void OnGUI()
     {
         if (!IsServer) return;
