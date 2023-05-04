@@ -14,7 +14,7 @@ public class UsableMoveSet : NetworkBehaviour
 
     public void InitializeMoveSet(CharacterMoveSet moveSet)
     {
-        foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
             byte isUsable = (byte)(moveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
             byte typeAsByte = (byte)type;
@@ -22,19 +22,19 @@ public class UsableMoveSet : NetworkBehaviour
         }
     }
 
-    public void DisableMoveByType(CharacterMove.Type type)
+    public void DisableMoveByType(Move.Type type)
     {
         byte mask = (byte) (Byte.MaxValue - (byte)type);
         _moves.Value &= mask;
     }
 
-    public void EnableMoveByType(CharacterMove.Type type)
+    public void EnableMoveByType(Move.Type type)
     {
         byte mask = (byte) type;
         _moves.Value |= mask;
     }
 
-    public bool CheckEnabledByType(CharacterMove.Type type)
+    public bool CheckEnabledByType(Move.Type type)
     {
         byte mask = (byte) type;
         return (_moves.Value & mask) == mask;

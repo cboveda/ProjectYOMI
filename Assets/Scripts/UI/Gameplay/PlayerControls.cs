@@ -35,26 +35,26 @@ public class PlayerControls : MonoBehaviour
         
     }
 
-    public MoveButton GetButtonByType(CharacterMove.Type type)
+    public MoveButton GetButtonByType(Move.Type type)
     {
         return type switch
         {
-            CharacterMove.Type.LightAttack => _lightAttackButton,
-            CharacterMove.Type.HeavyAttack => _heavyAttackButton,
-            CharacterMove.Type.Parry => _parryButton,
-            CharacterMove.Type.Grab => _grabButton,
-            CharacterMove.Type.Special => _specialButton,
+            Move.Type.LightAttack => _lightAttackButton,
+            Move.Type.HeavyAttack => _heavyAttackButton,
+            Move.Type.Parry => _parryButton,
+            Move.Type.Grab => _grabButton,
+            Move.Type.Special => _specialButton,
             _ => null,
         };
     }
 
     public void RegisterCharacterMoveSet(int lightId, int heavyId, int parryId, int grabId, int specialId)
     {
-        _lightAttackButton.SetMove(_database.MoveDB.GetMoveById(lightId));
-        _heavyAttackButton.SetMove(_database.MoveDB.GetMoveById(heavyId));
-        _parryButton.SetMove(_database.MoveDB.GetMoveById(parryId));
-        _grabButton.SetMove(_database.MoveDB.GetMoveById(grabId));
-        _specialButton.SetMove(_database.MoveDB.GetMoveById(specialId));
+        _lightAttackButton.SetMove(_database.Moves.GetMoveById(lightId));
+        _heavyAttackButton.SetMove(_database.Moves.GetMoveById(heavyId));
+        _parryButton.SetMove(_database.Moves.GetMoveById(parryId));
+        _grabButton.SetMove(_database.Moves.GetMoveById(grabId));
+        _specialButton.SetMove(_database.Moves.GetMoveById(specialId));
     }
 
     public void ToggleHelperArrows()

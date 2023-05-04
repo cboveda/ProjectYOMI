@@ -3,8 +3,8 @@ using UnityEngine;
 public class Database : MonoBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
-    [SerializeField] private CharacterMoveDatabase _characterMoveDatabase;
+    [SerializeField] private MoveDatabase _characterMoveDatabase;
 
-    public CharacterDatabase CharacterDB { get => _characterDatabase; }
-    public CharacterMoveDatabase MoveDB { get => _characterMoveDatabase; }
+    public CharacterDatabase Characters { get => _characterDatabase; }
+    public MoveDatabase Moves { get => _characterMoveDatabase; }
 }

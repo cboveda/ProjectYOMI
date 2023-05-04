@@ -106,7 +106,7 @@ public class PlayerCharacterAndDataTest
             .Verifiable();
         _playerCharacter.GameUIManager = mock.Object;
         _playerCharacter.ResetAction();
-        Assert.AreEqual(_playerCharacter.Action, CharacterMove.NO_MOVE);
+        Assert.AreEqual(_playerCharacter.Action, Move.NO_MOVE);
         mock.Verify(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ClientRpcParams>()), Times.Once());
     }
 

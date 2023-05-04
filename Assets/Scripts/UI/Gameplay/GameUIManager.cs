@@ -80,15 +80,15 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     {
         var playerData1 = turnData.PlayerData1;
         var playerData2 = turnData.PlayerData2;
-        var movePlayer1 = _database.MoveDB.GetMoveById(playerData1.Action);
-        var movePlayer2 = _database.MoveDB.GetMoveById(playerData2.Action);
+        var movePlayer1 = _database.Moves.GetMoveById(playerData1.Action);
+        var movePlayer2 = _database.Moves.GetMoveById(playerData2.Action);
 
         _roundResult.MoveNamePlayer1 = (movePlayer1) ? movePlayer1.MoveName : "None selected";
         _roundResult.MoveNamePlayer2 = (movePlayer2) ? movePlayer2.MoveName : "None selected";
         _roundResult.MoveTypePlayer1 = (movePlayer1) ?
-            Enum.GetName(typeof(CharacterMove.Type), movePlayer1.MoveType) : "";
+            Enum.GetName(typeof(Move.Type), movePlayer1.MoveType) : "";
         _roundResult.MoveTypePlayer2 = (movePlayer2) ?
-            Enum.GetName(typeof(CharacterMove.Type), movePlayer2.MoveType) : "";
+            Enum.GetName(typeof(Move.Type), movePlayer2.MoveType) : "";
         _roundResult.DamageToPlayer1 = GetDamageString(turnData.DamageToPlayer1);
         _roundResult.DamageToPlayer2 = GetDamageString(turnData.DamageToPlayer2);
         _roundResult.Result = turnData.Summary.ToString();
@@ -97,7 +97,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
 
     private void UpdateUsableMoveButtons(byte previousValue, byte newValue)
     {
-        foreach (CharacterMove.Type type in Enum.GetValues(typeof(CharacterMove.Type)))
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
             _playerControls.GetButtonByType(type).Button.interactable = (newValue & (byte)type) == (byte)type;
         }
@@ -106,13 +106,13 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [ClientRpc]
     public void UpdateActiveSelectionButtonClientRpc(int previousValue, int newValue, ClientRpcParams clientRpcParams = default)
     {
-        var previousMove = _database.MoveDB.GetMoveById(previousValue);
+        var previousMove = _database.Moves.GetMoveById(previousValue);
         if (previousMove != null)
         {
             _playerControls.GetButtonByType(previousMove.MoveType).SetHighlight(false);
         }
 
-        var currentMove = _database.MoveDB.GetMoveById(newValue);
+        var currentMove = _database.Moves.GetMoveById(newValue);
         if (currentMove != null)
         {
             _playerControls.GetButtonByType(currentMove.MoveType).SetHighlight(true);

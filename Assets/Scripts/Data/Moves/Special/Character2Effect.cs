@@ -4,8 +4,8 @@ public class Character2Effect : CharacterBaseEffect
     {
         var opponentPlayerCharacter = context.GetPlayerCharacterByOpponentClientId(clientId);
         var opponentMoveId = opponentPlayerCharacter.PlayerData.Action;
-        var opponentMove = _database.MoveDB.GetMoveById(opponentMoveId);
-        var type = opponentMove ? opponentMove.MoveType : CharacterMove.Type.LightAttack; //What to do if the player didn't select? Picks LightAttack
+        var opponentMove = _database.Moves.GetMoveById(opponentMoveId);
+        var type = opponentMove ? opponentMove.MoveType : Move.Type.LightAttack; //What to do if the player didn't select? Picks LightAttack
 
         context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber, type));
         context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber + 1, type));
@@ -34,9 +34,9 @@ public class Character2Effect : CharacterBaseEffect
 
     public class ApplyLockout : CombatCommandBase
     {
-        private readonly CharacterMove.Type _targetType;
+        private readonly Move.Type _targetType;
 
-        public ApplyLockout(ulong clientId, int round, CharacterMove.Type targetType) : base(clientId, round)
+        public ApplyLockout(ulong clientId, int round, Move.Type targetType) : base(clientId, round)
         {
             _targetType = targetType;
         }
@@ -52,9 +52,9 @@ public class Character2Effect : CharacterBaseEffect
 
     public class UndoLockout : CombatCommandBase
     {
-        private readonly CharacterMove.Type _targetType;
+        private readonly Move.Type _targetType;
 
-        public UndoLockout(ulong clientId, int round, CharacterMove.Type targetType) : base(clientId, round)
+        public UndoLockout(ulong clientId, int round, Move.Type targetType) : base(clientId, round)
         {
             _targetType = targetType;
         }
@@ -64,7 +64,7 @@ public class Character2Effect : CharacterBaseEffect
             base.Execute(context);
 
             var opponentPlayerCharacter = context.GetPlayerCharacterByOpponentClientId(ClientId);
-            if (_targetType != CharacterMove.Type.Special)
+            if (_targetType != Move.Type.Special)
             {
                 opponentPlayerCharacter.UsableMoveSet.EnableMoveByType(_targetType);
             }

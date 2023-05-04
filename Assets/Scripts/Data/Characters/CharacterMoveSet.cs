@@ -4,27 +4,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewCharacterMoveSet", menuName = "Characters/Character Move Set")]
 public class CharacterMoveSet : ScriptableObject
 {
-    [SerializeField] private CharacterMove _lightAttack;
-    [SerializeField] private CharacterMove _heavyAttack;
-    [SerializeField] private CharacterMove _parry;
-    [SerializeField] private CharacterMove _grab;
-    [SerializeField] private CharacterMove _special;
+    [SerializeField] private Move _lightAttack;
+    [SerializeField] private Move _heavyAttack;
+    [SerializeField] private Move _parry;
+    [SerializeField] private Move _grab;
+    [SerializeField] private Move _special;
 
-    public CharacterMove LightAttack => _lightAttack;
-    public CharacterMove HeavyAttack => _heavyAttack;
-    public CharacterMove Parry => _parry;
-    public CharacterMove Grab => _grab;
-    public CharacterMove Special => _special;
+    public Move LightAttack => _lightAttack;
+    public Move HeavyAttack => _heavyAttack;
+    public Move Parry => _parry;
+    public Move Grab => _grab;
+    public Move Special => _special;
 
-    public CharacterMove GetMoveByType(CharacterMove.Type type)
+    public Move GetMoveByType(Move.Type type)
     {
         return type switch
         {
-            CharacterMove.Type.LightAttack => _lightAttack,
-            CharacterMove.Type.HeavyAttack => _heavyAttack,
-            CharacterMove.Type.Parry => _parry,
-            CharacterMove.Type.Grab => _grab,
-            CharacterMove.Type.Special => _special,
+            Move.Type.LightAttack => _lightAttack,
+            Move.Type.HeavyAttack => _heavyAttack,
+            Move.Type.Parry => _parry,
+            Move.Type.Grab => _grab,
+            Move.Type.Special => _special,
             _ => null,
         };
     }

@@ -33,7 +33,7 @@ public class CharacterSpawner : NetworkBehaviour
         {
             var clientId = client.Value.clientId;
             var characterId = client.Value.characterId;
-            var character = _database.CharacterDB.GetCharacterById(characterId);
+            var character = _database.Characters.GetCharacterById(characterId);
             if (character == null)
             {
                 throw new Exception($"Error getting character from database. characterId: {client.Value.characterId}");

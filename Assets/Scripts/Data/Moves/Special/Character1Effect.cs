@@ -17,8 +17,8 @@ public class Character1Effect : CharacterBaseEffect
     public override float GetOutgoingDamageModifier(GameData context, ulong clientId)
     {
         var myMoveId = _playerCharacter.Action;
-        var myMove = _database.MoveDB.GetMoveById(myMoveId);
-        if (myMove != null && myMove.MoveType == CharacterMove.Type.Grab)
+        var myMove = _database.Moves.GetMoveById(myMoveId);
+        if (myMove != null && myMove.MoveType == Move.Type.Grab)
         {
             return 1.5f;
         }

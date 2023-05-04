@@ -36,9 +36,9 @@ public class UsableMoveSetTest
     private void InitializeCheckByte()
     {
         var moveSet = _testObject.GetComponent<PlayerCharacter>().Character.CharacterMoveSet;
-        var moveTypeList = Enum.GetValues(typeof(CharacterMove.Type));
+        var moveTypeList = Enum.GetValues(typeof(Move.Type));
         _initialCheckByte = 0;
-        foreach (CharacterMove.Type type in moveTypeList)
+        foreach (Move.Type type in moveTypeList)
         {
             byte isUsable = (byte)(moveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
             byte typeAsByte = (byte)type;
@@ -53,12 +53,12 @@ public class UsableMoveSetTest
     }
 
     [Test, Order(2)]
-    [TestCase(CharacterMove.Type.Special)]
-    [TestCase(CharacterMove.Type.Parry)]
-    [TestCase(CharacterMove.Type.Grab)]
-    [TestCase(CharacterMove.Type.LightAttack)]
-    [TestCase(CharacterMove.Type.HeavyAttack)]
-    public void CheckEnabledByTypeReturnsCorrectValue(CharacterMove.Type type)
+    [TestCase(Move.Type.Special)]
+    [TestCase(Move.Type.Parry)]
+    [TestCase(Move.Type.Grab)]
+    [TestCase(Move.Type.LightAttack)]
+    [TestCase(Move.Type.HeavyAttack)]
+    public void CheckEnabledByTypeReturnsCorrectValue(Move.Type type)
     {
         bool result = _usableMoveSet.CheckEnabledByType(type);
         byte mask = (byte) type;
@@ -67,24 +67,24 @@ public class UsableMoveSetTest
     }
 
     [Test]
-    [TestCase(CharacterMove.Type.Special)]
-    [TestCase(CharacterMove.Type.Parry)]
-    [TestCase(CharacterMove.Type.Grab)]
-    [TestCase(CharacterMove.Type.LightAttack)]
-    [TestCase(CharacterMove.Type.HeavyAttack)]
-    public void DisablesMoveByTypeCorrectly(CharacterMove.Type type)
+    [TestCase(Move.Type.Special)]
+    [TestCase(Move.Type.Parry)]
+    [TestCase(Move.Type.Grab)]
+    [TestCase(Move.Type.LightAttack)]
+    [TestCase(Move.Type.HeavyAttack)]
+    public void DisablesMoveByTypeCorrectly(Move.Type type)
     {
         _usableMoveSet.DisableMoveByType(type);
         Assert.IsFalse(_usableMoveSet.CheckEnabledByType(type));
     }
 
     [Test]
-    [TestCase(CharacterMove.Type.Special)]
-    [TestCase(CharacterMove.Type.Parry)]
-    [TestCase(CharacterMove.Type.Grab)]
-    [TestCase(CharacterMove.Type.LightAttack)]
-    [TestCase(CharacterMove.Type.HeavyAttack)]
-    public void EnablesMoveByTypeCorrectly(CharacterMove.Type type)
+    [TestCase(Move.Type.Special)]
+    [TestCase(Move.Type.Parry)]
+    [TestCase(Move.Type.Grab)]
+    [TestCase(Move.Type.LightAttack)]
+    [TestCase(Move.Type.HeavyAttack)]
+    public void EnablesMoveByTypeCorrectly(Move.Type type)
     {
         _usableMoveSet.EnableMoveByType(type);
         Assert.IsTrue(_usableMoveSet.CheckEnabledByType(type));

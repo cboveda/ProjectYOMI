@@ -2,12 +2,12 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Character Move Database", menuName = "Characters/Move Database")]
-public class CharacterMoveDatabase : ScriptableObject
+public class MoveDatabase : ScriptableObject
 {
-    [SerializeField] private CharacterMove[] _moves = new CharacterMove[0];
+    [SerializeField] private Move[] _moves = new Move[0];
 
-    public CharacterMove[] GetAllMoves() => _moves;
-    public CharacterMove GetMoveById(int id)
+    public Move[] GetAllMoves() => _moves;
+    public Move GetMoveById(int id)
     {
 
         foreach (var move in _moves)

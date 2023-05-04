@@ -113,6 +113,6 @@ public class PlayerCharacter : NetworkBehaviour
 
     public void ResetAction()
     {
-        Action = CharacterMove.NO_MOVE;
+        Action = Move.NO_MOVE;
     }
 }
