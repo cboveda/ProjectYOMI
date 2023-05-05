@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class GameData : NetworkBehaviour
+public class TurnHistory : NetworkBehaviour
 {
     //History
     private NetworkList<TurnData> _turnDataList;

@@ -23,7 +23,7 @@ public class GameTurnResolveState : GameBaseState
     {
         _context.SetTimer(_context.RoundResolveDuration);
         var turnData = _context.CombatEvaluator.EvaluateTurnCombat();
-        _context.GameData.AddTurnData(turnData);
+        _context.TurnHistory.AddTurnData(turnData);
     }
 
     public override void ExitState()

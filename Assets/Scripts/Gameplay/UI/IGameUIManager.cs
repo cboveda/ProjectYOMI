@@ -1,9 +1,7 @@
 ﻿using Unity.Netcode;
 
 public interface IGameUIManager
-{
-    GameData Data { get; }
-
+{ 
     void DisplayGameResultClientRpc(string result);
     void DisplayRoundResult(TurnData turnData);
     void HideRoundResultClientRpc();

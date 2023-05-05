@@ -14,17 +14,17 @@ public class CharacterSpawner : NetworkBehaviour
     private IServerManager _serverManager;
     private PlayerDataCollection _players;
     private CombatEvaluator _combatEvaluator;
-    private GameData _gameData;
+    private TurnHistory _turnHistory;
 
     [Inject]
-    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players, CombatEvaluator combatEvaluator, GameData gameData)
+    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players, CombatEvaluator combatEvaluator, TurnHistory turnHistory)
     {
         _gameUIManager = gameUIManager;
         _serverManager = serverManager;
         _database = database;
         _players = players;
         _combatEvaluator = combatEvaluator;
-        _gameData = gameData;
+        _turnHistory = turnHistory;
     }
 
     public override void OnNetworkSpawn()
@@ -52,7 +52,7 @@ public class CharacterSpawner : NetworkBehaviour
         playerCharacter.GameUIManager = _gameUIManager;
         playerCharacter.ClientId = clientId;
         playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
-        playerCharacter.Effect.Contstruct(playerCharacter, _gameData, _players, _database, _combatEvaluator);
+        playerCharacter.Effect.Contstruct(playerCharacter, _turnHistory, _players, _database, _combatEvaluator);
     }
 
     private void SpawnPlayerObjectForGivenClientId(ulong clientId, Character character, out NetworkObject instance)

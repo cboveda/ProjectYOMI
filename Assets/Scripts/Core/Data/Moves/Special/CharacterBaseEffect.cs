@@ -6,13 +6,13 @@ public abstract class CharacterBaseEffect : MonoBehaviour
     protected PlayerDataCollection _players;
     protected CombatEvaluator _combatEvaluator;
     protected Database _database;
-    protected GameData _gameData;
+    protected TurnHistory _turnHistory;
 
     // TODO: Figure out Zenject factories
-    public void Contstruct(PlayerCharacter playerCharacter, GameData gameData, PlayerDataCollection players, Database database, CombatEvaluator combatEvaluator)
+    public void Contstruct(PlayerCharacter playerCharacter, TurnHistory turnHistory, PlayerDataCollection players, Database database, CombatEvaluator combatEvaluator)
     {
         _playerCharacter = playerCharacter;
-        _gameData = gameData;
+        _turnHistory = turnHistory;
         _players = players;
         _database = database;
         _combatEvaluator = combatEvaluator;

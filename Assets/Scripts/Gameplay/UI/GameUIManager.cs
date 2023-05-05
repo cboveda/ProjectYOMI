@@ -21,30 +21,28 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player2Name;
     private Database _database;
-    private GameData _data;
+    private TurnHistory _turnHistory;
     private NetworkManager _networkManager;
     private PlayerCharacter _localPlayerCharacter;
     private PlayerDataCollection _players;
 
-    public GameData Data { get => _data; }
-
     [Inject]
-    public void Construct(NetworkManager networkManager, Database database, PlayerDataCollection players, GameData gameData)
+    public void Construct(NetworkManager networkManager, Database database, PlayerDataCollection players, TurnHistory turnHistory)
     {
         _networkManager = networkManager;
         _database = database;
         _players = players;
-        _data = gameData;
+        _turnHistory = turnHistory;
     }
 
     public override void OnNetworkSpawn()
     {
-        _data.TurnDataList.OnListChanged += HandleTurnData;
+        _turnHistory.TurnDataList.OnListChanged += HandleTurnData;
     }
 
     public override void OnNetworkDespawn()
     {
-        _data.TurnDataList.OnListChanged -= HandleTurnData;
+        _turnHistory.TurnDataList.OnListChanged -= HandleTurnData;
         _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged += UpdateUsableMoveButtons;
     }
 

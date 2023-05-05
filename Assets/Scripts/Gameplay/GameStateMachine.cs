@@ -18,7 +18,7 @@ public class GameStateMachine : NetworkBehaviour
     private GameStateFactory _states;
     private IGameUIManager _gameUIManager;
     private NetworkManager _networkManager;
-    private GameData _gameData;
+    private TurnHistory _turnHistory;
     private PlayerDataCollection _players;
     private CombatEvaluator _combatEvaluator;
 
@@ -29,16 +29,16 @@ public class GameStateMachine : NetworkBehaviour
     public float RoundResolveDuration { get { return _roundResolveDuration; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
-    public GameData GameData { get { return _gameData; } }
+    public TurnHistory TurnHistory { get { return _turnHistory; } }
     public PlayerDataCollection Players { get {  return _players; } }
     public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
 
     [Inject]
-    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, GameData gameData, PlayerDataCollection players, CombatEvaluator combatEvaluator)
+    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, TurnHistory turnHistory, PlayerDataCollection players, CombatEvaluator combatEvaluator)
     {
         _networkManager = networkManager;
         _gameUIManager = gameUIManager;
-        _gameData = gameData;
+        _turnHistory = turnHistory;
         _players = players;
         _combatEvaluator = combatEvaluator;
     }

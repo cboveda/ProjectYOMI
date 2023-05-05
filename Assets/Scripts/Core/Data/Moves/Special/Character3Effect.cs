@@ -36,7 +36,7 @@ public class Character3Effect : CharacterBaseEffect
             return 2.0f;
         }
         
-        var lastRound = _gameData.TurnDataList[^1];
+        var lastRound = _turnHistory.TurnDataList[^1];
         bool isPlayer1 = _playerCharacter.PlayerNumber == 1;
         var currentMove = _playerCharacter.PlayerData.Action;
         if ((isPlayer1 ? lastRound.PlayerData1.Action : lastRound.PlayerData2.Action) == currentMove)
