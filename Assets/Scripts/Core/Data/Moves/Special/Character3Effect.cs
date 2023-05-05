@@ -1,9 +1,10 @@
 using UnityEngine;
+using Zenject;
 
 public class Character3Effect : CharacterBaseEffect
 {
     private readonly float[] _outgoingDamageModifiers = { 0.8f, 1.0f, 1.2f, 1.5f};
-    [SerializeField] int _modifierIndex;
+    private int _modifierIndex;
     private bool _specialUsed;
 
     private void Awake()

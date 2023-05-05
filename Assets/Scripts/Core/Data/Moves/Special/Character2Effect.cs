@@ -1,3 +1,5 @@
+using Zenject;
+
 public class Character2Effect : CharacterBaseEffect
 {
     public override void DoSpecial()

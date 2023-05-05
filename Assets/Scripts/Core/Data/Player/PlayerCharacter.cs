@@ -4,9 +4,9 @@ using Zenject;
 
 public class PlayerCharacter : NetworkBehaviour
 {
-    private IGameUIManager _gameUIManager;
     [SerializeField] private Character _character;
     private CharacterBaseEffect _characterBaseEffect;
+    private IGameUIManager _gameUIManager;
     private int _playerNumber;
     private PlayerData _playerData;
     private ulong _clientId;
@@ -14,11 +14,11 @@ public class PlayerCharacter : NetworkBehaviour
 
     public Character Character { get => _character; }
     public CharacterBaseEffect Effect { get => _characterBaseEffect; }
+    public IGameUIManager GameUIManager { set => _gameUIManager = value; }
     public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
     public PlayerData PlayerData { get => _playerData; set => _playerData = value; }
     public ulong ClientId { get => _clientId; set => _clientId = value; }
     public UsableMoveSet UsableMoveSet { get => _usableMoveSet; }
-    public IGameUIManager GameUIManager { set => _gameUIManager = value; }
 
     void Awake()
     {

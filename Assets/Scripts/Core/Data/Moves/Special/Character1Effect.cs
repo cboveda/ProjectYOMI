@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class Character1Effect : CharacterBaseEffect
 {

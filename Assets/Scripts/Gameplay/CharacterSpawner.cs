@@ -13,14 +13,18 @@ public class CharacterSpawner : NetworkBehaviour
     private IGameUIManager _gameUIManager;
     private IServerManager _serverManager;
     private PlayerDataCollection _players;
+    private CombatEvaluator _combatEvaluator;
+    private GameData _gameData;
 
     [Inject]
-    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players)
+    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players, CombatEvaluator combatEvaluator, GameData gameData)
     {
         _gameUIManager = gameUIManager;
         _serverManager = serverManager;
         _database = database;
         _players = players;
+        _combatEvaluator = combatEvaluator;
+        _gameData = gameData;
     }
 
     public override void OnNetworkSpawn()
@@ -35,22 +39,20 @@ public class CharacterSpawner : NetworkBehaviour
             var clientId = client.Value.clientId;
             var characterId = client.Value.characterId;
             var character = _database.Characters.GetCharacterById(characterId);
-            if (character == null)
-            {
-                throw new Exception($"Error getting character from database. characterId: {client.Value.characterId}");
-            }
             SpawnPlayerObjectForGivenClientId(clientId, character, out var instance);
-            if (!instance.TryGetComponent<PlayerCharacter>(out var playerCharacter))
-            {
-                throw new Exception("Error getting PlayerCharacter component of player object");
-            }
-            playerCharacter.GameUIManager = _gameUIManager;
-            playerCharacter.ClientId = clientId;
-            playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
+            var playerCharacter = instance.GetComponent<PlayerCharacter>();
+            InitializePlayerCharacterFields(clientId, playerCharacter);
             RegisterPlayerObjectWithSystems(clientId, playerCharacter);
-
             _hasSpawnedPlayer1 = true;
         }
+    }
+
+    private void InitializePlayerCharacterFields(ulong clientId, PlayerCharacter playerCharacter)
+    {
+        playerCharacter.GameUIManager = _gameUIManager;
+        playerCharacter.ClientId = clientId;
+        playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
+        playerCharacter.Effect.Contstruct(playerCharacter, _gameData, _players, _database, _combatEvaluator);
     }
 
     private void SpawnPlayerObjectForGivenClientId(ulong clientId, Character character, out NetworkObject instance)

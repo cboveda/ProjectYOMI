@@ -17,7 +17,6 @@ public class PlayerControls : MonoBehaviour
     [Inject]
     public void Construct(Database database)
     {
-        Debug.Log("PlayerControls Injected!");
         _database = database;
     }
 
@@ -36,8 +35,6 @@ public class PlayerControls : MonoBehaviour
 
     public void RegisterCharacterMoveSet(int lightId, int heavyId, int parryId, int grabId, int specialId)
     {
-        Debug.Log($"Is database null? {_database == null}");
-        Debug.Log($"Is database.Moves null? {_database.Moves == null}");
         _lightAttackButton.SetMove(_database.Moves.GetMoveById(lightId));
         _heavyAttackButton.SetMove(_database.Moves.GetMoveById(heavyId));
         _parryButton.SetMove(_database.Moves.GetMoveById(parryId));
