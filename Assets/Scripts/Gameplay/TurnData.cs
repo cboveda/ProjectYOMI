@@ -45,6 +45,6 @@ public struct TurnData : INetworkSerializable, IEquatable<TurnData>
 
     public override string ToString()
     {
-        return $"[Turn {TurnNumber}] P1: {PlayerData1} Dmg: {DamageToPlayer1}, P2: {PlayerData2} Dmg {DamageToPlayer2}";
+        return $"[Turn {TurnNumber}]\nP1: {PlayerData1}, DmgTaken: {DamageToPlayer1}\nP2: {PlayerData2}, DmgTaken: {DamageToPlayer2}";
     }
 }

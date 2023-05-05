@@ -35,6 +35,6 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
 
     public override string ToString()
     {
-        return $"{{He: {Health}, Sp: {SpecialMeter}, Ac: {Action}, Cm: {ComboCount}}}";
+        return $"{{Health: {Health}, Special: {SpecialMeter}, Action: {Action}, Combo: {ComboCount}}}";
     }
 }

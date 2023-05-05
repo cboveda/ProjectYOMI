@@ -129,7 +129,7 @@ public class PlayerCharacter : NetworkBehaviour
 
     public void IncreaseSpecialMeter(float value)
     {
-        SpecialMeter -= value;
+        SpecialMeter += value;
     }
 
     public void IncrementComboCount()
