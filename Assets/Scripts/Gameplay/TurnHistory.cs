@@ -16,4 +16,9 @@ public class TurnHistory : NetworkBehaviour
     {
         _turnDataList.Add(turnData);
     }
+
+    public int GetCurrentTurnNumber()
+    {
+        return _turnDataList.Count + 1;
+    }
 }
