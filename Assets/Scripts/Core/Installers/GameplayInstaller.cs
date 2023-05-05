@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Zenject;
 
 public class GameplayInstaller : MonoInstaller
@@ -11,8 +10,16 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle()
             .NonLazy();
 
+        Container.Bind<GameData>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+
         Container.Bind<PlayerDataCollection>()
             .FromNew()
-            .NonLazy();
+            .AsSingle();
+
+        Container.Bind<CombatEvaluator>()
+            .FromNew()
+            .AsSingle();
     }
 }

@@ -4,9 +4,7 @@ using UnityEngine.UI;
 using Zenject;
 
 public class PlayerControls : MonoBehaviour
-{
-    public static PlayerControls Instance { get; private set; }
-
+{ 
     private Database _database;
 
     [SerializeField] private MoveButton _lightAttackButton;
@@ -19,20 +17,8 @@ public class PlayerControls : MonoBehaviour
     [Inject]
     public void Construct(Database database)
     {
+        Debug.Log("PlayerControls Injected!");
         _database = database;
-    }
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-        
     }
 
     public MoveButton GetButtonByType(Move.Type type)
@@ -50,6 +36,8 @@ public class PlayerControls : MonoBehaviour
 
     public void RegisterCharacterMoveSet(int lightId, int heavyId, int parryId, int grabId, int specialId)
     {
+        Debug.Log($"Is database null? {_database == null}");
+        Debug.Log($"Is database.Moves null? {_database.Moves == null}");
         _lightAttackButton.SetMove(_database.Moves.GetMoveById(lightId));
         _heavyAttackButton.SetMove(_database.Moves.GetMoveById(heavyId));
         _parryButton.SetMove(_database.Moves.GetMoveById(parryId));

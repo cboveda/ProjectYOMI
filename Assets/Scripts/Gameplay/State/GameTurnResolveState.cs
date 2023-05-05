@@ -8,7 +8,7 @@ public class GameTurnResolveState : GameBaseState
     {
         if (_context.TimerComplete)
         {
-            if (GameData.Instance.GameShouldEnd())
+            if (_context.Players.GameShouldEnd())
             {
                 SwitchState(_factory.End());
             }
@@ -22,18 +22,13 @@ public class GameTurnResolveState : GameBaseState
     public override void EnterState()
     {
         _context.SetTimer(_context.RoundResolveDuration);
-        GameData.Instance.EvaluateTurnCombat();
-        //set time dilation
-        //read player inputs
-        //determine combat outcome
-        //apply health changes
-        //start animations
+        var turnData = _context.CombatEvaluator.EvaluateTurnCombat();
+        _context.GameData.AddTurnData(turnData);
     }
 
     public override void ExitState()
     {
-        GameUIManager.Instance.HideRoundResultClientRpc();
-        //reset time dilation
+        _context.GameplayUI.HideRoundResultClientRpc();
     }
 
     public override void UpdateState()

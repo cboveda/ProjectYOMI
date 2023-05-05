@@ -12,7 +12,7 @@ public class Character3Effect : CharacterBaseEffect
         _specialUsed = false;
     }
 
-    public override void DoSpecial(GameData context, ulong clientId)
+    public override void DoSpecial()
     {
         // @TODO: needs work. This implementation will mess up turn history I think. Need a way to modify how a win is evaluated. For now, just does the double damage part.
         //bool isPlayer1 = _playerCharacter.PlayerNumber == 1;
@@ -22,12 +22,12 @@ public class Character3Effect : CharacterBaseEffect
         _specialUsed = true;
     }
 
-    public override float GetIncomingDamageModifier(GameData context, ulong clientId)
+    public override float GetIncomingDamageModifier()
     {
         return 1.0f;
     }
 
-    public override float GetOutgoingDamageModifier(GameData context, ulong clientId)
+    public override float GetOutgoingDamageModifier()
     {
         if (_specialUsed)
         {
@@ -35,7 +35,7 @@ public class Character3Effect : CharacterBaseEffect
             return 2.0f;
         }
         
-        var lastRound = context.TurnDataList[^1];
+        var lastRound = _gameData.TurnDataList[^1];
         bool isPlayer1 = _playerCharacter.PlayerNumber == 1;
         var currentMove = _playerCharacter.PlayerData.Action;
         if ((isPlayer1 ? lastRound.PlayerData1.Action : lastRound.PlayerData2.Action) == currentMove)
@@ -49,12 +49,12 @@ public class Character3Effect : CharacterBaseEffect
         return _outgoingDamageModifiers[_modifierIndex];
     }
 
-    public override float GetSpecialMeterGainModifier(GameData context, ulong clientId)
+    public override float GetSpecialMeterGainModifier()
     {
         return 1.0f;
     }
 
-    public override float GetSpecialMeterGivenModifier(GameData context, ulong clientId)
+    public override float GetSpecialMeterGivenModifier()
     {
         return 1.0f;
     }

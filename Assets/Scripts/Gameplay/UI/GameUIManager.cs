@@ -6,10 +6,6 @@ using Zenject;
 
 public class GameUIManager : NetworkBehaviour, IGameUIManager
 {
-    private static GameUIManager _instance;
-    public static GameUIManager Instance { get => _instance; }
-
-    [SerializeField] private GameData _data;
     [SerializeField] private GameObject _player1ComboContainer;
     [SerializeField] private GameObject _player2ComboContainer;
     [SerializeField] private GameResult _gameResult;
@@ -24,29 +20,21 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [SerializeField] private TMP_Text _player1Name;
     [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player2Name;
-    private PlayerCharacter _localPlayerCharacter;
-    private NetworkManager _networkManager;
     private Database _database;
+    private GameData _data;
+    private NetworkManager _networkManager;
+    private PlayerCharacter _localPlayerCharacter;
+    private PlayerDataCollection _players;
 
     public GameData Data { get => _data; }
 
     [Inject]
-    public void Construct(NetworkManager networkManager, Database database)
+    public void Construct(NetworkManager networkManager, Database database, PlayerDataCollection players, GameData gameData)
     {
         _networkManager = networkManager;
         _database = database;
-    }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
+        _players = players;
+        _data = gameData;
     }
 
     public override void OnNetworkSpawn()
@@ -190,7 +178,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
 
     public void SubmitPlayerAction(int id)
     {
-        Data.SubmitPlayerActionServerRpc(id);
+        _localPlayerCharacter.SubmitPlayerActionServerRpc(id);
     }
 
 
@@ -218,7 +206,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
 
     public void RegisterPlayerCharacter(int playerNumber, ulong clientId)
     {
-        var playerCharacter = _data.GetPlayerCharacterByClientId(clientId);
+        var playerCharacter = _players.GetByClientId(clientId);
         if (playerCharacter == null)
         {
             throw new Exception("Failed to get player character");

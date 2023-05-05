@@ -1,33 +1,36 @@
 public class Character2Effect : CharacterBaseEffect
 {
-    public override void DoSpecial(GameData context, ulong clientId)
+    public override void DoSpecial()
     {
-        var opponentPlayerCharacter = context.GetPlayerCharacterByOpponentClientId(clientId);
+        var myId = _playerCharacter.ClientId;
+        var opponentPlayerCharacter = _players.GetByOpponentClientId(myId);
+        var opponentClientId = opponentPlayerCharacter.ClientId;
         var opponentMoveId = opponentPlayerCharacter.PlayerData.Action;
         var opponentMove = _database.Moves.GetMoveById(opponentMoveId);
-        var type = opponentMove ? opponentMove.MoveType : Move.Type.LightAttack; //What to do if the player didn't select? Picks LightAttack
+        var opponentMoveType = opponentMove ? opponentMove.MoveType : Move.Type.LightAttack; //What to do if the player didn't select? Picks LightAttack
+        var currentTurnNumber = _combatEvaluator.TurnNumber;
 
-        context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber, type));
-        context.CombatCommands.Add(new ApplyLockout(clientId, context.RoundNumber + 1, type));
-        context.CombatCommands.Add(new UndoLockout(clientId, context.RoundNumber + 2, type));
+        _combatEvaluator.AddCombatCommand(new ApplyLockout(opponentClientId, currentTurnNumber, opponentMoveType));
+        _combatEvaluator.AddCombatCommand(new ApplyLockout(opponentClientId, currentTurnNumber + 1, opponentMoveType));
+        _combatEvaluator.AddCombatCommand(new UndoLockout(opponentClientId, currentTurnNumber + 2, opponentMoveType));
     }
 
-    public override float GetIncomingDamageModifier(GameData context, ulong clientId)
+    public override float GetIncomingDamageModifier()
     {
         return 1.0f;
     }
 
-    public override float GetOutgoingDamageModifier(GameData context, ulong clientId)
+    public override float GetOutgoingDamageModifier()
     {
         return 1.0f;
     }
 
-    public override float GetSpecialMeterGainModifier(GameData context, ulong clientId)
+    public override float GetSpecialMeterGainModifier()
     {
         return 1.0f;
     }
 
-    public override float GetSpecialMeterGivenModifier(GameData context, ulong clientId)
+    public override float GetSpecialMeterGivenModifier()
     {
         return 0.80f;
     }
@@ -41,12 +44,12 @@ public class Character2Effect : CharacterBaseEffect
             _targetType = targetType;
         }
 
-        public override void Execute(GameData context)
+        public override void Execute()
         {
-            base.Execute(context);
+            base.Execute();
 
-            var opponentPlayerCharacter = context.GetPlayerCharacterByOpponentClientId(ClientId);
-            opponentPlayerCharacter.UsableMoveSet.DisableMoveByType(_targetType);
+            var targetPlayerCharacter = _players.GetByClientId(TargetClientId);
+            targetPlayerCharacter.UsableMoveSet.DisableMoveByType(_targetType);
         }
     }
 
@@ -59,11 +62,11 @@ public class Character2Effect : CharacterBaseEffect
             _targetType = targetType;
         }
 
-        public override void Execute(GameData context)
+        public override void Execute()
         {
-            base.Execute(context);
+            base.Execute();
 
-            var opponentPlayerCharacter = context.GetPlayerCharacterByOpponentClientId(ClientId);
+            var opponentPlayerCharacter = _players.GetByClientId(TargetClientId);
             if (_targetType != Move.Type.Special)
             {
                 opponentPlayerCharacter.UsableMoveSet.EnableMoveByType(_targetType);

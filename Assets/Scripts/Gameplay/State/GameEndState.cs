@@ -13,7 +13,7 @@ public class GameEndState : GameBaseState
     public override void EnterState()
     {
         string result = "Game Over!";
-        GameUIManager.Instance.DisplayGameResultClientRpc(result);
+        _context.GameplayUI.DisplayGameResultClientRpc(result);
     }
 
     public override void ExitState()

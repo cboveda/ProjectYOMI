@@ -15,17 +15,14 @@ public class GameStartState : GameBaseState
     public override void EnterState()
     {
         _context.SetTimer(_context.GameStartDuration);
-        //show start countdown
     }
 
     public override void ExitState()
     {
-        //destroy start countdown
     }
 
     public override void UpdateState()
     {
-        //tween countdown?
         CheckSwitchStates();
     }
 }

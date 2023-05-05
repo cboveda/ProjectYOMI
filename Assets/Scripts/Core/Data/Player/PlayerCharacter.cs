@@ -115,4 +115,30 @@ public class PlayerCharacter : NetworkBehaviour
     {
         Action = Move.NO_MOVE;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SubmitPlayerActionServerRpc(int moveId, ServerRpcParams serverRpcParams = default)
+    {
+        Action = moveId;
+    }
+
+    public void DecreaseHealth(float value)
+    {
+        Health -= value;
+    }
+
+    public void IncreaseSpecialMeter(float value)
+    {
+        SpecialMeter -= value;
+    }
+
+    public void IncrementComboCount()
+    {
+        ComboCount++;
+    }
+
+    public void ResetComboCount()
+    {
+        ComboCount = 0;
+    }
 }

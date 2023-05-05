@@ -39,7 +39,7 @@ Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/cshar
 
 General assets are grouped by asset type, while context specific assets are grouped by context.
 
-```js
+```C#
 Assets
 ├── Art  // For general art assets
 |   ├── Materials
@@ -49,11 +49,11 @@ Assets
 ├── External
 ├── Levels  // Anything related to game design
 |   ├── Characters
-|   |   ├── [1_Character]  // Assets grouped by context
-|   |   |   ├── [Sound]
-|   |   |   ├── [Prefab]
-|   |   |   ├── [Animation]
-|   |   |   └── [Data]
+|   |   ├── Character1  // Assets grouped by context
+|   |   |   ├── Sound
+|   |   |   ├── Prefab
+|   |   |   ├── Animation
+|   |   |   └── Data
 |   |   └── ...
 |   ├── Moves
 |   ├── Prefabs

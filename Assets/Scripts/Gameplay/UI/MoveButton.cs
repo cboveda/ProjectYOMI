@@ -2,16 +2,24 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class MoveButton : MonoBehaviour
 {
     [SerializeField] TMP_Text _nameText;
     [SerializeField] TMP_Text _typeText;
     [SerializeField] Button _button;
-    private Move _move;
     [SerializeField] private GameObject _highlight;
-
+    private Move _move;
+    private IGameUIManager _gameUIManager;
+    
     public Button Button { get { return _button; } }
+
+    [Inject]
+    public void Construct(IGameUIManager gameUIManager)
+    {
+        _gameUIManager = gameUIManager;
+    }
 
     public void SetMove(Move move)
     {
@@ -25,7 +33,7 @@ public class MoveButton : MonoBehaviour
 
     private void HandleClick()
     {
-        GameUIManager.Instance.SubmitPlayerAction(_move.Id);
+        _gameUIManager.SubmitPlayerAction(_move.Id);
     }
 
     public void SetHighlight(bool value)

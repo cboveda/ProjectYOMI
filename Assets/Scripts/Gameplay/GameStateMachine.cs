@@ -18,6 +18,9 @@ public class GameStateMachine : NetworkBehaviour
     private GameStateFactory _states;
     private IGameUIManager _gameUIManager;
     private NetworkManager _networkManager;
+    private GameData _gameData;
+    private PlayerDataCollection _players;
+    private CombatEvaluator _combatEvaluator;
 
     public bool AllPlayersLoaded { get { return _allPlayersLoaded; } }
     public bool TimerComplete { get {  return _timerComplete; } }
@@ -26,12 +29,18 @@ public class GameStateMachine : NetworkBehaviour
     public float RoundResolveDuration { get { return _roundResolveDuration; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
+    public GameData GameData { get { return _gameData; } }
+    public PlayerDataCollection Players { get {  return _players; } }
+    public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
 
     [Inject]
-    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager)
+    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, GameData gameData, PlayerDataCollection players, CombatEvaluator combatEvaluator)
     {
         _networkManager = networkManager;
         _gameUIManager = gameUIManager;
+        _gameData = gameData;
+        _players = players;
+        _combatEvaluator = combatEvaluator;
     }
 
     public override void OnNetworkSpawn()
