@@ -35,6 +35,42 @@ This repository utilizes trunk-based development to more easily faciliate contin
 
 Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 
+#### Project Structure
+
+General assets are grouped by asset type, while context specific assets are grouped by context.
+
+```C#
+Assets
+├── Art  // For general art assets
+|   ├── Materials
+|   ├── Models
+|   ├── Music
+|   └── Sound
+├── External
+├── Levels  // Anything related to game design
+|   ├── Characters
+|   |   ├── Character1  // Assets grouped by context
+|   |   |   ├── Sound
+|   |   |   ├── Prefab
+|   |   |   ├── Animation
+|   |   |   └── Data
+|   |   └── ...
+|   ├── Moves
+|   ├── Prefabs
+|   └── Scenes
+├── Plugins
+├── Resources  // To be used sparingly
+├── Scripts  // Scripts grouped by context
+|   ├── CharcterSelect
+|   ├── Core
+|   |   ├── Data
+|   |   ├── Installers
+|   |   └── Networking
+|   ├── Gameplay
+|   └── MainMenu
+└── Tests
+```
+
 #### Quality policy
 
 All merges to the main branch shall pass automated build testing and unit testing, with a minimum code coverage percentage to be defined once the CI and testing automations have been implemented (see [here](https://github.com/users/cboveda/projects/3/views/1?filterQuery=milestone%3A%22CI+and+Testing%22) for related tasks).
