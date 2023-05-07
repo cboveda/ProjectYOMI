@@ -1,21 +1,21 @@
-using System.Collections;
-using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
-using Unity.Netcode;
-using System;
 using Moq;
+using NUnit.Framework;
+using System.Collections;
 using System.Linq;
+using Unity.Netcode;
+using UnityEngine.TestTools;
+using UnityEngine;
 
 public class PlayerCharacterAndDataTest
 {
-    NetworkManager _networkManager;
-    GameObject _testObject;
-    PlayerCharacter _playerCharacter;
     bool _initialized = false;
+    GameObject _testObject;
+    Mock<IGameUIManager> _gameUIManagerMock;
+    NetworkManager _networkManager;
+    PlayerCharacter _playerCharacter;
 
     [UnitySetUp]
-    public IEnumerator SetUp()
+    public IEnumerator OneTimeUnitySetUp()
     {
         if (!_initialized)
         {
@@ -35,15 +35,31 @@ public class PlayerCharacterAndDataTest
         }
     }
 
+    [SetUp]
+    public void SetUp()
+    {
+        _gameUIManagerMock = new Mock<IGameUIManager>();
+        _gameUIManagerMock
+            .Setup(
+                m => m.UpdateActiveSelectionButtonClientRpc(
+                    It.IsAny<int>(), 
+                    It.IsAny<int>(), 
+                    It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(
+                        clientRpcParam, 
+                        _playerCharacter.ClientId))))
+            .Verifiable();
+        _playerCharacter.GameUIManager = _gameUIManagerMock.Object;
+    }
+
     [Test, Order(1)]
-    public void IntializesCorrectly()
+    public void PlayerCharacterClassIntializesCorrectly()
     {
         var playerData = _playerCharacter.PlayerData;
         var character = _playerCharacter.Character;
         var compare = new PlayerData(health: character.MaximumHealth);
         var usableMoveSet = _playerCharacter.UsableMoveSet;
         var characterEffect = _playerCharacter.Effect;
-        Assert.AreEqual(playerData, compare);
+        Assert.AreEqual(compare, playerData);
         Assert.NotNull(usableMoveSet);
         Assert.NotNull(characterEffect);
     }
@@ -54,10 +70,10 @@ public class PlayerCharacterAndDataTest
     [TestCase(1, 1)]
     [TestCase(99, 99)]
     [TestCase(101, 100)]
-    public void SetHealthCorrectly(float value, float expected)
+    public void HealthSetterChangesValueCorrectly(float value, float expected)
     {
         _playerCharacter.Health = value;
-        Assert.AreEqual(_playerCharacter.Health, expected);
+        Assert.AreEqual(expected, _playerCharacter.Health);
     }
 
     [Test]
@@ -66,25 +82,35 @@ public class PlayerCharacterAndDataTest
     [TestCase(1, 1)]
     [TestCase(99, 99)]
     [TestCase(101, 100)]
-    public void SetSpecialMeterCorrectly(float value, float expected)
+    public void SpecialMeterSetterChangesValueCorrectly(float value, float expected)
     {
         _playerCharacter.SpecialMeter = value;
-        Assert.AreEqual(_playerCharacter.SpecialMeter, expected);
+        Assert.AreEqual(expected, _playerCharacter.SpecialMeter);
     }
 
     [Test]
-    [TestCase(-1, -1)]
-    [TestCase(1, 1)]
-    [TestCase(2, 2)]
-    public void SetActionCorrectlyAndSendsRpc(int value, int expected)
+    [TestCase(-1)]
+    [TestCase(1)]
+    [TestCase(2)]
+    public void ActionSetterChangesValueCorrectly(int value)
     {
-        var mock = new Mock<IGameUIManager>();
-        mock.Setup(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.Is<int>(v => v == value), It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(clientRpcParam, _playerCharacter.ClientId))))
-            .Verifiable();
-        _playerCharacter.GameUIManager = mock.Object;
         _playerCharacter.Action = value;
-        Assert.AreEqual(_playerCharacter.Action, expected);
-        mock.Verify(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ClientRpcParams>()), Times.Once());
+        Assert.AreEqual(value, _playerCharacter.Action);
+    }
+
+    [Test]
+    [TestCase(1)]
+    [TestCase(2)]
+    public void SubmitPlayerActionServerRpcSetsActionAndSendsClientRpc(int value)
+    {
+        _playerCharacter.SubmitPlayerActionServerRpc(value);
+        Assert.AreEqual(value, _playerCharacter.Action);
+        _gameUIManagerMock.Verify(
+            m => m.UpdateActiveSelectionButtonClientRpc(
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<ClientRpcParams>()),
+            Times.Once());
     }
 
     [Test]
@@ -92,22 +118,64 @@ public class PlayerCharacterAndDataTest
     [TestCase(0, 0)]
     [TestCase(1, 1)]
     [TestCase(2, 2)]
-    public void SetComboCountCorrectly(int value, int expected)
+    public void ComboCountSetterChangesValueCorrectly(int value, int expected)
     {
         _playerCharacter.ComboCount = value;
-        Assert.AreEqual(_playerCharacter.ComboCount, expected);
+        Assert.AreEqual(expected, _playerCharacter.ComboCount);
     }
 
     [Test]
-    public void ResetActionCorrectlyAndSendsRpc()
+    public void ResetActionSetsValueAndSendsRpc()
     {
-        var mock = new Mock<IGameUIManager>();
-        mock.Setup(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.Is<ClientRpcParams>(clientRpcParam => HasCorrectTargetClientId(clientRpcParam, _playerCharacter.ClientId))))
-            .Verifiable();
-        _playerCharacter.GameUIManager = mock.Object;
         _playerCharacter.ResetAction();
         Assert.AreEqual(_playerCharacter.Action, Move.NO_MOVE);
-        mock.Verify(m => m.UpdateActiveSelectionButtonClientRpc(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ClientRpcParams>()), Times.Once());
+        _gameUIManagerMock.Verify(
+            m => m.UpdateActiveSelectionButtonClientRpc(
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<ClientRpcParams>()),
+            Times.Once());
+    }
+
+    [Test]
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(1)]
+    public void DecreaseHealthChangesValueCorrectly(float value)
+    {
+        float initial = _playerCharacter.Health;
+        float expected = initial - value;
+        _playerCharacter.DecreaseHealth(value);
+        Assert.AreEqual(expected, _playerCharacter.Health);
+    }
+
+    [Test]
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(1)]
+    public void IncreaseSpecialMeterChangesValueCorrectly(float value)
+    {
+        float initial = _playerCharacter.SpecialMeter;
+        float expected = initial + value;
+        _playerCharacter.IncreaseSpecialMeter(value);
+        Assert.AreEqual(expected, _playerCharacter.SpecialMeter);
+    }
+
+    [Test]
+    public void IncrementComboCountChangesValueCorrectly()
+    {
+        int initial = _playerCharacter.ComboCount;
+        int expected = initial + 1;
+        _playerCharacter.IncrementComboCount();
+        Assert.AreEqual(expected, _playerCharacter.ComboCount);
+    }
+
+    [Test]
+    public void ResetComboCountChangesValueCorrectly()
+    {
+        int expected = 0;
+        _playerCharacter.ResetComboCount();
+        Assert.AreEqual(expected, _playerCharacter.ComboCount);
     }
 
     [OneTimeTearDown]
