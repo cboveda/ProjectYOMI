@@ -37,7 +37,7 @@ Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/cshar
 
 #### Project Structure
 
-General assets are grouped by asset type, while context specific assets are grouped by context.
+General assets are grouped by asset type, while context-specific assets are grouped by context.
 
 ```C#
 Assets
