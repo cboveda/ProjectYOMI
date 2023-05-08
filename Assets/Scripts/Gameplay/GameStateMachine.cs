@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 public class GameStateMachine : NetworkBehaviour
@@ -10,7 +8,6 @@ public class GameStateMachine : NetworkBehaviour
     [SerializeField] private float _roundActiveDuration;
     [SerializeField] private float _roundResolveDuration;
     [SerializeField] private float _timer;
-    private bool _allPlayersLoaded = false;
     private bool _timerActive = false;
     private bool _timerComplete = false;
     private CombatEvaluator _combatEvaluator;
@@ -22,7 +19,6 @@ public class GameStateMachine : NetworkBehaviour
     private PlayerDataCollection _players;
     private ITurnHistory _turnHistory;
 
-    public bool AllPlayersLoaded { get { return _allPlayersLoaded; } }
     public bool TimerComplete { get {  return _timerComplete; } }
     public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
     public float GameStartDuration { get { return _gameStartDuration; } set { _gameStartDuration = value; } }
@@ -47,20 +43,9 @@ public class GameStateMachine : NetworkBehaviour
     {
         if (!IsServer) return;
 
-#if !UNITY_INCLUDE_TESTS
-        _networkManager.SceneManager.OnLoadEventCompleted += HandleLoadEventCompleted;
-#endif
         _states = new GameStateFactory(this);
-        _currentState = _states.NotReady();
+        _currentState = _states.Start();
         _currentState.EnterState();
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        if (!IsServer) return;
-#if !UNITY_INCLUDE_TESTS
-        _networkManager.SceneManager.OnLoadEventCompleted -= HandleLoadEventCompleted;
-#endif
     }
 
     void Update()
@@ -88,10 +73,5 @@ public class GameStateMachine : NetworkBehaviour
         _timerMax = max;
         _timerActive = true;
         _timerComplete = false;
-    }
-
-    private void HandleLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
-    {
-        _allPlayersLoaded = true;
     }
 }

@@ -12,11 +12,6 @@ public class GameStateFactory
         _context = currentContext;
     }
 
-    public GameBaseState NotReady()
-    {
-        return new GameNotReadyState(_context, this);
-    }
-
     public GameBaseState Start()
     {
         return new GameStartState(_context, this);
