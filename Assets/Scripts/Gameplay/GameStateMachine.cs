@@ -13,34 +13,34 @@ public class GameStateMachine : NetworkBehaviour
     private bool _allPlayersLoaded = false;
     private bool _timerActive = false;
     private bool _timerComplete = false;
+    private CombatEvaluator _combatEvaluator;
     private float _timerMax;
     private GameBaseState _currentState;
     private GameStateFactory _states;
     private IGameUIManager _gameUIManager;
     private NetworkManager _networkManager;
-    private TurnHistory _turnHistory;
     private PlayerDataCollection _players;
-    private CombatEvaluator _combatEvaluator;
+    private TurnHistory _turnHistory;
 
     public bool AllPlayersLoaded { get { return _allPlayersLoaded; } }
     public bool TimerComplete { get {  return _timerComplete; } }
-    public float GameStartDuration { get { return _gameStartDuration; } }
-    public float RoundActiveDuration { get { return _roundActiveDuration; } }
-    public float RoundResolveDuration { get { return _roundResolveDuration; } }
+    public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
+    public float GameStartDuration { get { return _gameStartDuration; } set { _gameStartDuration = value; } }
+    public float RoundActiveDuration { get { return _roundActiveDuration; } set { _roundActiveDuration = value; } }
+    public float RoundResolveDuration { get { return _roundResolveDuration; } set { _roundResolveDuration = value; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
-    public TurnHistory TurnHistory { get { return _turnHistory; } }
     public PlayerDataCollection Players { get {  return _players; } }
-    public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
+    public TurnHistory TurnHistory { get { return _turnHistory; } }
 
     [Inject]
     public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, TurnHistory turnHistory, PlayerDataCollection players, CombatEvaluator combatEvaluator)
     {
-        _networkManager = networkManager;
-        _gameUIManager = gameUIManager;
-        _turnHistory = turnHistory;
-        _players = players;
         _combatEvaluator = combatEvaluator;
+        _gameUIManager = gameUIManager;
+        _networkManager = networkManager;
+        _players = players;
+        _turnHistory = turnHistory;
     }
 
     public override void OnNetworkSpawn()
