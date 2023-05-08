@@ -47,8 +47,9 @@ public class GameStateMachine : NetworkBehaviour
     {
         if (!IsServer) return;
 
+#if !UNITY_INCLUDE_TESTS
         _networkManager.SceneManager.OnLoadEventCompleted += HandleLoadEventCompleted;
-
+#endif
         _states = new GameStateFactory(this);
         _currentState = _states.NotReady();
         _currentState.EnterState();
@@ -57,8 +58,9 @@ public class GameStateMachine : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         if (!IsServer) return;
-
+#if !UNITY_INCLUDE_TESTS
         _networkManager.SceneManager.OnLoadEventCompleted -= HandleLoadEventCompleted;
+#endif
     }
 
     void Update()

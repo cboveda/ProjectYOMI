@@ -25,12 +25,20 @@ public class GameStateMachineTest
             _initialized = true;
             var networkManagerPrefab = Resources.Load("Tests/NetworkManagerTester");
             var testObjectPrefab = (GameObject)Resources.Load("Tests/GameStateMachineTester");
+
             var networkManagerObject = (GameObject)MonoBehaviour.Instantiate(networkManagerPrefab);
             _networkManager = networkManagerObject.GetComponent<NetworkManager>();
             _networkManager.StartHost();
+            yield return null;
+
+
+            Debug.Log("Is SceneManager null? " + _networkManager.SceneManager == null);
+
             _networkManager.AddNetworkPrefab(testObjectPrefab);
             _testObject = (GameObject)MonoBehaviour.Instantiate(testObjectPrefab);
             _testObject.GetComponent<NetworkObject>().Spawn();
+            yield return null;
+
             _gameStateMachine = _testObject.GetComponent<GameStateMachine>();
             _gameUIManagerMock = new Mock<IGameUIManager>();
             _turnHistoryMock = new Mock<ITurnHistory>();
@@ -44,7 +52,7 @@ public class GameStateMachineTest
                 turnHistory: _turnHistoryMock.Object,
                 players: _playerDataCollectionMock.Object,
                 combatEvaluator: _combatEvaluatorMock.Object);
-            yield return null;
+
         }
     }
 
@@ -61,6 +69,36 @@ public class GameStateMachineTest
         _gameStateMachine.SetTimer(testValue);
         yield return new WaitForSeconds(testValue); ;
         Assert.IsTrue(_gameStateMachine.TimerComplete);
+    }
+
+    [Test]
+    public void DependencyGettersReturnCorrectObject()
+    {
+        Assert.AreEqual(_combatEvaluatorMock.Object, _gameStateMachine.CombatEvaluator);
+        Assert.AreEqual(_gameUIManagerMock.Object, _gameStateMachine.GameplayUI);
+        Assert.AreEqual(_playerDataCollectionMock.Object, _gameStateMachine.Players);
+        Assert.AreEqual(_turnHistoryMock.Object, _gameStateMachine.TurnHistory);
+    }
+
+    [Test]
+    public void DurationAccessorsSetAndReturnCorrectValues()
+    {
+        float testValue = 1.123f;
+        _gameStateMachine.GameStartDuration = testValue;
+        _gameStateMachine.RoundActiveDuration = testValue;
+        _gameStateMachine.RoundResolveDuration = testValue;
+        Assert.AreEqual(testValue, _gameStateMachine.GameStartDuration);
+        Assert.AreEqual(testValue, _gameStateMachine.RoundActiveDuration);
+        Assert.AreEqual(testValue, _gameStateMachine.RoundResolveDuration);
+    }
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _networkManager.GetComponent<NetworkManager>().Shutdown();
+        _gameStateMachine.OnNetworkDespawn();
+        GameObject.Destroy(_networkManager.gameObject);
+        GameObject.Destroy(_testObject);
     }
 }
 
