@@ -14,10 +14,10 @@ public class CharacterSpawner : NetworkBehaviour
     private IServerManager _serverManager;
     private PlayerDataCollection _players;
     private CombatEvaluator _combatEvaluator;
-    private TurnHistory _turnHistory;
+    private ITurnHistory _turnHistory;
 
     [Inject]
-    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players, CombatEvaluator combatEvaluator, TurnHistory turnHistory)
+    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players, CombatEvaluator combatEvaluator, ITurnHistory turnHistory)
     {
         _gameUIManager = gameUIManager;
         _serverManager = serverManager;

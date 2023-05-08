@@ -13,7 +13,7 @@ public class GameStateMachineTest
     GameStateMachine _gameStateMachine;
     bool _initialized = false;
     Mock<IGameUIManager> _gameUIManagerMock;
-    Mock<TurnHistory> _turnHistoryMock;
+    Mock<ITurnHistory> _turnHistoryMock;
     Mock<PlayerDataCollection> _playerDataCollectionMock;
     Mock<CombatEvaluator> _combatEvaluatorMock;
 
@@ -33,7 +33,7 @@ public class GameStateMachineTest
             _testObject.GetComponent<NetworkObject>().Spawn();
             _gameStateMachine = _testObject.GetComponent<GameStateMachine>();
             _gameUIManagerMock = new Mock<IGameUIManager>();
-            _turnHistoryMock = new Mock<TurnHistory>();
+            _turnHistoryMock = new Mock<ITurnHistory>();
             _playerDataCollectionMock = new Mock<PlayerDataCollection>();
             _combatEvaluatorMock = new Mock<CombatEvaluator>();
 

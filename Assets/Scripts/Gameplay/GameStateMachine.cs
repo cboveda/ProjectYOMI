@@ -20,7 +20,7 @@ public class GameStateMachine : NetworkBehaviour
     private IGameUIManager _gameUIManager;
     private NetworkManager _networkManager;
     private PlayerDataCollection _players;
-    private TurnHistory _turnHistory;
+    private ITurnHistory _turnHistory;
 
     public bool AllPlayersLoaded { get { return _allPlayersLoaded; } }
     public bool TimerComplete { get {  return _timerComplete; } }
@@ -31,10 +31,10 @@ public class GameStateMachine : NetworkBehaviour
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
     public PlayerDataCollection Players { get {  return _players; } }
-    public TurnHistory TurnHistory { get { return _turnHistory; } }
+    public ITurnHistory TurnHistory { get { return _turnHistory; } }
 
     [Inject]
-    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, TurnHistory turnHistory, PlayerDataCollection players, CombatEvaluator combatEvaluator)
+    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, ITurnHistory turnHistory, PlayerDataCollection players, CombatEvaluator combatEvaluator)
     {
         _combatEvaluator = combatEvaluator;
         _gameUIManager = gameUIManager;

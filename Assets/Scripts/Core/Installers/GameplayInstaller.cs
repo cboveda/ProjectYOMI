@@ -10,7 +10,8 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle()
             .NonLazy();
 
-        Container.Bind<TurnHistory>()
+        Container.Bind<ITurnHistory>()
+            .To<TurnHistory>()
             .FromComponentInHierarchy()
             .AsSingle();
 
