@@ -143,6 +143,7 @@ public class PlayerCharacterAndDataTest
     [TestCase(1)]
     public void DecreaseHealthChangesValueCorrectly(float value)
     {
+        _playerCharacter.Health = _playerCharacter.Character.MaximumHealth / 2;
         float initial = _playerCharacter.Health;
         float expected = initial - value;
         _playerCharacter.DecreaseHealth(value);
@@ -155,6 +156,7 @@ public class PlayerCharacterAndDataTest
     [TestCase(1)]
     public void IncreaseSpecialMeterChangesValueCorrectly(float value)
     {
+        _playerCharacter.SpecialMeter = 10;
         float initial = _playerCharacter.SpecialMeter;
         float expected = initial + value;
         _playerCharacter.IncreaseSpecialMeter(value);
