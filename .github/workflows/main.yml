@@ -16,7 +16,7 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: Library/
+          path: /Library/
           key: Library-Yomi-StandaloneWindows
           restore-keys: |
               Library-Yomi-
@@ -45,7 +45,7 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: Library/
+          path: /Library/
           key: Library-Yomi-StandaloneWindows
           restore-keys: |
               Library-Yomi-
@@ -62,8 +62,6 @@ jobs:
           customParameters: |
             -debugCodeOptimization 
             -enableCodeCoverage 
-            -coverageResultsPath ./coverage-results 
-            -coverageOptions generateAdditionalMetrics
 
       # CodeCov integration
       - name: Upload to Codecov
