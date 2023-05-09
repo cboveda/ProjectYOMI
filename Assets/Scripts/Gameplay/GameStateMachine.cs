@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
-public class GameStateMachine : NetworkBehaviour
+public class GameStateMachine : NetworkBehaviour, IGameStateMachine
 {
     [SerializeField] private float _gameStartDuration;
     [SerializeField] private float _roundActiveDuration;
@@ -19,7 +19,7 @@ public class GameStateMachine : NetworkBehaviour
     private NetworkManager _networkManager;
     private PlayerDataCollection _players;
 
-    public bool TimerComplete { get {  return _timerComplete; } }
+    public bool TimerComplete { get { return _timerComplete; } }
     public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
     public float GameStartDuration { get { return _gameStartDuration; } set { _gameStartDuration = value; } }
     public float RoundActiveDuration { get { return _roundActiveDuration; } set { _roundActiveDuration = value; } }
@@ -27,7 +27,7 @@ public class GameStateMachine : NetworkBehaviour
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
     public ITurnHistory TurnHistory { get { return _turnHistory; } }
-    public PlayerDataCollection Players { get {  return _players; } }
+    public PlayerDataCollection Players { get { return _players; } }
 
     [Inject]
     public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, ITurnHistory turnHistory, PlayerDataCollection players, CombatEvaluator combatEvaluator)

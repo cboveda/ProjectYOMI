@@ -1,6 +1,6 @@
 public class GameStartState : GameBaseState
 {
-    public GameStartState(GameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
+    public GameStartState(IGameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
     {
     }
 
