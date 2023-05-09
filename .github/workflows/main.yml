@@ -63,7 +63,9 @@ jobs:
           customParameters: |
             -debugCodeOptimization 
             -enableCodeCoverage 
-
+      - name: Show files
+        run: ls -a
+        
       # CodeCov integration
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
