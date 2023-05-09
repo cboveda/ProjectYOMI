@@ -69,4 +69,4 @@ jobs:
         with:
           flags: automated
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage-results/**/*.xml
+          files: CoverageResult/**/*.xml
