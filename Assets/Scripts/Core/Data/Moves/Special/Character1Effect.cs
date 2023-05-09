@@ -18,9 +18,6 @@ public class Character1Effect : CharacterBaseEffect
     public override float GetOutgoingDamageModifier()
     {
         var myMoveId = _playerCharacter.Action;
-        Debug.Log($"Is database null? {_database == null}");
-        Debug.Log($"Is database.Moves null? {_database.Moves}");
-
         var myMove = _database.Moves.GetMoveById(myMoveId);
         if (myMove != null && myMove.MoveType == Move.Type.Grab)
         {

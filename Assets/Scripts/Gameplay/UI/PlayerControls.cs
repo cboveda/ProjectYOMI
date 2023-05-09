@@ -5,7 +5,7 @@ using Zenject;
 
 public class PlayerControls : MonoBehaviour
 { 
-    private Database _database;
+    private IDatabase _database;
 
     [SerializeField] private MoveButton _lightAttackButton;
     [SerializeField] private MoveButton _heavyAttackButton;
@@ -15,7 +15,7 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private GameObject _helperArrows;
 
     [Inject]
-    public void Construct(Database database)
+    public void Construct(IDatabase database)
     {
         _database = database;
     }

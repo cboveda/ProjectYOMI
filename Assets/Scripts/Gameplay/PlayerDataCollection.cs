@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class PlayerDataCollection
+public class PlayerDataCollection : IPlayerDataCollection
 {
     private readonly Dictionary<ulong, PlayerCharacter> _playerCharacters;
     private ulong _clientIdPlayer1;
@@ -11,7 +11,7 @@ public class PlayerDataCollection
 
     public PlayerDataCollection()
     {
-        _playerCharacters = new Dictionary<ulong, PlayerCharacter>();   
+        _playerCharacters = new Dictionary<ulong, PlayerCharacter>();
     }
 
     public void RegisterPlayerCharacter(int playerNumber, ulong clientId, PlayerCharacter playerCharacter)
@@ -28,7 +28,7 @@ public class PlayerDataCollection
     }
 
     public PlayerCharacter[] GetAll()
-    { 
+    {
         return _playerCharacters.Values.ToArray();
     }
 
@@ -43,7 +43,7 @@ public class PlayerDataCollection
 
     public PlayerCharacter GetByPlayerNumber(int playerNumber)
     {
-        var clientId = 
+        var clientId =
             playerNumber == 1 ? ClientIdPlayer1 :
             playerNumber == 2 ? ClientIdPlayer2 :
             ulong.MaxValue;
@@ -56,7 +56,7 @@ public class PlayerDataCollection
 
     public PlayerCharacter GetByOpponentClientId(ulong clientId)
     {
-        var targetId = 
+        var targetId =
             ClientIdPlayer1 == clientId ? ClientIdPlayer2 :
             ClientIdPlayer2 == clientId ? ClientIdPlayer1 :
             ulong.MaxValue;

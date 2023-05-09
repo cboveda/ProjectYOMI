@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Unity.Netcode;
 using Zenject;
@@ -9,15 +8,15 @@ public class CharacterSpawner : NetworkBehaviour
     [SerializeField] private GameObject _player2SpawnLocation;
 
     private bool _hasSpawnedPlayer1 = false;
-    private Database _database;
+    private IDatabase _database;
     private IGameUIManager _gameUIManager;
     private IServerManager _serverManager;
-    private PlayerDataCollection _players;
+    private IPlayerDataCollection _players;
     private CombatEvaluator _combatEvaluator;
     private ITurnHistory _turnHistory;
 
     [Inject]
-    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, Database database, PlayerDataCollection players, CombatEvaluator combatEvaluator, ITurnHistory turnHistory)
+    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, IDatabase database, IPlayerDataCollection players, CombatEvaluator combatEvaluator, ITurnHistory turnHistory)
     {
         _gameUIManager = gameUIManager;
         _serverManager = serverManager;
@@ -33,7 +32,11 @@ public class CharacterSpawner : NetworkBehaviour
         {
             return;
         }
+        SpawnCharacters();
+    }
 
+    private void SpawnCharacters()
+    {
         foreach (var client in _serverManager.ClientData)
         {
             var clientId = client.Value.clientId;

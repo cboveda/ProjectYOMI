@@ -3,13 +3,13 @@ using UnityEngine;
 public abstract class CharacterBaseEffect : MonoBehaviour
 {
     protected PlayerCharacter _playerCharacter;
-    protected PlayerDataCollection _players;
+    protected IPlayerDataCollection _players;
     protected CombatEvaluator _combatEvaluator;
-    protected Database _database;
+    protected IDatabase _database;
     protected ITurnHistory _turnHistory;
 
     // TODO: Figure out Zenject factories
-    public void Contstruct(PlayerCharacter playerCharacter, ITurnHistory turnHistory, PlayerDataCollection players, Database database, CombatEvaluator combatEvaluator)
+    public void Contstruct(PlayerCharacter playerCharacter, ITurnHistory turnHistory, IPlayerDataCollection players, IDatabase database, CombatEvaluator combatEvaluator)
     {
         _playerCharacter = playerCharacter;
         _turnHistory = turnHistory;

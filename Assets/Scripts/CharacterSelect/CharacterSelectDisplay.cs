@@ -272,11 +272,10 @@ public class CharacterSelectDisplay : NetworkBehaviour
                 _lockInButton.interactable = false;
                 foreach (var button in _characterButtons)
                 {
-                    if (button.IsDisabled)
+                    if (button.IsEnabled)
                     {
-                        continue;
+                        button.SetDisabled();
                     }
-                    button.SetDisabled();
                 }
                 break;
             }

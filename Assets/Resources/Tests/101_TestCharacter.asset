@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03bf138825ea14c4f88245b302db6afb, type: 3}
+  m_Name: 101_TestCharacter
+  m_EditorClassIdentifier: 
+  _id: 101
+  _displayName: Test Character
+  _informationText: Test Info
+  _icon: {fileID: 21300000, guid: ac1fccc01b32ec948be6be7a7d055bc0, type: 3}
+  _introPrefab: {fileID: 1792858871355532953, guid: 7238a05b979115e45a008e26e06b7948, type: 3}
+  _gameplayPrefab: {fileID: -4886832200975278714, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
+  _characterMoveSet: {fileID: 11400000, guid: ecd433dfba62f7f41b8cc14ef27ab3ad, type: 2}
+  _maximumHealth: 100
+  _effect: {fileID: -1378166976225564033, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}

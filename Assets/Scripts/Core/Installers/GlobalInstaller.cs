@@ -16,7 +16,8 @@ public class GlobalInstaller : MonoInstaller
             .AsSingle()
             .NonLazy();
 
-        Container.Bind<Database>()
+        Container.Bind<IDatabase>()
+            .To<Database>()
             .FromComponentInNewPrefabResource("Database")
             .AsSingle()
             .NonLazy();

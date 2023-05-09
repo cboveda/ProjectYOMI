@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.TextCore.Text;
 
 public class CharacterSelectDisplayTest
 {
@@ -67,6 +69,48 @@ public class CharacterSelectDisplayTest
     }
 
     [Test]
+    [TestCase(101, 102)]
+    [TestCase(102, 101)]
+    public void SelectingCharacterSetsButtonToSelectedAndSetsOtherButtonsToUnselected(int select, int other)
+    {
+        var database = _characterSelectDisplay.CharacterDatabase;
+        var selectedCharacter = database.GetCharacterById(select);
+        var otherCharacter = database.GetCharacterById(other);
+
+        var buttonList = _characterSelectDisplay.CharacterButtons;
+        var selectedButton = buttonList.Find(b => b.Character == selectedCharacter);
+        var otherButton = buttonList.Find(b => b.Character == otherCharacter); ;
+
+        _characterSelectDisplay.Select(selectedCharacter);
+        Assert.IsTrue(selectedButton.IsSelected);
+        Assert.IsFalse(otherButton.IsSelected);
+    }
+
+    [Test]
+    public void ClickingSelectButtonSelectsCharacter()
+    {
+        int id = 101;
+        _characterSelectDisplay.CharacterButtons.Find(b => b.Character.Id == id).SelectCharacter();
+        Assert.AreEqual(id, _characterSelectDisplay.Players[0].CharacterId);
+    }
+
+    [Test]
+    public void SetButtonToDisabledMakesButtonNotInteractable()
+    {
+        var button = _characterSelectDisplay.CharacterButtons[0];
+        button.SetDisabled();
+        Assert.IsFalse(button.IsEnabled);
+    }
+
+    [Test]
+    public void SetButtonToEnabledMakesButtonInteractable()
+    {
+        var button = _characterSelectDisplay.CharacterButtons[0];
+        button.SetEnabled();
+        Assert.IsTrue(button.IsEnabled);
+    }
+
+    [Test]
     public void CanLockInCorrectly()
     {
         var character = (Character)_characterSelectDisplay.CharacterDatabase.GetAllCharacters()[0];
@@ -77,11 +121,17 @@ public class CharacterSelectDisplayTest
         _serverManager.Verify(m => m.StartGame(), Times.Once());
     }
 
+    [Test]
+    public void DespawnDoesNotThrowException()
+    {
+        Assert.DoesNotThrow(() => _characterSelectDisplay.OnNetworkDespawn());
+    }
+
     [OneTimeTearDown]
     public void TearDown()
     {
         _networkManager.GetComponent<NetworkManager>().Shutdown();
         GameObject.Destroy(_networkManager.gameObject);
-        GameObject.Destroy(_testObject);
+        GameObject.Destroy(_testObject.gameObject);
     }
 }

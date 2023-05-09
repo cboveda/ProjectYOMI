@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Character Move Database", menuName = "Characters/Move Database")]
-public class MoveDatabase : ScriptableObject
+public class MoveDatabase : ScriptableObject, IMoveDatabase
 {
     [SerializeField] private Move[] _moves = new Move[0];
 

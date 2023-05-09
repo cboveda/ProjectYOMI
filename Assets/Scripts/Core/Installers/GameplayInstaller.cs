@@ -15,7 +15,8 @@ public class GameplayInstaller : MonoInstaller
             .FromComponentInHierarchy()
             .AsSingle();
 
-        Container.Bind<PlayerDataCollection>()
+        Container.Bind<IPlayerDataCollection>()
+            .To<PlayerDataCollection>()
             .FromNew()
             .AsSingle();
 
