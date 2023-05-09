@@ -1,5 +1,7 @@
 # Project YOMI (Working Title)
 
+[![Build](https://github.com/cboveda/ProjectYOMI/actions/workflows/main.yml/badge.svg)](https://github.com/cboveda/ProjectYOMI/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/cboveda/ProjectYOMI/branch/main/graph/badge.svg?token=NAMSFMFB5I)](https://codecov.io/gh/cboveda/ProjectYOMI)
+
 ## Vision
 
 An online multiplayer, synchronous turn-based fighting game for iOS and Web with colorful visuals, uniquely stylized characters, and social features such as player profiles, leaderboards, and character customization.
