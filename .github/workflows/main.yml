@@ -63,12 +63,14 @@ jobs:
           customParameters: |
             -debugCodeOptimization 
             -enableCodeCoverage 
+      
+      # debug      
       - name: Show files
-        run: ls -a -r
+        run: ls -r
 
       # CodeCov integration
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./CodeCoverage/ 
+          files: ./CodeCoverage/**/*.xml 
