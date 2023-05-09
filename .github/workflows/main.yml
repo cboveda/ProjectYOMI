@@ -53,6 +53,7 @@ jobs:
       
       # Test Runner
       - name: Run tests
+        id: testStep
         uses: game-ci/unity-test-runner@v2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -69,4 +70,4 @@ jobs:
         with:
           flags: automated
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: CoverageResult/**/*.xml
+          files: ${{ steps.testStep.outputs.coveragePath }}
