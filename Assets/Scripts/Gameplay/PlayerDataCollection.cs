@@ -43,21 +43,26 @@ public class PlayerDataCollection
 
     public PlayerCharacter GetByPlayerNumber(int playerNumber)
     {
-        var clientId = playerNumber == 1 ? ClientIdPlayer1 : ClientIdPlayer2;
+        var clientId = 
+            playerNumber == 1 ? ClientIdPlayer1 :
+            playerNumber == 2 ? ClientIdPlayer2 :
+            ulong.MaxValue;
         if (!_playerCharacters.TryGetValue(clientId, out var playerCharacter))
         {
-            return null;
+            throw new System.Exception($"Player character for player#: {playerNumber} not found.");
         }
         return playerCharacter;
     }
 
     public PlayerCharacter GetByOpponentClientId(ulong clientId)
     {
-        var targetId = (ClientIdPlayer1 == clientId) ? ClientIdPlayer2 : ClientIdPlayer1;
-
+        var targetId = 
+            ClientIdPlayer1 == clientId ? ClientIdPlayer2 :
+            ClientIdPlayer2 == clientId ? ClientIdPlayer1 :
+            ulong.MaxValue;
         if (!_playerCharacters.TryGetValue(targetId, out PlayerCharacter playerCharacter))
         {
-            return null;
+            throw new System.Exception($"Player character for opponent id: {clientId} not found.");
         }
         return playerCharacter;
     }

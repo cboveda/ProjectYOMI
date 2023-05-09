@@ -41,7 +41,7 @@ public class PlayerDataCollectionTest
             _collection = new PlayerDataCollection();
             yield return null;
         }
-    }
+    } 
 
     [Test, Order(1)]
     public void InitializesWithEmptyCollection()
@@ -65,7 +65,7 @@ public class PlayerDataCollectionTest
         Assert.AreEqual(playerCharacter.ClientId, clientIdValueInCollection);
     }
 
-    [Test, Order(3)]
+    [Test]
     [TestCase(0)]
     [TestCase(1)]
     public void GetByClientIdReturnsCorrectPlayerCharacter(int index)
@@ -75,7 +75,13 @@ public class PlayerDataCollectionTest
         Assert.AreEqual(compare, output);
     }
 
-    [Test, Order(3)]
+    [Test]
+    public void GetByClientIdThrowsExceptionForInvalidId()
+    {
+        Assert.Throws<System.Exception>(() => _collection.GetByClientId(ulong.MaxValue));
+    }
+
+    [Test]
     [TestCase(0)]
     [TestCase(1)]
     public void GetByPlayerNumberReturnsCorrectPlayerCharacter(int index)
@@ -85,7 +91,13 @@ public class PlayerDataCollectionTest
         Assert.AreEqual(compare, output);
     }
 
-    [Test, Order(3)]
+    [Test]
+    public void GetByPlayerNumberThrowsExceptionIfPlayerNotFound()
+    {
+        Assert.Throws<System.Exception>(() => _collection.GetByPlayerNumber(int.MaxValue));
+    }
+
+    [Test]
     [TestCase(0)]
     [TestCase(1)]
     public void GetByOpponentIdReturnsCorrectPlayerCharacter(int index)
@@ -96,13 +108,19 @@ public class PlayerDataCollectionTest
         Assert.AreEqual(other, output);
     }
 
-    [Test, Order(4)]
+    [Test]
+    public void GetByOpponentIdThrowsExceptionForInvalidId()
+    {
+        Assert.Throws<System.Exception>(() => _collection.GetByOpponentClientId(ulong.MaxValue));
+    }
+
+    [Test]
     public void GameShouldEndReturnsFalseWhenBothPlayerHealthsAreNotZero()
     {
         Assert.IsFalse(_collection.GameShouldEnd());
     }
 
-    [Test, Order(5)]
+    [Test]
     [TestCase((ulong) 0)]
     [TestCase((ulong) 1)]
     public void GameShouldEndReturnsTrueWhenAPlayerHealthIsZero(ulong index)
