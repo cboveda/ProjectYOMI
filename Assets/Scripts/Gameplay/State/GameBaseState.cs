@@ -1,10 +1,10 @@
 using UnityEngine;
 public abstract class GameBaseState
 {
-    protected GameStateMachine _context;
+    protected IGameStateMachine _context;
     protected GameStateFactory _factory;
 
-    public GameBaseState(GameStateMachine currentContext, GameStateFactory gameStateFactory)
+    public GameBaseState(IGameStateMachine currentContext, GameStateFactory gameStateFactory)
     {
         _context = currentContext;
         _factory = gameStateFactory;

@@ -4,7 +4,7 @@ using Zenject;
 
 public class GameStateFactory
 {
-    protected GameStateMachine _context;
+    protected IGameStateMachine _context;
 
     //TODO: Injection, rather than "prop drilling"
     public GameStateFactory(GameStateMachine currentContext)
