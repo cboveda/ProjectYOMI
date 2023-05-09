@@ -7,7 +7,7 @@ public class GameStateFactory
     protected IGameStateMachine _context;
 
     //TODO: Injection, rather than "prop drilling"
-    public GameStateFactory(GameStateMachine currentContext)
+    public GameStateFactory(IGameStateMachine currentContext)
     {
         _context = currentContext;
     }
