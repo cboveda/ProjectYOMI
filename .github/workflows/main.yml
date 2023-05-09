@@ -59,10 +59,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           unityVersion: 2021.3.20f1
-          testMode: All
-          customParameters: |
-            -debugCodeOptimization 
-            -enableCodeCoverage 
+          coverageOptions: 'assemblyFilters:+_ProjectYomi'
       
       # debug      
       - name: Show files
