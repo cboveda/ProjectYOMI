@@ -87,9 +87,8 @@ public class GameStateMachineTest
     public void TearDown()
     {
         _networkManager.GetComponent<NetworkManager>().Shutdown();
-        _gameStateMachine.OnNetworkDespawn();
         GameObject.Destroy(_networkManager.gameObject);
-        GameObject.Destroy(_testObject);
+        GameObject.Destroy(_testObject.gameObject);
     }
 }
 

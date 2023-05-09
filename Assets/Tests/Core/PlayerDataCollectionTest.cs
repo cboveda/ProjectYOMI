@@ -129,4 +129,11 @@ public class PlayerDataCollectionTest
         Assert.IsTrue(_collection.GameShouldEnd());
         _collection.GetByClientId(index).Health = 1;
     }
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _networkManager.Shutdown();
+        GameObject.Destroy(_networkManager.gameObject);
+    }
 }

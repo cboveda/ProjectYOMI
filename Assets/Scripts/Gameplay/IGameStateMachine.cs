@@ -9,7 +9,7 @@ public interface IGameStateMachine
     bool TimerComplete { get; }
     IGameUIManager GameplayUI { get; }
     ITurnHistory TurnHistory { get; }
-    PlayerDataCollection Players { get; }
+    IPlayerDataCollection Players { get; }
     CombatEvaluator CombatEvaluator { get; }
 
     void SetTimer(float max);

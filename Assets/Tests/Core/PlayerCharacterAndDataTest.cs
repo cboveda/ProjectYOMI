@@ -56,12 +56,14 @@ public class PlayerCharacterAndDataTest
     {
         var playerData = _playerCharacter.PlayerData;
         var character = _playerCharacter.Character;
-        var compare = new PlayerData(health: character.MaximumHealth);
+        var playerDataCompare = new PlayerData(health: character.MaximumHealth);
         var usableMoveSet = _playerCharacter.UsableMoveSet;
         var characterEffect = _playerCharacter.Effect;
-        Assert.AreEqual(compare, playerData);
+        Assert.AreEqual(playerDataCompare, playerData);
+        Assert.That(character.Effect, Is.InstanceOf(typeof(CharacterBaseEffect)));
+        Assert.That(characterEffect, Is.InstanceOf(typeof(CharacterBaseEffect)));
         Assert.NotNull(usableMoveSet);
-        Assert.NotNull(characterEffect);
+        Assert.NotNull(character.GameplayPrefab);
     }
 
     [Test]
@@ -185,7 +187,7 @@ public class PlayerCharacterAndDataTest
     {
         _networkManager.GetComponent<NetworkManager>().Shutdown();
         GameObject.Destroy(_networkManager.gameObject);
-        GameObject.Destroy(_testObject);
+        GameObject.Destroy(_testObject.gameObject);
     }
 
     public bool HasCorrectTargetClientId(ClientRpcParams clientRpcParams, ulong targetClientId)

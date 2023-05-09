@@ -10,6 +10,12 @@ public class RoundTimer : MonoBehaviour
     [SerializeField] private float _currentTimeSeconds;
     private bool _timerActive;
 
+#if UNITY_INCLUDE_TESTS
+    public float CurrentTimeSeconds { get => _currentTimeSeconds; }
+    public bool TimerActive { get => _timerActive; }
+#endif
+
+
     void Start()
     {
         _progressBar.current = 0;
@@ -40,14 +46,14 @@ public class RoundTimer : MonoBehaviour
 
     void UpdateDisplay()
     {
-        _progressBar.current = (int) (_currentTimeSeconds * 1000);
+        _progressBar.SetCurrent(_currentTimeSeconds * 1000);
         _timerText.text = string.Format("{0:0.0}", _currentTimeSeconds);
     }
 
     public void StartTimer(float duration)
     {
         _maximumTimeSeconds = duration;
-        _progressBar.maximum = (int)(_maximumTimeSeconds * 1000);
+        _progressBar.SetMaximum(_maximumTimeSeconds * 1000);
         _currentTimeSeconds = _maximumTimeSeconds;
         _timerActive = true;
         _timerText.enabled = true;

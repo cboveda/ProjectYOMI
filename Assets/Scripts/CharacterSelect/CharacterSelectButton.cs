@@ -10,12 +10,14 @@ public class CharacterSelectButton : MonoBehaviour
     private CharacterSelectDisplay _characterSelect;
     public Character Character { get; private set; }
 
-    public bool IsDisabled { get; private set; }
+    public bool IsEnabled { get { return _button.interactable; } private set { _button.interactable = value; } }
+    public bool IsSelected { get; private set; }
     public void SetCharacter(CharacterSelectDisplay characterSelect, Character character)
     {
         _iconImage.sprite = character.Icon;
-        this._characterSelect = characterSelect;
+        _characterSelect = characterSelect;
         Character = character;
+        IsSelected = false;
     }
 
     public void SelectCharacter()
@@ -25,16 +27,23 @@ public class CharacterSelectButton : MonoBehaviour
 
     public void ShowSelected()
     {
+        IsSelected = true;
         _borderImage.color = Color.cyan;
     }
 
     public void ShowUnselected()
     {
+        IsSelected = false;
         _borderImage.color = Color.black;
     }
 
     public void SetDisabled()
     {
-        _button.interactable = false;
+        IsEnabled = false;
+    }
+
+    public void SetEnabled()
+    {
+        IsEnabled = true;
     }
 }

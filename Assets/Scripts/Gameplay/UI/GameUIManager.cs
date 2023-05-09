@@ -20,14 +20,14 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [SerializeField] private TMP_Text _player1Name;
     [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player2Name;
-    private Database _database;
+    private IDatabase _database;
     private ITurnHistory _turnHistory;
     private NetworkManager _networkManager;
     private PlayerCharacter _localPlayerCharacter;
-    private PlayerDataCollection _players;
+    private IPlayerDataCollection _players;
 
     [Inject]
-    public void Construct(NetworkManager networkManager, Database database, PlayerDataCollection players, ITurnHistory turnHistory)
+    public void Construct(NetworkManager networkManager, IDatabase database, IPlayerDataCollection players, ITurnHistory turnHistory)
     {
         _networkManager = networkManager;
         _database = database;

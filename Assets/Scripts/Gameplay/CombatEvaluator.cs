@@ -14,8 +14,8 @@ public class CombatEvaluator
     [SerializeField] private float _chipDamageModifier = 0.5f;
     [SerializeField] private float _specialGainOnLossModifier = 0.35f;
 
-    private Database _database;
-    private PlayerDataCollection _players;
+    private IDatabase _database;
+    private IPlayerDataCollection _players;
     private List<CombatCommandBase> _combatCommands;
     private int _turnNumber = 0;
 
@@ -27,7 +27,7 @@ public class CombatEvaluator
     }
 
     [Inject]
-    public void Construct(Database database, PlayerDataCollection playerDataCollection)
+    public void Construct(IDatabase database, IPlayerDataCollection playerDataCollection)
     {
         _database = database;
         _players = playerDataCollection;

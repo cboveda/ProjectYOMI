@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03bf138825ea14c4f88245b302db6afb, type: 3}
-  m_Name: 0_TestCharacter
+  m_Name: 102_TestCharacter
   m_EditorClassIdentifier: 
-  _id: 0
+  _id: 102
   _displayName: Test Character
   _informationText: Test Info
-  _icon: {fileID: 21300000, guid: d7bf7c8ad1eee824398de9bdc53e9062, type: 3}
+  _icon: {fileID: 21300000, guid: ac1fccc01b32ec948be6be7a7d055bc0, type: 3}
   _introPrefab: {fileID: 1792858871355532953, guid: 7238a05b979115e45a008e26e06b7948, type: 3}
   _gameplayPrefab: {fileID: -4886832200975278714, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
   _characterMoveSet: {fileID: 11400000, guid: ecd433dfba62f7f41b8cc14ef27ab3ad, type: 2}
   _maximumHealth: 100
-  _effect: {fileID: 2801655811604510264, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
+  _effect: {fileID: -1378166976225564033, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
