@@ -64,10 +64,11 @@ jobs:
             -debugCodeOptimization 
             -enableCodeCoverage 
       - name: Show files
-        run: ls -a
-        
+        run: ls -a -r
+
       # CodeCov integration
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./CodeCoverage/ 
