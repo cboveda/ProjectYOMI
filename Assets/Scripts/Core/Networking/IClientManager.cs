@@ -1,4 +1,6 @@
-﻿public interface IClientManager
+﻿using System;
+
+public interface IClientManager
 {
-    void StartClient(string joinCode);
+    void StartClient(string joinCode, Action<string> callback);
 }

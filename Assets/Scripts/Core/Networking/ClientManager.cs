@@ -18,7 +18,7 @@ public class ClientManager : MonoBehaviour, IClientManager
     }
 
 
-    public async void StartClient(string joinCode)
+    public async void StartClient(string joinCode, Action<string> callback)
     {
         JoinAllocation allocation;
 
@@ -29,12 +29,12 @@ public class ClientManager : MonoBehaviour, IClientManager
         catch (Exception e)
         {
             Debug.LogError($"Relay get join code request failed {e.Message}");
+            callback("Failed to connect.");
             throw;
         }
-
+        callback("Connecting...");
         var relayServerData = new RelayServerData(allocation, "dtls");
         _networkManager.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
-
         _networkManager.StartClient();
     }
 }
