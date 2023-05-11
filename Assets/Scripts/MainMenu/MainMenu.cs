@@ -1,3 +1,4 @@
+using ModestTree;
 using System;
 using TMPro;
 using Unity.Netcode;
@@ -39,6 +40,12 @@ public class MainMenu : MonoBehaviour
 
         _connectingText.SetActive(false);
         _buttonPanel.SetActive(true);
+        _inputField.onEndEdit.AddListener((e) =>
+        {
+            StartClient();
+            FocusInputField();
+        });
+        FocusInputField();
     }
 
     public void StartHost()
@@ -49,7 +56,24 @@ public class MainMenu : MonoBehaviour
 
     public void StartClient()
     {
-        _clientManager.StartClient(_inputField.text);
-        _statusText.text = "Attempting to connect...";
+        var joinCode = _inputField.text;
+        if (joinCode.Length == 0)
+        {
+            _statusText.text = "Please enter a join code.";
+            return;
+        }
+        if (joinCode.Length != 6)
+        {
+            _statusText.text = "Please enter a valid join code.";
+            return;
+        }
+        _clientManager.StartClient(joinCode, (message) => _statusText.text = message);
+
+    }
+
+    private void FocusInputField()
+    {
+        _inputField.Select();
+        _inputField.ActivateInputField();
     }
 }
