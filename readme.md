@@ -6,6 +6,12 @@
 
 An online multiplayer, synchronous turn-based fighting game for iOS and Web with colorful visuals, uniquely stylized characters, and social features such as player profiles, leaderboards, and character customization.
 
+## Links
+
+- [Project Management](https://github.com/users/cboveda/projects/3/views/1)
+- [Design Documents](https://github.com/cboveda/ProjectYOMI/wiki)
+- [Dev Journal](https://dev.to/cboveda/series/22535)
+
 ## Tools
 
 This project is being built on the Unity Engine, with Unity Netcode for GameObjects for the networking programming, and Unity Gaming Services handling the network services. Blender and Adobe Illustrator will be used for assets, with placeholders pulled from Mixamo until production assets are finalized.
@@ -19,25 +25,21 @@ This project is being built on the Unity Engine, with Unity Netcode for GameObje
 
 ## Project
 
-### Management
+### Git Workflow
 
-This project is being tracked through GitHub Projects, [here](https://github.com/users/cboveda/projects/3/views/1).
+Trunk-based development with short-lived feature branches.
 
-### Workflow
+### Code Conventions
 
-This repository utilizes trunk-based development to more easily faciliate continuous integration. Even though I am currently the sole developer of this project, rather than committing directly to main, short-lived feature branches and pull requests into main will be used to trigger pre-integration automated build tests and practice what it would be like to work on a larger team.
-
-### Conventions
-
-#### Branch naming syntax
+#### Branch naming
 
 `<work item ID>-<title>`
 
-#### Code standards 
+#### Code style
 
 Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 
-#### Project Structure
+#### Structure
 
 General assets are grouped by asset type, while context-specific assets are grouped by context.
 
@@ -73,6 +75,6 @@ Assets
 └── Tests
 ```
 
-#### Quality policy
+## Quality Policy
 
 All merges to the main branch shall pass automated build testing and unit testing, and shall not decrease total code coverage by greater than 5%.
