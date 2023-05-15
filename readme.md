@@ -29,17 +29,15 @@ This project is being built on the Unity Engine, with Unity Netcode for GameObje
 
 Trunk-based development with short-lived feature branches.
 
-### Code Conventions
-
-#### Branch naming
+### Branch naming
 
 `<work item ID>-<title>`
 
-#### Code style
+### Code style
 
 Following [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 
-#### Structure
+### Structure
 
 General assets are grouped by asset type, while context-specific assets are grouped by context.
 
@@ -75,6 +73,6 @@ Assets
 └── Tests
 ```
 
-## Quality Policy
+### Quality Policy
 
 All merges to the main branch shall pass automated build testing and unit testing, and shall not decrease total code coverage by greater than 5%.
