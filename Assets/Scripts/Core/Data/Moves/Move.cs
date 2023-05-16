@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 
-[CreateAssetMenu(fileName = "NewCharacterMove", menuName = "Characters/Character Move")]
+[CreateAssetMenu(fileName = "NewCharacterMove", menuName = "Moves/Character Move")]
 public class Move : ScriptableObject
 {
     public static readonly int NO_MOVE = -1;
