@@ -9,5 +9,4 @@ public class Database : MonoBehaviour, IDatabase
     public ICharacterDatabase Characters { get => _characterDatabase; }
     public IMoveDatabase Moves { get => _moveDatabase; }
     public IMoveInteractions MoveInteractions { get => _moveInteractions; }
-
 }

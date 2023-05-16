@@ -22,7 +22,6 @@ public abstract class SerializableDictionary<TKey, TValue> : ScriptableObject, I
         return Dictionary.TryGetValue(key, out value);
     }
 
-
     void ISerializationCallbackReceiver.OnAfterDeserialize()
     {
         Dictionary.Clear();
