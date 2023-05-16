@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1febc245a1a102e42aa5de53c5377d7c, type: 3}
   m_Name: 1_ComboPath_Grab
   m_EditorClassIdentifier: 
-  _comboMove: 0
-  _freshComboMove: 0
-  _mixUp: 
-  _freshMixUp: 
+  _comboMove: 8
+  _freshComboMove: 16
+  _mixUp: 04
+  _freshMixUp: 0802

@@ -7,12 +7,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1febc245a1a102e42aa5de53c5377d7c, type: 3}
-  m_Name: 1_ComboPath_Parry
+  m_Script: {fileID: 11500000, guid: 436a5d3c85120214d8c7cd580414a3da, type: 3}
+  m_Name: MoveInteractions
   m_EditorClassIdentifier: 
-  _comboMove: 16
-  _freshComboMove: 8
-  _mixUp: 0802
-  _freshMixUp: 04
+  _lightDefeatsTypes: 0208
+  _heavyDefeatsTypes: 0402
+  _grabDefeatsTypes: 0401
+  _parryDefeatsTypes: 1001
+  _specialDefeatsTypes: 1008

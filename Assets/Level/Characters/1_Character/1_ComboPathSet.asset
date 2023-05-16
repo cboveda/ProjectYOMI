@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a16a95c8a06dbf43996135597ddd659, type: 3}
   m_Name: 1_ComboPathSet
   m_EditorClassIdentifier: 
-  _light: {fileID: 0}
-  _heavy: {fileID: 0}
-  _grab: {fileID: 0}
-  _parry: {fileID: 0}
+  _light: {fileID: 11400000, guid: be862666073e3af4caa09d3039ce62c7, type: 2}
+  _heavy: {fileID: 11400000, guid: 447ab06782136b948b135906b003012e, type: 2}
+  _grab: {fileID: 11400000, guid: 10525aa3aefb509438a50ff64a211da2, type: 2}
+  _parry: {fileID: 11400000, guid: 060fd85c033bae7478ba269eb67ba3b1, type: 2}
