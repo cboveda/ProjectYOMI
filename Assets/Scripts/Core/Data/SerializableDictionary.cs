@@ -1,33 +1,62 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public class SerializableDictionary<T, Y> : ISerializationCallbackReceiver
+public abstract class SerializableDictionary<TKey, TValue> : ScriptableObject, ISerializationCallbackReceiver
 {
-    public List<T> Keys = new();
-    public List<Y> Values = new();
-    public Dictionary<T, Y> Dictionary = new();
+    [SerializeField] private List<KeyValueEntry> _entries;
+    private List<TKey> _keys = new();
 
-    public void OnAfterDeserialize()
+    public Dictionary<TKey, TValue> Dictionary = new Dictionary<TKey, TValue>();
+
+    [Serializable]
+    class KeyValueEntry
     {
-        Keys.Clear();
-        Values.Clear();
-
-        foreach (var kvp in Dictionary)
-        {
-            Keys.Add(kvp.Key);
-            Values.Add(kvp.Value);
-        }
+        public TKey Key;
+        public TValue Value;
     }
 
-    public void OnBeforeSerialize()
+    public bool TryGetValue(TKey key, out TValue value)
     {
-        Dictionary = new();
+        return Dictionary.TryGetValue(key, out value);
+    }
 
-        for (int i = 0; i != Math.Min(Keys.Count, Values.Count); i++)
+
+    void ISerializationCallbackReceiver.OnAfterDeserialize()
+    {
+        Dictionary.Clear();
+
+        for (int i = 0; i < _entries.Count; i++)
         {
-            Dictionary.Add(Keys[i], Values[i]);
+            Dictionary.Add(_entries[i].Key, _entries[i].Value);
+        }
+
+    }
+
+    void ISerializationCallbackReceiver.OnBeforeSerialize()
+    {
+        if (_entries == null)
+        {
+            return;
+        }
+
+        _keys.Clear();
+
+        for (int i = 0; i < _entries.Count; i++)
+        {
+            _keys.Add(_entries[i].Key);
+        }
+
+        var result = _keys.GroupBy(x => x)
+                 .Where(g => g.Count() > 1)
+                 .Select(x => new { Element = x.Key, Count = x.Count() })
+                 .ToList();
+
+        if (result.Count > 0)
+        {
+            var duplicates = string.Join(", ", result);
+            Debug.LogError($"Warning {GetType().FullName} keys has duplicates {duplicates}");
         }
     }
 }

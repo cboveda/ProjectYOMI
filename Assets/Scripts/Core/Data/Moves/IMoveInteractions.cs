@@ -2,7 +2,6 @@
 
 public interface IMoveInteractions
 {
-    Dictionary<Move.Type, List<Move.Type>> DefeatedByType { get; }
-    Dictionary<Move.Type, List<Move.Type>> DefeatsType { get; }
-    Move.Type[] SpecialDefeatsTypes { get; set; }
+    List<Move.Type> DefeatedByType(Move.Type type);
+    List<Move.Type> DefeatsType(Move.Type type);
 }
