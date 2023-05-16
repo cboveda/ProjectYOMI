@@ -18,20 +18,13 @@ public class Move : ScriptableObject
 
     [SerializeField] private string _moveName;
     [SerializeField] private Type _moveType;
-    [SerializeField] private Type[] _defeatsTypes;
     [SerializeField] private bool _usableByDefault;
     [SerializeField] private int _id;
 
     public string MoveName => _moveName;
     public Type MoveType => _moveType;
-    public Type[] DefeatsTypes => _defeatsTypes;
     public bool UsableByDefault => _usableByDefault;
     public int Id => _id;
-
-    public bool Defeats(Type other)
-    {
-        return _defeatsTypes.Any<Type>(t => t == other);
-    }
 
     public override string ToString()
     {
