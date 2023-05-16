@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,9 +31,14 @@ public class ComboPath : ScriptableObject
             return null;
         }
 
-        //Find the counters to the counter of the specified combo move.
         List<Move.Type> output = new();
-        _database.MoveInteractions.DefeatsType(comboMove).ForEach(l => output.AddRange(_database.MoveInteractions.DefeatsType(l)));
+        // Find the counters to the combo move (except special)
+        var counters = _database.MoveInteractions.DefeatsType(comboMove)
+            .Where(t => t != Move.Type.Special)
+            .ToList();
+        // Find the counters to the counters (except special)
+        counters.ForEach(counter => output.AddRange(_database.MoveInteractions.DefeatsType(counter).Where(t => t != Move.Type.Special)));
+        // Remove duplicates
         return new HashSet<Move.Type>(output).ToArray();
     }
 }
