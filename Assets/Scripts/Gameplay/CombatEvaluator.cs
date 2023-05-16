@@ -56,9 +56,9 @@ public class CombatEvaluator
         var movePlayer1 = _database.Moves.GetMoveById(action1);
         var movePlayer2 = _database.Moves.GetMoveById(action2);
         var player1Wins = (movePlayer2 == null) ||
-            (movePlayer1 && movePlayer1.Defeats(movePlayer2.MoveType));
+            (movePlayer1 && _database.MoveInteractions.DefeatedByType(movePlayer1.MoveType).Contains(movePlayer2.MoveType));
         var player2Wins = (movePlayer1 == null) ||
-            (movePlayer2 && movePlayer2.Defeats(movePlayer1.MoveType));
+            (movePlayer2 && _database.MoveInteractions.DefeatedByType(movePlayer2.MoveType).Contains(movePlayer1.MoveType));
 
         // Check for specials   
         if ((movePlayer1 != null) && (movePlayer1.MoveType == Move.Type.Special))

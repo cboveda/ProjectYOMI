@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characterDatabase: {fileID: 11400000, guid: 49d2dde0aecdb5c45ab502278e6c37f5, type: 2}
   _moveDatabase: {fileID: 11400000, guid: 2c1b0dd1acd15bc4d813b3033b33f460, type: 2}
+  _moveInteractions: {fileID: 11400000, guid: d09def052f6639a438ca67a09f33fb94, type: 2}
