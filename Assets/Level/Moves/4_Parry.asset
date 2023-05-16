@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: 4_Parry
   m_EditorClassIdentifier: 
-  _moveName: Quick Counter
+  _moveName: Parry
   _moveType: 4
   _defeatsTypes: 10
   _usableByDefault: 1

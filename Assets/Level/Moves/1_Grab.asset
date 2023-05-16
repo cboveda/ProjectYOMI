@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeacbda4b3ca3034a9244a863f437c2b, type: 3}
   m_Name: 1_Grab
   m_EditorClassIdentifier: 
-  _moveName: Overpower
+  _moveName: Grab
   _moveType: 2
-  _defeatsTypes: 0804
+  _defeatsTypes: 04
   _usableByDefault: 1
   _id: 1
