@@ -12,4 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fbeb390daeebe740a2ec3971917b5b5, type: 3}
   m_Name: DefeatsTypeDictionary
   m_EditorClassIdentifier: 
-  _entries: []
+  _entries:
+  - Key: 16
+    Value: 0401
+  - Key: 8
+    Value: 1001
+  - Key: 4
+    Value: 0802
+  - Key: 2
+    Value: 1008
+  - Key: 1
+    Value: 0402

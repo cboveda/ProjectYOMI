@@ -12,8 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436a5d3c85120214d8c7cd580414a3da, type: 3}
   m_Name: MoveInteractions
   m_EditorClassIdentifier: 
-  _grabDefeatsTypes: 0401
-  _heavyDefeatsTypes: 0402
-  _lightDefeatsTypes: 0208
-  _parryDefeatsTypes: 1001
-  _specialDefeatsTypes: 1008
+  _defeatedByType: {fileID: 11400000, guid: c1b0330470da7a14ebf4e806490c507d, type: 2}
+  _defeatsType: {fileID: 11400000, guid: 2be9c7a956f8d394396c0342f6826d6a, type: 2}

@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a16a95c8a06dbf43996135597ddd659, type: 3}
   m_Name: 2_ComboPathSet
   m_EditorClassIdentifier: 
-  _entries: []
+  _entries:
+  - Key: 16
+    Value: {fileID: 11400000, guid: ee444afaa9782be46b4f1d4f604df94f, type: 2}
+  - Key: 8
+    Value: {fileID: 11400000, guid: ee0975b9479c9eb4d8fbbfb08415c641, type: 2}
+  - Key: 4
+    Value: {fileID: 11400000, guid: 972fd5fc688719c418ba05fc5a8dfc52, type: 2}
+  - Key: 2
+    Value: {fileID: 11400000, guid: 955a60403b1b3c74ba38f0f5e6fcac4e, type: 2}
