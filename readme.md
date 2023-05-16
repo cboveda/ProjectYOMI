@@ -25,10 +25,6 @@ This project is being built on the Unity Engine, with Unity Netcode for GameObje
 
 ## Project
 
-### Git Workflow
-
-Trunk-based development with short-lived feature branches.
-
 ### Branch naming
 
 `<work item ID>-<title>`
