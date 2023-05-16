@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewMoveInteractions", menuName = "Moves/Move Interactions")]
-public class MoveInteractions : ScriptableObject
+public class MoveInteractions : ScriptableObject, IMoveInteractions
 {
     [SerializeField] private Move.Type[] _grabDefeatsTypes;
     [SerializeField] private Move.Type[] _heavyDefeatsTypes;
