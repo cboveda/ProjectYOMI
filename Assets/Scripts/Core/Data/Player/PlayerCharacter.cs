@@ -9,22 +9,31 @@ public class PlayerCharacter : NetworkBehaviour
     private IGameUIManager _gameUIManager;
     private int _playerNumber;
     private PlayerData _playerData;
+    private PlayerMovementController _playerMovementController;
     private ulong _clientId;
     private UsableMoveSet _usableMoveSet;
-
     public Character Character { get => _character; }
     public CharacterBaseEffect Effect { get => _characterBaseEffect; }
     public IGameUIManager GameUIManager { set => _gameUIManager = value; }
-    public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
     public PlayerData PlayerData { get => _playerData; set => _playerData = value; }
+    public PlayerMovementController PlayerMovementController { get => _playerMovementController; }
     public ulong ClientId { get => _clientId; set => _clientId = value; }
     public UsableMoveSet UsableMoveSet { get => _usableMoveSet; }
+    public int PlayerNumber { get => _playerNumber; set
+        {
+            _playerNumber = value;
+            _playerMovementController.Direction = (value == 1) ?
+                PlayerMovementController.KnockbackDirection.Left :
+                PlayerMovementController.KnockbackDirection.Right;
+        } 
+    }
 
     void Awake()
     {
         _playerData = new PlayerData(health: _character.MaximumHealth);
         _usableMoveSet = GetComponent<UsableMoveSet>();
         _characterBaseEffect = GetComponent<CharacterBaseEffect>();
+        _playerMovementController = GetComponent<PlayerMovementController>();
     }
 
     public float Health
@@ -41,7 +50,8 @@ public class PlayerCharacter : NetworkBehaviour
                 Health = value,
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
-                ComboCount = _playerData.ComboCount
+                ComboCount = _playerData.ComboCount,
+                Position = _playerData.Position
             };
         }
     }
@@ -60,7 +70,8 @@ public class PlayerCharacter : NetworkBehaviour
                 Health = _playerData.Health,
                 SpecialMeter = value,
                 Action = _playerData.Action,
-                ComboCount = _playerData.ComboCount
+                ComboCount = _playerData.ComboCount,
+                Position = _playerData.Position
             };
         }
     }
@@ -79,7 +90,8 @@ public class PlayerCharacter : NetworkBehaviour
                 Health = _playerData.Health,
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = value,
-                ComboCount = _playerData.ComboCount
+                ComboCount = _playerData.ComboCount,
+                Position = _playerData.Position
             };
             var clientRpcParams = new ClientRpcParams
             {
@@ -106,7 +118,28 @@ public class PlayerCharacter : NetworkBehaviour
                 Health = _playerData.Health,
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
-                ComboCount = value
+                ComboCount = value,
+                Position = _playerData.Position
+            };
+        }
+    }
+
+    public int Position
+    {
+        get
+        {
+            return _playerData.Position;
+        }
+        set
+        {
+            value = Mathf.Clamp(value, int.MinValue, int.MaxValue);
+            _playerData = new PlayerData
+            {
+                Health = _playerData.Health,
+                SpecialMeter = _playerData.SpecialMeter,
+                Action = _playerData.Action,
+                ComboCount = _playerData.ComboCount, 
+                Position = value
             };
         }
     }

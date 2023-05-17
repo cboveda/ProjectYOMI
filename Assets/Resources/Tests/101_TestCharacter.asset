@@ -19,5 +19,6 @@ MonoBehaviour:
   _introPrefab: {fileID: 1792858871355532953, guid: 7238a05b979115e45a008e26e06b7948, type: 3}
   _gameplayPrefab: {fileID: -4886832200975278714, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
   _characterMoveSet: {fileID: 11400000, guid: ecd433dfba62f7f41b8cc14ef27ab3ad, type: 2}
+  _comboPathSet: {fileID: 11400000, guid: ff3b527cd63087c4799a6630eceedbd8, type: 2}
   _maximumHealth: 100
   _effect: {fileID: -1378166976225564033, guid: b4ce05c1f849bc645b4825e25972fec5, type: 3}
