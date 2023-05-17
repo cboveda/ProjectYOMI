@@ -10,6 +10,12 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle()
             .NonLazy();
 
+        Container.Bind<ICameraFocusObject>()
+            .To<CameraFocusObject>()
+            .FromComponentInHierarchy()
+            .AsSingle()
+            .NonLazy();
+
         Container.Bind<ITurnHistory>()
             .To<TurnHistory>()
             .FromComponentInHierarchy()

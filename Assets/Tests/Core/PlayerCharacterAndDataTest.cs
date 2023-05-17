@@ -58,11 +58,14 @@ public class PlayerCharacterAndDataTest
         var character = _playerCharacter.Character;
         var playerDataCompare = new PlayerData(health: character.MaximumHealth);
         var usableMoveSet = _playerCharacter.UsableMoveSet;
+        var movementController = _playerCharacter.PlayerMovementController;
         var characterEffect = _playerCharacter.Effect;
         Assert.AreEqual(playerDataCompare, playerData);
         Assert.That(character.Effect, Is.InstanceOf(typeof(CharacterBaseEffect)));
         Assert.That(characterEffect, Is.InstanceOf(typeof(CharacterBaseEffect)));
+        Assert.NotNull(character.ComboPathSet);
         Assert.NotNull(usableMoveSet);
+        Assert.NotNull(movementController);
         Assert.NotNull(character.GameplayPrefab);
     }
 
@@ -98,6 +101,16 @@ public class PlayerCharacterAndDataTest
     {
         _playerCharacter.Action = value;
         Assert.AreEqual(value, _playerCharacter.Action);
+    }
+
+    [Test]
+    [TestCase(-1, -1)]
+    [TestCase(0, 0)]
+    [TestCase(1, 1)]
+    public void PositionSetterChangesValueCorrectly(int value, int expected)
+    {
+        _playerCharacter.Position = value;
+        Assert.AreEqual(expected, _playerCharacter.Position);
     }
 
     [Test]
@@ -180,6 +193,45 @@ public class PlayerCharacterAndDataTest
         int expected = 0;
         _playerCharacter.ResetComboCount();
         Assert.AreEqual(expected, _playerCharacter.ComboCount);
+    }
+
+
+    [Test]
+    [TestCase(Move.Type.LightAttack)]
+    [TestCase(Move.Type.HeavyAttack)]
+    [TestCase(Move.Type.Parry)]
+    [TestCase(Move.Type.Grab)]
+    [TestCase(Move.Type.Special)]
+    [TestCase(null)]
+    public void CharacterMoveSetGetMoveByTypeReturnsCorrectMove(Move.Type type)
+    {
+        var moveSet = _playerCharacter.Character.CharacterMoveSet;
+        var move = type switch
+        {
+            Move.Type.LightAttack => moveSet.LightAttack,
+            Move.Type.HeavyAttack => moveSet.HeavyAttack,
+            Move.Type.Special => moveSet.Special,
+            Move.Type.Grab => moveSet.Grab,
+            Move.Type.Parry => moveSet.Parry,
+            _ => null,
+        };
+        Assert.AreEqual(move, moveSet.GetMoveByType(type));
+    }
+
+    [Test]
+    [TestCase(-2)]
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    public void PlayerMovementControllerUpdatesPositionCorrectly(int position)
+    {
+        var controller = _playerCharacter.PlayerMovementController;
+        controller.KnockIncrement = 1.25f;
+        var expectedX = controller.InitialX - (position * controller.KnockIncrement * (float) controller.Direction);
+        _playerCharacter.Position = position;
+        controller.UpdatePosition();
+        Assert.AreEqual(expectedX, _playerCharacter.transform.position.x);
     }
 
     [OneTimeTearDown]
