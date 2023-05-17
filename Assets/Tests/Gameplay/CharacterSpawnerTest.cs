@@ -40,6 +40,7 @@ public class CharacterSpawnerTest
             var serverManager = new Mock<IServerManager>();
             var combatEvaluator = new Mock<CombatEvaluator>();
             var turnHistory = new Mock<ITurnHistory>();
+            var cameraFocusObject = new Mock<ICameraFocusObject>();  
 
             // Setup Mocks
             _players
@@ -70,7 +71,8 @@ public class CharacterSpawnerTest
                 database: database.Object,
                 players: _players.Object,
                 combatEvaluator: combatEvaluator.Object,
-                turnHistory: turnHistory.Object);
+                turnHistory: turnHistory.Object,
+                cameraFocusObject: cameraFocusObject.Object);
 
             _characterSpawner.GetComponent<NetworkObject>().Spawn();
             yield return null;

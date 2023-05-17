@@ -14,9 +14,17 @@ public class CharacterSpawner : NetworkBehaviour
     private IPlayerDataCollection _players;
     private CombatEvaluator _combatEvaluator;
     private ITurnHistory _turnHistory;
+    private ICameraFocusObject _cameraFocusObject;
 
     [Inject]
-    public void Construct(IGameUIManager gameUIManager, IServerManager serverManager, IDatabase database, IPlayerDataCollection players, CombatEvaluator combatEvaluator, ITurnHistory turnHistory)
+    public void Construct(
+        IGameUIManager gameUIManager,
+        IServerManager serverManager,
+        IDatabase database,
+        IPlayerDataCollection players,
+        CombatEvaluator combatEvaluator,
+        ITurnHistory turnHistory,
+        ICameraFocusObject cameraFocusObject)
     {
         _gameUIManager = gameUIManager;
         _serverManager = serverManager;
@@ -24,6 +32,7 @@ public class CharacterSpawner : NetworkBehaviour
         _players = players;
         _combatEvaluator = combatEvaluator;
         _turnHistory = turnHistory;
+        _cameraFocusObject = cameraFocusObject;
     }
 
     public override void OnNetworkSpawn()
@@ -70,5 +79,6 @@ public class CharacterSpawner : NetworkBehaviour
     {
         _players.RegisterPlayerCharacter(playerCharacter.PlayerNumber, clientId, playerCharacter);
         _gameUIManager.RegisterPlayerCharacter(playerCharacter.PlayerNumber, clientId);
+        _cameraFocusObject.AddTarget(playerCharacter.transform);
     }
 }
