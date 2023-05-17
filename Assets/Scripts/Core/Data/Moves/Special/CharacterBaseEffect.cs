@@ -17,5 +17,5 @@ public abstract class CharacterBaseEffect : MonoBehaviour
         _combatEvaluator = combatEvaluator;
     }
 
-    public abstract void DoSpecial();
+    public abstract void DoSpecial(bool didWinTurn);
 }

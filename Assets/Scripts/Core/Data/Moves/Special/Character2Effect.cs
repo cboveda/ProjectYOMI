@@ -1,9 +1,11 @@
-using Zenject;
-
 public class Character2Effect : CharacterBaseEffect
 {
-    public override void DoSpecial()
+    public override void DoSpecial(bool didWinTurn)
     {
+        if (!didWinTurn)
+        {
+            return;
+        }
         var myId = _playerCharacter.ClientId;
         var opponentPlayerCharacter = _players.GetByOpponentClientId(myId);
         var opponentClientId = opponentPlayerCharacter.ClientId;
