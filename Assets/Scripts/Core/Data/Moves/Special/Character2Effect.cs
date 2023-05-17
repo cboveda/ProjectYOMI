@@ -17,26 +17,6 @@ public class Character2Effect : CharacterBaseEffect
         _combatEvaluator.AddCombatCommand(new UndoLockout(opponentClientId, currentTurnNumber + 2, opponentMoveType));
     }
 
-    public override float GetIncomingDamageModifier()
-    {
-        return 1.0f;
-    }
-
-    public override float GetOutgoingDamageModifier()
-    {
-        return 1.0f;
-    }
-
-    public override float GetSpecialMeterGainModifier()
-    {
-        return 1.0f;
-    }
-
-    public override float GetSpecialMeterGivenModifier()
-    {
-        return 0.80f;
-    }
-
     public class ApplyLockout : CombatCommandBase
     {
         private readonly Move.Type _targetType;

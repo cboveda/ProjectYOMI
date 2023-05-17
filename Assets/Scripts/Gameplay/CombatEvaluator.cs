@@ -16,7 +16,7 @@ public class CombatEvaluator
 
     private IDatabase _database;
     private IPlayerDataCollection _players;
-    private List<CombatCommandBase> _combatCommands;
+    private readonly List<CombatCommandBase> _combatCommands;
     private int _turnNumber = 0;
 
     public int TurnNumber { get => _turnNumber; }
@@ -55,10 +55,15 @@ public class CombatEvaluator
         var action2 = playerCharacter2.PlayerData.Action;
         var movePlayer1 = _database.Moves.GetMoveById(action1);
         var movePlayer2 = _database.Moves.GetMoveById(action2);
+
+        // Evaluate winner
         var player1Wins = (movePlayer2 == null) ||
             (movePlayer1 && _database.MoveInteractions.DefeatedByType(movePlayer1.MoveType).Contains(movePlayer2.MoveType));
         var player2Wins = (movePlayer1 == null) ||
             (movePlayer2 && _database.MoveInteractions.DefeatedByType(movePlayer2.MoveType).Contains(movePlayer1.MoveType));
+
+        // Check combo context
+        // TODO
 
         // Check for specials   
         if ((movePlayer1 != null) && (movePlayer1.MoveType == Move.Type.Special))
@@ -80,19 +85,12 @@ public class CombatEvaluator
         var damageToPlayer2 = 0f;
 
         var special1 = _baseSpecialGain;
-        special1 *= playerCharacter1.Effect.GetSpecialMeterGainModifier();
-        special1 *= playerCharacter2.Effect.GetSpecialMeterGivenModifier();
-
         var special2 = _baseSpecialGain;
-        special2 *= playerCharacter2.Effect.GetSpecialMeterGainModifier();
-        special2 *= playerCharacter1.Effect.GetSpecialMeterGivenModifier();
 
         // Check who won and apply updates
         if (player1Wins && !player2Wins)
         {
             damageToPlayer2 = _baseDamage;
-            damageToPlayer2 *= playerCharacter1.Effect.GetOutgoingDamageModifier();
-            damageToPlayer2 *= playerCharacter2.Effect.GetIncomingDamageModifier();
             special2 *= _specialGainOnLossModifier;
             playerCharacter1.IncrementComboCount();
             playerCharacter2.ResetComboCount();
@@ -100,8 +98,6 @@ public class CombatEvaluator
         else if (!player1Wins && player2Wins)
         {
             damageToPlayer1 = _baseDamage;
-            damageToPlayer1 *= playerCharacter2.Effect.GetOutgoingDamageModifier();
-            damageToPlayer1 *= playerCharacter1.Effect.GetIncomingDamageModifier();
             special1 *= _specialGainOnLossModifier;
             playerCharacter1.ResetComboCount();
             playerCharacter1.IncrementComboCount();
@@ -134,6 +130,9 @@ public class CombatEvaluator
         {
             command.Execute();
         }
+
+        // Update combo context
+        // TODO
 
         // Log combat
         var turnData = new TurnData
