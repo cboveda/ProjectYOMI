@@ -114,6 +114,15 @@ public class PlayerCharacterAndDataTest
     }
 
     [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void ComboIsFreshSetterChangesValueCorrectly(bool value)
+    {
+        _playerCharacter.ComboIsFresh = value;
+        Assert.AreEqual(value, _playerCharacter.ComboIsFresh);
+    }
+
+    [Test]
     [TestCase(1)]
     [TestCase(2)]
     public void SubmitPlayerActionServerRpcSetsActionAndSendsClientRpc(int value)

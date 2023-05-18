@@ -53,7 +53,8 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
                 ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position
+                Position = _playerData.Position,
+                ComboIsFresh = _playerData.ComboIsFresh
             };
         }
     }
@@ -73,7 +74,8 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = value,
                 Action = _playerData.Action,
                 ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position
+                Position = _playerData.Position,
+                ComboIsFresh = _playerData.ComboIsFresh
             };
         }
     }
@@ -93,7 +95,8 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = value,
                 ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position
+                Position = _playerData.Position,
+                ComboIsFresh = _playerData.ComboIsFresh
             };
             var clientRpcParams = new ClientRpcParams
             {
@@ -121,7 +124,8 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
                 ComboCount = value,
-                Position = _playerData.Position
+                Position = _playerData.Position,
+                ComboIsFresh = _playerData.ComboIsFresh
             };
         }
     }
@@ -134,14 +138,34 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
         }
         set
         {
-            value = Mathf.Clamp(value, int.MinValue, int.MaxValue);
             _playerData = new PlayerData
             {
                 Health = _playerData.Health,
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
                 ComboCount = _playerData.ComboCount,
-                Position = value
+                Position = value,
+                ComboIsFresh = _playerData.ComboIsFresh
+            };
+        }
+    }
+
+    public bool ComboIsFresh
+    {
+        get
+        {
+            return _playerData.ComboIsFresh;
+        }
+        set
+        {
+            _playerData = new PlayerData
+            {
+                Health = _playerData.Health,
+                SpecialMeter = _playerData.SpecialMeter,
+                Action = _playerData.Action,
+                ComboCount = _playerData.ComboCount,
+                Position = _playerData.Position,
+                ComboIsFresh = value
             };
         }
     }

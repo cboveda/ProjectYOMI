@@ -9,14 +9,16 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     public int Action;
     public int ComboCount;
     public int Position;
+    public bool ComboIsFresh;
 
-    public PlayerData(float health, float specialMeter = 0, int action = -1, int comboCount = 0, int position = 0)
+    public PlayerData(float health, float specialMeter = 0, int action = -1, int comboCount = 0, int position = 0, bool comboIsFresh = true)
     {
         Health = health;
         SpecialMeter = specialMeter;
         Action = action;
         ComboCount = comboCount;
         Position = position;
+        ComboIsFresh = comboIsFresh;
     }
 
     public bool Equals(PlayerData other)
@@ -25,7 +27,8 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
             SpecialMeter == other.SpecialMeter && 
             Action == other.Action && 
             ComboCount == other.ComboCount &&
-            Position == other.Position;
+            Position == other.Position &&
+            ComboIsFresh == other.ComboIsFresh;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -35,10 +38,11 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
         serializer.SerializeValue(ref Action);
         serializer.SerializeValue(ref ComboCount);
         serializer.SerializeValue(ref Position);
+        serializer.SerializeValue(ref ComboIsFresh);
     }
 
     public override string ToString()
     {
-        return $"{{Health: {Health}, Special: {SpecialMeter}, Action: {Action}, Combo: {ComboCount}, Postion: {Position}}}";
+        return $"{{Health: {Health}, Special: {SpecialMeter}, Action: {Action}, Combo: {ComboCount}, Postion: {Position}, Fresh: {ComboIsFresh}}}";
     }
 }

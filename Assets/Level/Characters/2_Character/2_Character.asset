@@ -22,4 +22,4 @@ MonoBehaviour:
   _characterMoveSet: {fileID: 11400000, guid: 26b85bfecca86f14795f5e43670cd028, type: 2}
   _comboPathSet: {fileID: 11400000, guid: c4c4e1b97bdd3604b9c28a390859bc29, type: 2}
   _maximumHealth: 100
-  _effect: {fileID: -6011512517258168329, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}
+  _effect: {fileID: -727763050672013099, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}

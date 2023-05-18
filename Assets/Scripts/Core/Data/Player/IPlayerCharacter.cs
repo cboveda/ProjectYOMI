@@ -2,19 +2,20 @@
 
 public interface IPlayerCharacter
 {
-    int Action { get; set; }
+    bool ComboIsFresh { get; set; }
     Character Character { get; }
-    ulong ClientId { get; set; }
-    int ComboCount { get; set; }
     CharacterBaseEffect Effect { get; }
-    IGameUIManager GameUIManager { set; }
     float Health { get; set; }
-    PlayerData PlayerData { get; set; }
-    PlayerMovementController PlayerMovementController { get; }
+    float SpecialMeter { get; set; }
+    IGameUIManager GameUIManager { set; }
+    int Action { get; set; }
+    int ComboCount { get; set; }
     int PlayerNumber { get; set; }
     int Position { get; set; }
-    float SpecialMeter { get; set; }
     IUsableMoveSet UsableMoveSet { get; }
+    PlayerData PlayerData { get; set; }
+    PlayerMovementController PlayerMovementController { get; }
+    ulong ClientId { get; set; }
 
     void DecreaseHealth(float value);
     void IncreaseSpecialMeter(float value);
