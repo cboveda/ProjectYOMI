@@ -4,6 +4,8 @@ public class Character3Effect : CharacterBaseEffect
 {
     private int _turnSpecialWasLastTriggeredOn = -10;
 
+    public int TurnSpecialWasLastTriggeredOn { get => _turnSpecialWasLastTriggeredOn; set => _turnSpecialWasLastTriggeredOn = value; }
+
     public override void DoSpecial(bool didWinTurn)
     {
         var currentTurnNumber = _combatEvaluator.TurnNumber;

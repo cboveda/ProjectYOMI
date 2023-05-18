@@ -6,9 +6,9 @@ public abstract class CharacterBaseEffect : MonoBehaviour
     protected IDatabase _database;
     protected IPlayerDataCollection _players;
     protected ITurnHistory _turnHistory;
-    protected PlayerCharacter _playerCharacter;
+    protected IPlayerCharacter _playerCharacter;
 
-    public void Contstruct(PlayerCharacter playerCharacter, ITurnHistory turnHistory, IPlayerDataCollection players, IDatabase database, CombatEvaluator combatEvaluator)
+    public void Contstruct(IPlayerCharacter playerCharacter, ITurnHistory turnHistory, IPlayerDataCollection players, IDatabase database, CombatEvaluator combatEvaluator)
     {
         _playerCharacter = playerCharacter;
         _turnHistory = turnHistory;

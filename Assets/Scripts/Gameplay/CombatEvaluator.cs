@@ -19,9 +19,9 @@ public class CombatEvaluator
     private readonly List<CombatCommandBase> _combatCommands;
     private int _turnNumber = 0;
 
-    public int TurnNumber { get => _turnNumber; }
-    public IPlayerDataCollection Players { get => _players; }
-    public IDatabase Database {  get => _database; }
+    public virtual int TurnNumber { get => _turnNumber; }
+    public virtual IPlayerDataCollection Players { get => _players; }
+    public virtual IDatabase Database {  get => _database; }
 
     public CombatEvaluator()
     {
@@ -35,7 +35,7 @@ public class CombatEvaluator
         _players = playerDataCollection;
     }
 
-    public void AddCombatCommand(CombatCommandBase combatCommand)
+    public virtual void AddCombatCommand(CombatCommandBase combatCommand)
     {
         _combatCommands.Add(combatCommand);
     }
@@ -47,7 +47,7 @@ public class CombatEvaluator
         var playerCharacter1 = _players.GetByPlayerNumber(1);
         var playerCharacter2 = _players.GetByPlayerNumber(2);
 
-        if (!playerCharacter1 || !playerCharacter2)
+        if (playerCharacter1 == null || playerCharacter2 == null)
         {
             throw new Exception("Failed to get playerCharacter objects");
         }

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03bf138825ea14c4f88245b302db6afb, type: 3}
-  m_Name: 102_TestCharacter
+  m_Name: 103_TestCharacter
   m_EditorClassIdentifier: 
-  _id: 102
+  _id: 103
   _displayName: Test Character
   _informationText: Test Info
   _icon: {fileID: 21300000, guid: ac1fccc01b32ec948be6be7a7d055bc0, type: 3}
   _introPrefab: {fileID: 1792858871355532953, guid: 7238a05b979115e45a008e26e06b7948, type: 3}
-  _gameplayPrefab: {fileID: 4555916511642042660, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}
+  _gameplayPrefab: {fileID: 3896857865105610499, guid: 1d74e6fe9c214804d8bcf07fff1d2bde, type: 3}
   _characterMoveSet: {fileID: 11400000, guid: ecd433dfba62f7f41b8cc14ef27ab3ad, type: 2}
-  _comboPathSet: {fileID: 11400000, guid: c4c4e1b97bdd3604b9c28a390859bc29, type: 2}
+  _comboPathSet: {fileID: 11400000, guid: 2343d4fe376860443abd2ff923221678, type: 2}
   _maximumHealth: 100
-  _effect: {fileID: -727763050672013099, guid: a75a66e028d383c4eb68f0b72b32845c, type: 3}
+  _effect: {fileID: -3896960060548154663, guid: 1d74e6fe9c214804d8bcf07fff1d2bde, type: 3}
