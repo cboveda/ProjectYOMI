@@ -3,7 +3,7 @@ using System.Linq;
 
 public class PlayerDataCollection : IPlayerDataCollection
 {
-    private readonly Dictionary<ulong, PlayerCharacter> _playerCharacters;
+    private readonly Dictionary<ulong, IPlayerCharacter> _playerCharacters;
     private ulong _clientIdPlayer1;
     private ulong _clientIdPlayer2;
     public ulong ClientIdPlayer1 { get => _clientIdPlayer1; set => _clientIdPlayer1 = value; }
@@ -11,10 +11,10 @@ public class PlayerDataCollection : IPlayerDataCollection
 
     public PlayerDataCollection()
     {
-        _playerCharacters = new Dictionary<ulong, PlayerCharacter>();
+        _playerCharacters = new Dictionary<ulong, IPlayerCharacter>();
     }
 
-    public void RegisterPlayerCharacter(int playerNumber, ulong clientId, PlayerCharacter playerCharacter)
+    public void RegisterPlayerCharacter(int playerNumber, ulong clientId, IPlayerCharacter playerCharacter)
     {
         if (playerNumber == 1)
         {
@@ -27,21 +27,21 @@ public class PlayerDataCollection : IPlayerDataCollection
         _playerCharacters.Add(clientId, playerCharacter);
     }
 
-    public PlayerCharacter[] GetAll()
+    public IPlayerCharacter[] GetAll()
     {
         return _playerCharacters.Values.ToArray();
     }
 
-    public PlayerCharacter GetByClientId(ulong clientId)
+    public IPlayerCharacter GetByClientId(ulong clientId)
     {
-        if (!_playerCharacters.TryGetValue(clientId, out PlayerCharacter playerCharacter))
+        if (!_playerCharacters.TryGetValue(clientId, out IPlayerCharacter playerCharacter))
         {
             throw new System.Exception($"Player character for client: {clientId} not found.");
         }
         return playerCharacter;
     }
 
-    public PlayerCharacter GetByPlayerNumber(int playerNumber)
+    public IPlayerCharacter GetByPlayerNumber(int playerNumber)
     {
         var clientId =
             playerNumber == 1 ? ClientIdPlayer1 :
@@ -54,13 +54,13 @@ public class PlayerDataCollection : IPlayerDataCollection
         return playerCharacter;
     }
 
-    public PlayerCharacter GetByOpponentClientId(ulong clientId)
+    public IPlayerCharacter GetByOpponentClientId(ulong clientId)
     {
         var targetId =
             ClientIdPlayer1 == clientId ? ClientIdPlayer2 :
             ClientIdPlayer2 == clientId ? ClientIdPlayer1 :
             ulong.MaxValue;
-        if (!_playerCharacters.TryGetValue(targetId, out PlayerCharacter playerCharacter))
+        if (!_playerCharacters.TryGetValue(targetId, out IPlayerCharacter playerCharacter))
         {
             throw new System.Exception($"Player character for opponent id: {clientId} not found.");
         }
@@ -69,6 +69,6 @@ public class PlayerDataCollection : IPlayerDataCollection
 
     public bool GameShouldEnd()
     {
-        return _playerCharacters.Values.Any(pc => pc.PlayerData.Health <= 0);
+        return _playerCharacters.Values.Any(pc => pc.PlayerData.Health <= 0 || pc.PlayerData.Position < -6);
     }
 }

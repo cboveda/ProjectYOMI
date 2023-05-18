@@ -1,12 +1,14 @@
-using UnityEngine;
-using Zenject;
-
 public class Character1Effect : CharacterBaseEffect
 {
-    [SerializeField] private float _healAmountOnSpecial = 15;
-
-    public override void DoSpecial()
+    public override void DoSpecial(bool didWinTurn)
     {
-        _playerCharacter.Health += _healAmountOnSpecial;
+        if (!didWinTurn)
+        {
+            return;
+        }
+        var myId = _playerCharacter.ClientId;
+        var opponentPlayerCharacter = _players.GetByOpponentClientId(myId);
+        opponentPlayerCharacter.Position -= 1;
+        _playerCharacter.Position += 1;
     }
 }

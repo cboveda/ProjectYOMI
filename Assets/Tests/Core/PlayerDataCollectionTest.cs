@@ -59,7 +59,7 @@ public class PlayerDataCollectionTest
             playerNumber: playerCharacter.PlayerNumber,
             clientId: playerCharacter.ClientId,
             playerCharacter: playerCharacter);
-        bool playerCharacterFoundInCollection = _collection.GetAll().Any<PlayerCharacter>(pc => pc.ClientId == playerCharacter.ClientId);
+        bool playerCharacterFoundInCollection = _collection.GetAll().Any<IPlayerCharacter>(pc => pc.ClientId == playerCharacter.ClientId);
         ulong clientIdValueInCollection = (index == 0) ? _collection.ClientIdPlayer1 : _collection.ClientIdPlayer2;
         Assert.IsTrue(playerCharacterFoundInCollection);
         Assert.AreEqual(playerCharacter.ClientId, clientIdValueInCollection);

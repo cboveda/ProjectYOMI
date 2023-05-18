@@ -19,7 +19,9 @@ public class CombatEvaluator
     private readonly List<CombatCommandBase> _combatCommands;
     private int _turnNumber = 0;
 
-    public int TurnNumber { get => _turnNumber; }
+    public virtual int TurnNumber { get => _turnNumber; }
+    public virtual IPlayerDataCollection Players { get => _players; }
+    public virtual IDatabase Database {  get => _database; }
 
     public CombatEvaluator()
     {
@@ -33,7 +35,7 @@ public class CombatEvaluator
         _players = playerDataCollection;
     }
 
-    public void AddCombatCommand(CombatCommandBase combatCommand)
+    public virtual void AddCombatCommand(CombatCommandBase combatCommand)
     {
         _combatCommands.Add(combatCommand);
     }
@@ -45,10 +47,18 @@ public class CombatEvaluator
         var playerCharacter1 = _players.GetByPlayerNumber(1);
         var playerCharacter2 = _players.GetByPlayerNumber(2);
 
-        if (!playerCharacter1 || !playerCharacter2)
+        if (playerCharacter1 == null || playerCharacter2 == null)
         {
             throw new Exception("Failed to get playerCharacter objects");
         }
+
+        // Preliminary damage and special calculations
+        var damageToPlayer1 = 0f;
+        var damageToPlayer2 = 0f;
+        var positionChangePlayer1 = 0;
+        var positionChangePlayer2 = 0;
+        var special1 = _baseSpecialGain;
+        var special2 = _baseSpecialGain;
 
         // Read Inputs
         var action1 = playerCharacter1.PlayerData.Action;
@@ -68,35 +78,33 @@ public class CombatEvaluator
         // Check for specials   
         if ((movePlayer1 != null) && (movePlayer1.MoveType == Move.Type.Special))
         {
-            playerCharacter1.Effect.DoSpecial();
+            playerCharacter1.Effect.DoSpecial(player1Wins && !player2Wins);
             playerCharacter1.SpecialMeter = 0f;
-            playerCharacter1.UsableMoveSet.DisableMoveByType(Move.Type.Special);
+            special1 = 0;
         }
 
         if ((movePlayer2 != null) && (movePlayer2.MoveType == Move.Type.Special))
         {
-            playerCharacter2.Effect.DoSpecial();
+            playerCharacter2.Effect.DoSpecial(!player1Wins && player2Wins);
             playerCharacter2.SpecialMeter = 0f;
-            playerCharacter2.UsableMoveSet.DisableMoveByType(Move.Type.Special);
+
+            special2 = 0;
         }
-
-        // Preliminary damage and special calculations
-        var damageToPlayer1 = 0f;
-        var damageToPlayer2 = 0f;
-
-        var special1 = _baseSpecialGain;
-        var special2 = _baseSpecialGain;
 
         // Check who won and apply updates
         if (player1Wins && !player2Wins)
         {
             damageToPlayer2 = _baseDamage;
+            positionChangePlayer1 = 1;
+            positionChangePlayer2 = -1;
             special2 *= _specialGainOnLossModifier;
             playerCharacter1.IncrementComboCount();
             playerCharacter2.ResetComboCount();
         }
         else if (!player1Wins && player2Wins)
         {
+            positionChangePlayer1 = -1;
+            positionChangePlayer2 = 1;
             damageToPlayer1 = _baseDamage;
             special1 *= _specialGainOnLossModifier;
             playerCharacter1.ResetComboCount();
@@ -114,22 +122,34 @@ public class CombatEvaluator
         playerCharacter2.DecreaseHealth(damageToPlayer2);
         playerCharacter1.IncreaseSpecialMeter(special1);
         playerCharacter2.IncreaseSpecialMeter(special2);
+        playerCharacter1.Position += positionChangePlayer1;
+        playerCharacter2.Position += positionChangePlayer2;
+
+        // Execute queued commands
+        foreach (CombatCommandBase command in _combatCommands.Where(c => c.Round == _turnNumber))
+        {
+            command.Execute(this);
+        }
 
         // Check if specials should be enabled
         if (playerCharacter1.SpecialMeter >= 100f)
         {
             playerCharacter1.UsableMoveSet.EnableMoveByType(Move.Type.Special);
+        } 
+        else
+        {
+            playerCharacter1.UsableMoveSet.DisableMoveByType(Move.Type.Special);
         }
+
         if (playerCharacter2.SpecialMeter >= 100f)
         {
             playerCharacter2.UsableMoveSet.EnableMoveByType(Move.Type.Special);
         }
-
-        // Execute queued commands
-        foreach (CombatCommandBase command in _combatCommands.Where(c => c.Round == _turnNumber))
+        else
         {
-            command.Execute();
+            playerCharacter2.UsableMoveSet.DisableMoveByType(Move.Type.Special);
         }
+
 
         // Update combo context
         // TODO
@@ -148,6 +168,10 @@ public class CombatEvaluator
         // Reset moves
         playerCharacter1.ResetAction();
         playerCharacter2.ResetAction();
+        
+        // Temporary
+        playerCharacter1.PlayerMovementController.UpdatePosition();
+        playerCharacter2.PlayerMovementController.UpdatePosition();
 
         return turnData;
     }

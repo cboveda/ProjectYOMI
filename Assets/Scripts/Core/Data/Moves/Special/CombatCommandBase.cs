@@ -1,14 +1,9 @@
-using Zenject;
-
 public abstract class CombatCommandBase
 {
-    protected PlayerDataCollection _players;
+
     public ulong TargetClientId;
     public int Round;
     public bool HasExecuted;
-
-    [Inject]
-    public PlayerDataCollection Players { get => _players; set => _players = value; }
 
     public CombatCommandBase (ulong targetClientId, int round)
     {
@@ -17,7 +12,7 @@ public abstract class CombatCommandBase
         HasExecuted = false;
     }
 
-    public virtual void Execute()
+    public virtual void Execute(CombatEvaluator context)
     {
         HasExecuted = true;
     }

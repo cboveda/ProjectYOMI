@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
-public class PlayerCharacter : NetworkBehaviour
+public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
 {
     [SerializeField] private Character _character;
     private CharacterBaseEffect _characterBaseEffect;
@@ -11,21 +11,23 @@ public class PlayerCharacter : NetworkBehaviour
     private PlayerData _playerData;
     private PlayerMovementController _playerMovementController;
     private ulong _clientId;
-    private UsableMoveSet _usableMoveSet;
+    private IUsableMoveSet _usableMoveSet;
     public Character Character { get => _character; }
     public CharacterBaseEffect Effect { get => _characterBaseEffect; }
     public IGameUIManager GameUIManager { set => _gameUIManager = value; }
     public PlayerData PlayerData { get => _playerData; set => _playerData = value; }
     public PlayerMovementController PlayerMovementController { get => _playerMovementController; }
     public ulong ClientId { get => _clientId; set => _clientId = value; }
-    public UsableMoveSet UsableMoveSet { get => _usableMoveSet; }
-    public int PlayerNumber { get => _playerNumber; set
+    public IUsableMoveSet UsableMoveSet { get => _usableMoveSet; }
+    public int PlayerNumber
+    {
+        get => _playerNumber; set
         {
             _playerNumber = value;
             _playerMovementController.Direction = (value == 1) ?
                 PlayerMovementController.KnockbackDirection.Left :
                 PlayerMovementController.KnockbackDirection.Right;
-        } 
+        }
     }
 
     void Awake()
@@ -138,7 +140,7 @@ public class PlayerCharacter : NetworkBehaviour
                 Health = _playerData.Health,
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
-                ComboCount = _playerData.ComboCount, 
+                ComboCount = _playerData.ComboCount,
                 Position = value
             };
         }
