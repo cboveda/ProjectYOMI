@@ -1,15 +1,27 @@
+using UnityEngine;
+
 public class Character3Effect : CharacterBaseEffect
 {
-    private void Awake()
-    {
-    }
+    private int _turnSpecialWasLastTriggeredOn = -10;
 
     public override void DoSpecial(bool didWinTurn)
     {
-        var myId = _playerCharacter.ClientId;
         var currentTurnNumber = _combatEvaluator.TurnNumber;
+        if (SpecialCommandsAreAlreadyInEffect(currentTurnNumber))
+        {
+            return;
+        }
+        _turnSpecialWasLastTriggeredOn = currentTurnNumber;
+
+        var myId = _playerCharacter.ClientId;
         _combatEvaluator.AddCombatCommand(new FreeSpecialUse(myId, currentTurnNumber, true));
         _combatEvaluator.AddCombatCommand(new FreeSpecialUse(myId, currentTurnNumber + 1, false));
+        _combatEvaluator.AddCombatCommand(new ClearFreeSpecialUse(myId, currentTurnNumber + 2));
+    }
+
+    private bool SpecialCommandsAreAlreadyInEffect(int currentTurnNumber)
+    {
+        return currentTurnNumber - _turnSpecialWasLastTriggeredOn < 2;
     }
 
     public class FreeSpecialUse : CombatCommandBase
@@ -21,15 +33,29 @@ public class Character3Effect : CharacterBaseEffect
             _isFirstInstance = isFirstInstance;
         }
 
-        public override void Execute()
+        public override void Execute(CombatEvaluator context)
         {
-            base.Execute();
+            base.Execute(context);
             
-            var targetPlayerCharacter = _players.GetByClientId(TargetClientId);
-
-            if (_isFirstInstance || targetPlayerCharacter.Action != (int) Move.Type.Special)
+            var targetPlayerCharacter = context.Players.GetByClientId(TargetClientId);
+            var currentMoveType = context.Database.Moves.GetMoveById(targetPlayerCharacter.Action).MoveType;
+            if (_isFirstInstance || currentMoveType != Move.Type.Special) 
             {
                 targetPlayerCharacter.SpecialMeter = 100;
+            }
+        }
+    }
+
+    public class ClearFreeSpecialUse : CombatCommandBase
+    {
+        public ClearFreeSpecialUse(ulong targetClientId, int round) : base(targetClientId, round) { }
+
+        public override void Execute(CombatEvaluator context)
+        {
+            var targetPlayerCharacter = context.Players.GetByClientId(TargetClientId);
+            if (targetPlayerCharacter.SpecialMeter >= 100)
+            {
+                targetPlayerCharacter.SpecialMeter = 0;
             }
         }
     }

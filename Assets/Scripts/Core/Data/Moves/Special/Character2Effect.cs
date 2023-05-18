@@ -28,11 +28,11 @@ public class Character2Effect : CharacterBaseEffect
             _targetType = targetType;
         }
 
-        public override void Execute()
+        public override void Execute(CombatEvaluator context)
         {
-            base.Execute();
+            base.Execute(context);
 
-            var targetPlayerCharacter = _players.GetByClientId(TargetClientId);
+            var targetPlayerCharacter = context.Players.GetByClientId(TargetClientId);
             targetPlayerCharacter.UsableMoveSet.DisableMoveByType(_targetType);
         }
     }
@@ -46,11 +46,11 @@ public class Character2Effect : CharacterBaseEffect
             _targetType = targetType;
         }
 
-        public override void Execute()
+        public override void Execute(CombatEvaluator context)
         {
-            base.Execute();
+            base.Execute(context);
 
-            var opponentPlayerCharacter = _players.GetByClientId(TargetClientId);
+            var opponentPlayerCharacter = context.Players.GetByClientId(TargetClientId);
             if (_targetType != Move.Type.Special)
             {
                 opponentPlayerCharacter.UsableMoveSet.EnableMoveByType(_targetType);

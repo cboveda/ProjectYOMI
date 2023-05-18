@@ -1,9 +1,5 @@
-using UnityEngine;
-
 public class Character1Effect : CharacterBaseEffect
 {
-    [SerializeField] private float _healAmountOnSpecial = 15;
-
     public override void DoSpecial(bool didWinTurn)
     {
         if (!didWinTurn)
