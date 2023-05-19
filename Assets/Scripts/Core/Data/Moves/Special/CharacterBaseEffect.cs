@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class CharacterBaseEffect : MonoBehaviour
+public abstract class CharacterBaseEffect : MonoBehaviour, ICharacterBaseEffect
 {
     protected CombatCommandExecutor _combatEvaluator;
     protected IDatabase _database;
@@ -8,7 +8,12 @@ public abstract class CharacterBaseEffect : MonoBehaviour
     protected ITurnHistory _turnHistory;
     protected IPlayerCharacter _playerCharacter;
 
-    public void Contstruct(IPlayerCharacter playerCharacter, ITurnHistory turnHistory, IPlayerDataCollection players, IDatabase database, CombatCommandExecutor combatEvaluator)
+    public void Construct(
+        IPlayerCharacter playerCharacter,
+        ITurnHistory turnHistory,
+        IPlayerDataCollection players,
+        IDatabase database,
+        CombatCommandExecutor combatEvaluator)
     {
         _playerCharacter = playerCharacter;
         _turnHistory = turnHistory;

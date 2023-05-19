@@ -40,19 +40,19 @@ public class CharacterBaseEffectAndCommandTest
         _database = new();
         _combatEvaluator = new();
 
-        _effect1.Contstruct(
+        _effect1.Construct(
             playerCharacter: _playerCharacter.Object,
             turnHistory: _turnHistory.Object,
             players: _players.Object,
             database: _database.Object,
             combatEvaluator: _combatEvaluator.Object);
-        _effect2.Contstruct(
+        _effect2.Construct(
             playerCharacter: _playerCharacter.Object,
             turnHistory: _turnHistory.Object,
             players: _players.Object,
             database: _database.Object,
             combatEvaluator: _combatEvaluator.Object);
-        _effect3.Contstruct(
+        _effect3.Construct(
             playerCharacter: _playerCharacter.Object,
             turnHistory: _turnHistory.Object,
             players: _players.Object,

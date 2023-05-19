@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Moq;
@@ -79,6 +80,17 @@ public class TurnTest
             .Returns(new List<Move.Type>() { Move.Type.Parry, Move.Type.Special });
         _moveInteractionsMock.Setup(m => m.DefeatedByType(Move.Type.Special))
             .Returns(new List<Move.Type>() { Move.Type.LightAttack, Move.Type.HeavyAttack });
+        
+        _moveInteractionsMock.Setup(m => m.DefeatsType(Move.Type.LightAttack))
+            .Returns(new List<Move.Type>() { Move.Type.Parry, Move.Type.Special});
+        _moveInteractionsMock.Setup(m => m.DefeatsType(Move.Type.HeavyAttack))
+            .Returns(new List<Move.Type>() { Move.Type.LightAttack, Move.Type.Special });
+        _moveInteractionsMock.Setup(m => m.DefeatsType(Move.Type.Parry))
+            .Returns(new List<Move.Type>() { Move.Type.HeavyAttack, Move.Type.Grab});
+        _moveInteractionsMock.Setup(m => m.DefeatsType(Move.Type.Grab))
+            .Returns(new List<Move.Type>() { Move.Type.LightAttack, Move.Type.HeavyAttack});
+        _moveInteractionsMock.Setup(m => m.DefeatsType(Move.Type.Special))
+            .Returns(new List<Move.Type>() { Move.Type.Parry, Move.Type.Grab});
 
         _factory = new TurnFactory();
         _factory.Construct(
@@ -204,6 +216,42 @@ public class TurnTest
                 _turn.DetermineComboStatus();
                 Assert.AreEqual(ComboType.Special, _turn.Player1ComboType);
             }
+
+            public class WhenLastMoveWasNotSpecialOrNull : ForPlayer1
+            {
+                [SetUp]
+                public new void SetUp()
+                {
+                    base.SetUp();
+
+                    Character character = Resources.Load<Character>("Tests/101_TestCharacter");
+                    foreach(Move.Type type in Enum.GetValues(typeof(Move.Type))) 
+                    {
+                        if(character.ComboPathSet.TryGetValue(type, out var comboPath))
+                        {
+                            comboPath.Construct(_databaseMock.Object);
+                        }
+                    }
+                    _player1Mock.Setup(m => m.Character).Returns(character);
+                }
+
+                [Test]
+                [TestCase(Move.Type.LightAttack, Move.Type.HeavyAttack, true, ComboType.Combo)] //fresh combo
+                [TestCase(Move.Type.LightAttack, Move.Type.Parry, true, ComboType.MixUp)] //fresh mixup
+                [TestCase(Move.Type.Grab, Move.Type.HeavyAttack, false, ComboType.Combo)] //not fresh combo
+                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.MixUp)] //not fresh mixup
+                [TestCase(Move.Type.Grab, Move.Type.Parry, true, ComboType.Normal)] //fresh normal
+                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.Normal)] //not fresh normal
+                public void ForGivenLastMoveAndCurrentMoveAndFreshness(Move.Type lastMove, Move.Type currentMove, bool isFresh, ComboType expected)
+                {
+                    _player1Mock.Setup(m => m.ComboIsFresh).Returns(isFresh);
+                    _turn.Player1Move = GetTestMoveByType(currentMove);
+                    _turn.Player1LastMove = GetTestMoveByType(lastMove);
+                    _turn.DetermineComboStatus();
+                    Assert.AreEqual(expected, _turn.Player1ComboType);
+                }
+
+            }
         }
 
         public class ForPlayer2 : DeterminesComboStatusCorrectly
@@ -242,6 +290,122 @@ public class TurnTest
                 _turn.DetermineComboStatus();
                 Assert.AreEqual(ComboType.Special, _turn.Player2ComboType);
             }
+
+            public class WhenLastMoveWasNotSpecialOrNull : ForPlayer2
+            {
+                [SetUp]
+                public new void SetUp()
+                {
+                    base.SetUp();
+
+                    Character character = Resources.Load<Character>("Tests/101_TestCharacter");
+                    foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+                    {
+                        if (character.ComboPathSet.TryGetValue(type, out var comboPath))
+                        {
+                            comboPath.Construct(_databaseMock.Object);
+                        }
+                    }
+                    _player2Mock.Setup(m => m.Character).Returns(character);
+                }
+
+                [Test]
+                [TestCase(Move.Type.LightAttack, Move.Type.HeavyAttack, true, ComboType.Combo)] //fresh combo
+                [TestCase(Move.Type.LightAttack, Move.Type.Parry, true, ComboType.MixUp)] //fresh mixup
+                [TestCase(Move.Type.Grab, Move.Type.HeavyAttack, false, ComboType.Combo)] //not fresh combo
+                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.MixUp)] //not fresh mixup
+                [TestCase(Move.Type.Grab, Move.Type.Parry, true, ComboType.Normal)] //fresh normal
+                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.Normal)] //not fresh normal
+                public void ForGivenLastMoveAndCurrentMoveAndFreshness(Move.Type lastMove, Move.Type currentMove, bool isFresh, ComboType expected)
+                {
+                    _player2Mock.Setup(m => m.ComboIsFresh).Returns(isFresh);
+                    _turn.Player2Move = GetTestMoveByType(currentMove);
+                    _turn.Player2LastMove = GetTestMoveByType(lastMove);
+                    _turn.DetermineComboStatus();
+                    Assert.AreEqual(expected, _turn.Player2ComboType);
+                }
+            }
+        }
+    }
+
+    public class ChecksForSpecialMovesAndExecutesCorrectly : TurnTest
+    {
+        private int _calls = 0;
+
+        [SetUp]
+        public new void SetUp()
+        {
+            base.SetUp();
+
+            _turn.Player1 = _player1Mock.Object;
+            _turn.Player2 = _player2Mock.Object;
+            var effectMock = new Mock<ICharacterBaseEffect>();
+            effectMock.Setup(m=>m.DoSpecial(It.IsAny<bool>())).Callback(() => _calls++);
+            _player1Mock.Setup(m => m.Effect).Returns(effectMock.Object);
+            _player2Mock.Setup(m => m.Effect).Returns(effectMock.Object);
+        }
+
+        [Test]
+        public void WhenPlayer1WonTurnAndUsedSpecial()
+        {
+            _turn.Player1Wins = true;
+            _turn.IsDraw = false;
+            _turn.Player1Move = _specialMove;
+            _turn.Player2Move = _lightMove;
+
+            var initial = _calls;
+            _turn.CheckForSpecialMovesAndExecute();
+            Assert.AreEqual(initial + 1, _calls);
+        }        
+        
+        [Test]
+        public void WhenPlayer1WonTurnAndDidNotUseSpecial()
+        {
+            _turn.Player1Wins = true;
+            _turn.IsDraw = false;
+            _turn.Player1Move = _parryMove;
+            _turn.Player2Move = _lightMove;
+
+            var initial = _calls;
+            _turn.CheckForSpecialMovesAndExecute();
+            Assert.AreEqual(initial, _calls);
+        }
+
+        [Test]
+        public void WhenPlayerDidNotSelectAMove()
+        {
+            _turn.Player1Move = null;
+            _turn.Player2Move = null;
+
+            var initial = _calls;
+            _turn.CheckForSpecialMovesAndExecute();
+            Assert.AreEqual(initial, _calls);
+        }
+
+        [Test]
+        public void WhenPlayer2WonTurnAndUsedSpecial()
+        {
+            _turn.Player2Wins = true;
+            _turn.IsDraw = false;
+            _turn.Player2Move = _specialMove;
+            _turn.Player1Move = _lightMove;
+
+            var initial = _calls;
+            _turn.CheckForSpecialMovesAndExecute();
+            Assert.AreEqual(initial + 1, _calls);
+        }
+
+        [Test]
+        public void WhenPlayer2WonTurnAndDidNotUseSpecial()
+        {
+            _turn.Player2Wins = true;
+            _turn.IsDraw = false;
+            _turn.Player2Move = _parryMove;
+            _turn.Player1Move = _lightMove;
+
+            var initial = _calls;
+            _turn.CheckForSpecialMovesAndExecute();
+            Assert.AreEqual(initial, _calls);
         }
     }
 
