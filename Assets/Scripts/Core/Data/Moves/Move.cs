@@ -21,10 +21,10 @@ public class Move : ScriptableObject
     [SerializeField] private bool _usableByDefault;
     [SerializeField] private int _id;
 
-    public string MoveName => _moveName;
-    public Type MoveType => _moveType;
-    public bool UsableByDefault => _usableByDefault;
-    public int Id => _id;
+    public string MoveName { get => _moveName; set => _moveName = value; }
+    public Type MoveType { get => _moveType; set => _moveType = value; }
+    public bool UsableByDefault { get => _usableByDefault; set => _usableByDefault = value; }
+    public int Id { get => _id; set => _id = value; }
 
     public override string ToString()
     {
