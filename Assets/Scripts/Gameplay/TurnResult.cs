@@ -3,7 +3,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public struct TurnData : INetworkSerializable, IEquatable<TurnData>
+public struct TurnResult : INetworkSerializable, IEquatable<TurnResult>
 {
     public int TurnNumber;
     public PlayerData PlayerData1;
@@ -12,7 +12,7 @@ public struct TurnData : INetworkSerializable, IEquatable<TurnData>
     public float DamageToPlayer2;
     public FixedString32Bytes Summary;
 
-    public TurnData (
+    public TurnResult (
         int turnNumber,
         PlayerData playerData1,
         PlayerData playerData2,
@@ -28,7 +28,7 @@ public struct TurnData : INetworkSerializable, IEquatable<TurnData>
         Summary = summary;
     }
 
-    public bool Equals(TurnData other)
+    public bool Equals(TurnResult other)
     {
         return TurnNumber == other.TurnNumber;
     }
@@ -45,6 +45,6 @@ public struct TurnData : INetworkSerializable, IEquatable<TurnData>
 
     public override string ToString()
     {
-        return $"[Turn {TurnNumber}]\nP1: {PlayerData1}, DmgTaken: {DamageToPlayer1}\nP2: {PlayerData2}, DmgTaken: {DamageToPlayer2}";
+        return $"[Turn {TurnNumber}]\nP1: {PlayerData1}\nP2: {PlayerData2}";
     }
 }

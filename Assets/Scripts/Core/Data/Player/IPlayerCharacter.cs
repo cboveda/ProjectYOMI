@@ -18,6 +18,7 @@ public interface IPlayerCharacter
     ulong ClientId { get; set; }
 
     void DecreaseHealth(float value);
+    void IncreasePosition(int value);
     void IncreaseSpecialMeter(float value);
     void IncrementComboCount();
     void ResetAction();

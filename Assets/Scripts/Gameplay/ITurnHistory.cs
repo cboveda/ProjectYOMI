@@ -2,8 +2,8 @@
 
 public interface ITurnHistory
 {
-    NetworkList<TurnData> TurnDataList { get; }
+    NetworkList<TurnResult> TurnDataList { get; }
 
-    void AddTurnData(TurnData turnData);
+    void AddTurnData(TurnResult turnData);
     int GetCurrentTurnNumber();
 }

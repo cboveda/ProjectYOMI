@@ -19,7 +19,7 @@ public class CharacterBaseEffectAndCommandTest
     Mock<ITurnHistory> _turnHistory;
     Mock<IPlayerDataCollection> _players;
     Mock<IDatabase> _database;
-    Mock<CombatEvaluator> _combatEvaluator;
+    Mock<CombatCommandExecutor> _combatEvaluator;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()

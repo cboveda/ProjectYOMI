@@ -191,6 +191,11 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
         SpecialMeter += value;
     }
 
+    public void IncreasePosition(int value)
+    {
+        Position += value;
+    }
+
     public void IncrementComboCount()
     {
         ComboCount++;

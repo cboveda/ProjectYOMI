@@ -12,7 +12,7 @@ public class CharacterSpawner : NetworkBehaviour
     private IGameUIManager _gameUIManager;
     private IServerManager _serverManager;
     private IPlayerDataCollection _players;
-    private CombatEvaluator _combatEvaluator;
+    private CombatCommandExecutor _combatEvaluator;
     private ITurnHistory _turnHistory;
     private ICameraFocusObject _cameraFocusObject;
 
@@ -22,7 +22,7 @@ public class CharacterSpawner : NetworkBehaviour
         IServerManager serverManager,
         IDatabase database,
         IPlayerDataCollection players,
-        CombatEvaluator combatEvaluator,
+        CombatCommandExecutor combatEvaluator,
         ITurnHistory turnHistory,
         ICameraFocusObject cameraFocusObject)
     {

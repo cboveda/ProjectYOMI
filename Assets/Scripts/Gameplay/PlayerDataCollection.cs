@@ -71,4 +71,20 @@ public class PlayerDataCollection : IPlayerDataCollection
     {
         return _playerCharacters.Values.Any(pc => pc.PlayerData.Health <= 0 || pc.PlayerData.Position < -6);
     }
+
+    public void UpdatePositions()
+    {
+        foreach (var pc in _playerCharacters.Values)
+        {
+            pc.PlayerMovementController.UpdatePosition();
+        }
+    }
+
+    public void ResetActions()
+    {
+        foreach (var pc in _playerCharacters.Values)
+        {
+            pc.ResetAction();
+        }
+    }
 }

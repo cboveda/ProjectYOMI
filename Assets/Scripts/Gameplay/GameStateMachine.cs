@@ -10,32 +10,50 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
     [SerializeField] private float _timer;
     private bool _timerActive = false;
     private bool _timerComplete = false;
-    private CombatEvaluator _combatEvaluator;
+    private CombatConfiguration _combatConfiguration;
+    private CombatCommandExecutor _combatEvaluator;
     private float _timerMax;
     private GameBaseState _currentState;
     private GameStateFactory _states;
     private IGameUIManager _gameUIManager;
+    private IPlayerDataCollection _players;
     private ITurnHistory _turnHistory;
     private NetworkManager _networkManager;
-    private IPlayerDataCollection _players;
+    private IDatabase _database;
+    private TurnFactory _turnFactory;
 
     public bool TimerComplete { get { return _timerComplete; } }
-    public CombatEvaluator CombatEvaluator { get { return _combatEvaluator; } }
+    public CombatConfiguration CombatConfiguration { get => _combatConfiguration; }
+    public CombatCommandExecutor CombatEvaluator { get { return _combatEvaluator; } }
     public float GameStartDuration { get { return _gameStartDuration; } set { _gameStartDuration = value; } }
     public float RoundActiveDuration { get { return _roundActiveDuration; } set { _roundActiveDuration = value; } }
     public float RoundResolveDuration { get { return _roundResolveDuration; } set { _roundResolveDuration = value; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
-    public ITurnHistory TurnHistory { get { return _turnHistory; } }
     public IPlayerDataCollection Players { get { return _players; } }
+    public ITurnHistory TurnHistory { get { return _turnHistory; } }
+    public IDatabase Database { get { return _database; } }
+    public TurnFactory TurnFactory { get { return _turnFactory; } }
 
     [Inject]
-    public void Construct(NetworkManager networkManager, IGameUIManager gameUIManager, ITurnHistory turnHistory, IPlayerDataCollection players, CombatEvaluator combatEvaluator)
+    public void Construct(
+        CombatConfiguration configuration,
+        CombatCommandExecutor combatEvaluator,
+        IDatabase database,
+        IGameUIManager gameUIManager,
+        IPlayerDataCollection players,
+        ITurnHistory turnHistory,
+        NetworkManager networkManager,
+        TurnFactory turnFactory)
     {
+        _combatConfiguration = configuration;
         _combatEvaluator = combatEvaluator;
+        _database = database;
         _gameUIManager = gameUIManager;
         _networkManager = networkManager;
         _players = players;
+        _turnFactory = turnFactory;
+        _networkManager = networkManager;
         _turnHistory = turnHistory;
     }
 

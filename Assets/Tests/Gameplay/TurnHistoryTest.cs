@@ -35,7 +35,7 @@ public class TurnHistoryTest
     public void AddTurnDataAddsToCollection()
     {
         var initialCollectionLength = _turnHistory.TurnDataList.Count;
-        var turnData = new TurnData();
+        var turnData = new TurnResult();
         _turnHistory.AddTurnData(turnData);
         Assert.AreEqual(initialCollectionLength + 1, _turnHistory.TurnDataList.Count);
     }
@@ -44,7 +44,7 @@ public class TurnHistoryTest
     public void CurrentTurnNumberReflectsCollectionSize()
     {
         var initialTurnNumber = _turnHistory.GetCurrentTurnNumber();
-        var turnData = new TurnData();
+        var turnData = new TurnResult();
         _turnHistory.AddTurnData(turnData);
         Assert.AreEqual(initialTurnNumber + 1, _turnHistory.GetCurrentTurnNumber());
     }

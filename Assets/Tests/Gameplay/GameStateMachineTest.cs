@@ -15,7 +15,10 @@ public class GameStateMachineTest
     Mock<IGameUIManager> _gameUIManagerMock;
     Mock<ITurnHistory> _turnHistoryMock;
     Mock<PlayerDataCollection> _playerDataCollectionMock;
-    Mock<CombatEvaluator> _combatEvaluatorMock;
+    Mock<CombatCommandExecutor> _combatEvaluatorMock;
+    Mock<TurnFactory> _turnFactoryMock;
+    Mock<IDatabase> _databaseMock;
+    CombatConfiguration _combatConfiguration;
 
     [UnitySetUp]
     public IEnumerator SetUp()
@@ -35,13 +38,19 @@ public class GameStateMachineTest
             _gameUIManagerMock = new Mock<IGameUIManager>();
             _turnHistoryMock = new Mock<ITurnHistory>();
             _playerDataCollectionMock = new Mock<PlayerDataCollection>();
-            _combatEvaluatorMock = new Mock<CombatEvaluator>();
+            _combatEvaluatorMock = new Mock<CombatCommandExecutor>();
+            _turnFactoryMock = new Mock<TurnFactory>();
+            _databaseMock = new Mock<IDatabase>();
+            _combatConfiguration = ScriptableObject.CreateInstance<CombatConfiguration>();
             _gameStateMachine.Construct(
-                networkManager: _networkManager,
+                combatEvaluator: _combatEvaluatorMock.Object,
+                configuration: _combatConfiguration,
+                database: _databaseMock.Object,
                 gameUIManager: _gameUIManagerMock.Object,
-                turnHistory: _turnHistoryMock.Object,
+                networkManager: _networkManager,
                 players: _playerDataCollectionMock.Object,
-                combatEvaluator: _combatEvaluatorMock.Object);
+                turnFactory: _turnFactoryMock.Object,
+                turnHistory: _turnHistoryMock.Object);
             yield return null;
         }
     }

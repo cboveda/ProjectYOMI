@@ -9,4 +9,6 @@
     IPlayerCharacter GetByOpponentClientId(ulong clientId);
     IPlayerCharacter GetByPlayerNumber(int playerNumber);
     void RegisterPlayerCharacter(int playerNumber, ulong clientId, IPlayerCharacter playerCharacter);
+    void ResetActions();
+    void UpdatePositions();
 }
