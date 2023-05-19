@@ -170,12 +170,14 @@ public class Turn
 
     private void SetComboFreshness()
     {
-        Player1.ComboIsFresh = IsDraw || 
+        Player1.ComboIsFresh = 
+            IsDraw || 
             Player2Wins || 
             Player1ComboType != ComboType.Combo;
 
-        Player2.ComboIsFresh = IsDraw ||
-            Player2Wins ||
+        Player2.ComboIsFresh = 
+            IsDraw ||
+            Player1Wins ||
             Player2ComboType != ComboType.Combo;
     }
 
