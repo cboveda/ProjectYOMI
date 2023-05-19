@@ -1,3 +1,5 @@
+using Castle.Core.Configuration;
+
 public class GameTurnResolveState : GameBaseState
 {
     public GameTurnResolveState(IGameStateMachine currentContext, GameStateFactory gameStateFactory) : base(currentContext, gameStateFactory)
@@ -22,8 +24,20 @@ public class GameTurnResolveState : GameBaseState
     public override void EnterState()
     {
         _context.SetTimer(_context.RoundResolveDuration);
-        var turnData = _context.CombatEvaluator.EvaluateTurnCombat();
-        _context.TurnHistory.AddTurnData(turnData);
+        var turn = _context.TurnFactory.GetTurn();
+        var turnResult = turn
+            .Initialize()
+            .DetermineWinner()
+            .DetermineComboStatus()
+            .CheckForSpecialMovesAndExecute()
+            .CalculateStateChanges()
+            .ApplyStateChanges()
+            .ExecuteCombatCommands()
+            .CheckAndSetSpecialUsability()
+            .GetTurnData();
+        _context.TurnHistory.AddTurnData(turnResult);
+        _context.Players.ResetActions();
+        _context.Players.UpdatePositions();
     }
 
     public override void ExitState()

@@ -46,7 +46,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged += UpdateUsableMoveButtons;
     }
 
-    private void HandleTurnData(NetworkListEvent<TurnData> changeEvent)
+    private void HandleTurnData(NetworkListEvent<TurnResult> changeEvent)
     {
         Debug.Log(changeEvent.Value.ToString());
 
@@ -62,7 +62,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         DisplayRoundResult(turnData);
     }
 
-    public void DisplayRoundResult(TurnData turnData)
+    public void DisplayRoundResult(TurnResult turnData)
     {
         var playerData1 = turnData.PlayerData1;
         var playerData2 = turnData.PlayerData2;

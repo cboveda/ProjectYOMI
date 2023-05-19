@@ -12,7 +12,7 @@ public abstract class CombatCommandBase
         HasExecuted = false;
     }
 
-    public virtual void Execute(CombatEvaluator context)
+    public virtual void Execute(CombatCommandExecutor context)
     {
         HasExecuted = true;
     }

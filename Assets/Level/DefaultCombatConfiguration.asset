@@ -16,3 +16,4 @@ MonoBehaviour:
   _baseSpecialGain: 25
   _chipDamageModifier: 0.5
   _specialGainOnLossModifier: 0.35
+  _comboDamageMultiplier: 1.5

@@ -28,7 +28,7 @@ public class Character2Effect : CharacterBaseEffect
             _targetType = targetType;
         }
 
-        public override void Execute(CombatEvaluator context)
+        public override void Execute(CombatCommandExecutor context)
         {
             base.Execute(context);
 
@@ -46,7 +46,7 @@ public class Character2Effect : CharacterBaseEffect
             _targetType = targetType;
         }
 
-        public override void Execute(CombatEvaluator context)
+        public override void Execute(CombatCommandExecutor context)
         {
             base.Execute(context);
 

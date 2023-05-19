@@ -35,7 +35,7 @@ public class Character3Effect : CharacterBaseEffect
             _isFirstInstance = isFirstInstance;
         }
 
-        public override void Execute(CombatEvaluator context)
+        public override void Execute(CombatCommandExecutor context)
         {
             base.Execute(context);
             
@@ -52,7 +52,7 @@ public class Character3Effect : CharacterBaseEffect
     {
         public ClearFreeSpecialUse(ulong targetClientId, int round) : base(targetClientId, round) { }
 
-        public override void Execute(CombatEvaluator context)
+        public override void Execute(CombatCommandExecutor context)
         {
             var targetPlayerCharacter = context.Players.GetByClientId(TargetClientId);
             if (targetPlayerCharacter.SpecialMeter >= 100)

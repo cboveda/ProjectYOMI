@@ -38,7 +38,7 @@ public class CharacterSpawnerTest
             _players = new Mock<IPlayerDataCollection>();
             var database = new Mock<IDatabase>();
             var serverManager = new Mock<IServerManager>();
-            var combatEvaluator = new Mock<CombatEvaluator>();
+            var combatEvaluator = new Mock<CombatCommandExecutor>();
             var turnHistory = new Mock<ITurnHistory>();
             var cameraFocusObject = new Mock<ICameraFocusObject>();  
 

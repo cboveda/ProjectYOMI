@@ -1,6 +1,8 @@
 public enum ComboType
 {
+    None,
     Combo,
     MixUp,
-    Normal
+    Normal,
+    Special
 }

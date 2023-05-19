@@ -4,15 +4,15 @@ using Unity.Netcode;
 public class TurnHistory : NetworkBehaviour, ITurnHistory
 {
     //History
-    private NetworkList<TurnData> _turnDataList;
-    public NetworkList<TurnData> TurnDataList { get { return _turnDataList; } }
+    private NetworkList<TurnResult> _turnDataList;
+    public NetworkList<TurnResult> TurnDataList { get { return _turnDataList; } }
 
     private void Awake()
     {
-        _turnDataList = new NetworkList<TurnData>();
+        _turnDataList = new NetworkList<TurnResult>();
     }
 
-    public void AddTurnData(TurnData turnData)
+    public void AddTurnData(TurnResult turnData)
     {
         _turnDataList.Add(turnData);
     }

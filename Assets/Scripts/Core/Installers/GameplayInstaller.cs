@@ -2,8 +2,12 @@ using Zenject;
 
 public class GameplayInstaller : MonoInstaller
 {
+    public CombatConfiguration Configuration;
+
     public override void InstallBindings()
     {
+        Container.BindInstance(Configuration);
+
         Container.Bind<IGameUIManager>()
             .To<GameUIManager>()
             .FromComponentInHierarchy()
@@ -26,7 +30,11 @@ public class GameplayInstaller : MonoInstaller
             .FromNew()
             .AsSingle();
 
-        Container.Bind<CombatEvaluator>()
+        Container.Bind<CombatCommandExecutor>()
+            .FromNew()
+            .AsSingle();
+
+        Container.Bind<TurnFactory>()
             .FromNew()
             .AsSingle();
     }

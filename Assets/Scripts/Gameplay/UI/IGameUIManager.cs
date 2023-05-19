@@ -3,7 +3,7 @@
 public interface IGameUIManager
 { 
     void DisplayGameResultClientRpc(string result);
-    void DisplayRoundResult(TurnData turnData);
+    void DisplayRoundResult(TurnResult turnData);
     void HideRoundResultClientRpc();
     void OnNetworkDespawn();
     void OnNetworkSpawn();
