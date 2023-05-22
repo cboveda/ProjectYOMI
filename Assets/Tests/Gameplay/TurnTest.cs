@@ -201,20 +201,23 @@ public class TurnTest
                 _turn.IsDraw = false;
             }
 
-            [Test]
-            public void WhenLastMoveWasNull()
+            public class WhenLastMoveWasSpecialOrNull : ForPlayer1
             {
-                _turn.Player1LastMove = null;
-                _turn.DetermineComboStatus();
-                Assert.AreEqual(ComboType.None, _turn.Player1ComboType);
-            }
+                [Test]
+                public void WhenLastMoveWasNull()
+                {
+                    _turn.Player1LastMove = null;
+                    _turn.DetermineComboStatus();
+                    Assert.AreEqual(ComboType.None, _turn.Player1ComboType);
+                }
 
-            [Test]
-            public void WhenLastMoveWasSpecial()
-            {
-                _turn.Player1LastMove = _specialMove;
-                _turn.DetermineComboStatus();
-                Assert.AreEqual(ComboType.Special, _turn.Player1ComboType);
+                [Test]
+                public void WhenLastMoveWasSpecial()
+                {
+                    _turn.Player1LastMove = _specialMove;
+                    _turn.DetermineComboStatus();
+                    Assert.AreEqual(ComboType.Special, _turn.Player1ComboType);
+                }
             }
 
             public class WhenLastMoveWasNotSpecialOrNull : ForPlayer1
@@ -275,20 +278,23 @@ public class TurnTest
                 _turn.IsDraw = false;
             }
 
-            [Test]
-            public void WhenLastMoveWasNull()
+            public class WhenLastMoveWasSpecialOrNull : ForPlayer2
             {
-                _turn.Player2LastMove = null;
-                _turn.DetermineComboStatus();
-                Assert.AreEqual(ComboType.None, _turn.Player2ComboType);
-            }
+                [Test]
+                public void WhenLastMoveWasNull()
+                {
+                    _turn.Player2LastMove = null;
+                    _turn.DetermineComboStatus();
+                    Assert.AreEqual(ComboType.None, _turn.Player2ComboType);
+                }
 
-            [Test]
-            public void WhenLastMoveWasSpecial()
-            {
-                _turn.Player2LastMove = _specialMove;
-                _turn.DetermineComboStatus();
-                Assert.AreEqual(ComboType.Special, _turn.Player2ComboType);
+                [Test]
+                public void WhenLastMoveWasSpecial()
+                {
+                    _turn.Player2LastMove = _specialMove;
+                    _turn.DetermineComboStatus();
+                    Assert.AreEqual(ComboType.Special, _turn.Player2ComboType);
+                }
             }
 
             public class WhenLastMoveWasNotSpecialOrNull : ForPlayer2
@@ -420,21 +426,26 @@ public class TurnTest
             _turn.Player2 = _player2Mock.Object;
         }
 
-        [Test]
-        public void WhenIsDraw()
+        public class WhenIsDraw : CalculatesStateChangesCorrectly
         {
-            _turn.IsDraw = true;
-            _turn.CalculateStateChanges();
-            var expectedPosition = 0;
-            var expectedDamage = _configuration.BaseDamage * _configuration.ChipDamageModifier;
-            var expectedSpecial = _configuration.BaseSpecialGain * _configuration.SpecialGainOnLossModifier;
-            Assert.AreEqual(expectedPosition, _turn.Player1PositionChange);
-            Assert.AreEqual(expectedPosition, _turn.Player2PositionChange);
-            Assert.AreEqual(expectedDamage, _turn.Player1DamageTaken);
-            Assert.AreEqual(expectedDamage, _turn.Player2DamageTaken);
-            Assert.AreEqual(expectedSpecial, _turn.Player1SpecialGain);
-            Assert.AreEqual(expectedSpecial, _turn.Player2SpecialGain);
+            [Test]
+            public void IsTrue()
+            {
+                _turn.IsDraw = true;
+                _turn.CalculateStateChanges();
+                var expectedPosition = 0;
+                var expectedDamage = _configuration.BaseDamage * _configuration.ChipDamageModifier;
+                var expectedSpecial = _configuration.BaseSpecialGain * _configuration.SpecialGainOnLossModifier;
+                Assert.AreEqual(expectedPosition, _turn.Player1PositionChange);
+                Assert.AreEqual(expectedPosition, _turn.Player2PositionChange);
+                Assert.AreEqual(expectedDamage, _turn.Player1DamageTaken);
+                Assert.AreEqual(expectedDamage, _turn.Player2DamageTaken);
+                Assert.AreEqual(expectedSpecial, _turn.Player1SpecialGain);
+                Assert.AreEqual(expectedSpecial, _turn.Player2SpecialGain);
+            }
         }
+
+
 
         public class WhenPlayer1Wins : CalculatesStateChangesCorrectly
         {
@@ -554,7 +565,322 @@ public class TurnTest
                     _configuration.ComboDamageMultiplier :
                     1.0f;
         }
+    }
 
+    public class AppliesStateChangesCorrectly : TurnTest
+    {
+        [SetUp]
+        public new void SetUp()
+        {
+            base.SetUp();
+            _turn.Player1 = _player1Mock.Object;
+            _turn.Player2 = _player2Mock.Object;
+        }
+
+        public class ForComboFreshness : AppliesStateChangesCorrectly
+        {
+            [SetUp]
+            public new void SetUp()
+            {
+                base.SetUp();
+                _player1Mock.SetupProperty(m => m.ComboIsFresh, false);
+                _player2Mock.SetupProperty(m => m.ComboIsFresh, false);
+            }
+
+            [Test]
+            public void WhenGameIsADraw()
+            {
+                _turn.IsDraw = true;
+                _turn.ApplyStateChanges();
+                Assert.IsTrue(_turn.Player1.ComboIsFresh);
+                Assert.IsTrue(_turn.Player2.ComboIsFresh);
+            }
+
+            [Test]
+            public void WhenPlayer1WinsAndIsNotInExtendedCombo()
+            {
+                _turn.IsDraw = false;
+                _turn.Player1Wins = true;
+                _turn.Player1ComboType = ComboType.Normal;
+                _turn.ApplyStateChanges();
+                Assert.IsTrue(_turn.Player1.ComboIsFresh);
+            } 
+            
+            [Test]
+            public void WhenPlayer2WinsAndIsNotInExtendedCombo()
+            {
+                _turn.IsDraw = false;
+                _turn.Player2Wins = true;
+                _turn.Player2ComboType = ComboType.Normal;
+                _turn.ApplyStateChanges();
+                Assert.IsTrue(_turn.Player2.ComboIsFresh);
+            }
+            
+            [Test]
+            public void WhenPlayer1WinsButIsInExtendedCombo()
+            {
+                _turn.IsDraw = false;
+                _turn.Player1Wins = true;
+                _turn.Player1ComboType = ComboType.Combo;
+                _turn.ApplyStateChanges();
+                Assert.IsFalse(_turn.Player1.ComboIsFresh);
+            }
+            
+            [Test]
+            public void WhenPlayer2WinsButIsInExtendedCombo()
+            {
+                _turn.IsDraw = false;
+                _turn.Player2Wins = true;
+                _turn.Player2ComboType = ComboType.Combo;
+                _turn.ApplyStateChanges();
+                Assert.IsFalse(_turn.Player2.ComboIsFresh);
+            }
+
+            [Test]
+            public void WhenPlayer1DoesNotWin()
+            {
+                _turn.IsDraw = false;
+                _turn.Player1Wins = false;
+                _turn.ApplyStateChanges();
+                Assert.IsTrue(_turn.Player1.ComboIsFresh);
+            }
+            
+            [Test]
+            public void WhenPlayer2DoesNotWin()
+            {
+                _turn.IsDraw = false;
+                _turn.Player2Wins = false;
+                _turn.ApplyStateChanges();
+                Assert.IsTrue(_turn.Player2.ComboIsFresh);
+            }
+        }
+
+        public class ForComboCounts : AppliesStateChangesCorrectly
+        {
+            int _player1Combo;
+            int _player2Combo;
+
+            [SetUp]
+            public new void SetUp()
+            {
+                base.SetUp();
+                _player1Combo = 1;
+                _player2Combo = 1;
+                _player1Mock.Setup(m => m.ResetComboCount()).Callback(() => _player1Combo = 0);
+                _player2Mock.Setup(m => m.ResetComboCount()).Callback(() => _player2Combo = 0);
+                _player1Mock.Setup(m => m.IncrementComboCount()).Callback(() => _player1Combo++);
+                _player2Mock.Setup(m => m.IncrementComboCount()).Callback(() => _player2Combo++);
+            }
+
+            [Test]
+            public void WhenIsDraw()
+            {
+                _turn.IsDraw = true;
+                _turn.Player1Wins = false;
+                _turn.Player2Wins = false;
+                _turn.ApplyStateChanges();
+                Assert.AreEqual(0, _player1Combo);
+                Assert.AreEqual(0, _player2Combo);
+            }
+
+            [Test]
+            public void WhenPlayer1Wins()
+            {
+                _turn.IsDraw = false;
+                _turn.Player1Wins = true;
+                _turn.Player2Wins = false;
+                var expected = _player1Combo + 1;
+                _turn.ApplyStateChanges();
+                Assert.AreEqual(expected, _player1Combo);
+                Assert.AreEqual(0, _player2Combo);
+            }
+            
+            [Test]
+            public void WhenPlayer2Wins()
+            {
+                _turn.IsDraw = false;
+                _turn.Player1Wins = false;
+                _turn.Player2Wins = true;
+                var expected = _player2Combo + 1;
+                _turn.ApplyStateChanges();
+                Assert.AreEqual(0, _player1Combo);
+                Assert.AreEqual(expected, _player2Combo);
+            }
+        }
+
+        public class ForPlayerDataValues : AppliesStateChangesCorrectly
+        {
+            float _player1Health;
+            float _player2Health;
+            float _player1Special;
+            float _player2Special;
+            int _player1Position;
+            int _player2Position;
+
+
+            [SetUp]
+            public new void SetUp()
+            {
+                base.SetUp();
+
+                _player1Health = 10f;
+                _player2Health = 10f;
+                _player1Special = 10f;
+                _player2Special = 10f;
+                _player1Position = 0;
+                _player2Position = 0;
+
+                _player1Mock.Setup(m => m.DecreaseHealth(It.IsAny<float>()))
+                    .Callback<float>((value) => _player1Health -= value);
+                _player2Mock.Setup(m => m.DecreaseHealth(It.IsAny<float>()))
+                    .Callback<float>((value) => _player2Health -= value);
+                _player1Mock.Setup(m => m.IncreaseSpecialMeter(It.IsAny<float>()))
+                    .Callback<float>((value) => _player1Special += value);
+                _player2Mock.Setup(m => m.IncreaseSpecialMeter(It.IsAny<float>()))
+                    .Callback<float>((value) => _player2Special += value);
+                _player1Mock.Setup(m => m.IncreasePosition(It.IsAny<int>()))
+                    .Callback<int>((value) => _player1Position += value);
+                _player2Mock.Setup(m => m.IncreasePosition(It.IsAny<int>()))
+                    .Callback<int>((value) => _player2Position += value);
+            }
+
+            [Test]
+            [TestCase(-1f)]
+            [TestCase(0f)]
+            [TestCase(1f)]
+            public void WhenApplyingDamage(float value)
+            {
+                _turn.Player1DamageTaken = value;
+                _turn.Player2DamageTaken = value;
+                var expectedPlayer1 = _player1Health - value;
+                var expectedPlayer2 = _player2Health - value;
+                _turn.ApplyStateChanges();
+                Assert.AreEqual(expectedPlayer1, _player1Health);
+                Assert.AreEqual(expectedPlayer2, _player2Health);
+            }
+            
+            [Test]
+            [TestCase(-1f)]
+            [TestCase(0f)]
+            [TestCase(1f)]
+            public void WhenApplyingSpecialGain(float value)
+            {
+                _turn.Player1SpecialGain = value;
+                _turn.Player2SpecialGain = value;
+                var expectedPlayer1 = _player1Special + value;
+                var expectedPlayer2 = _player2Special + value;
+                _turn.ApplyStateChanges();
+                Assert.AreEqual(expectedPlayer1, _player1Special);
+                Assert.AreEqual(expectedPlayer2, _player2Special);
+            }
+
+            [Test]
+            [TestCase(-1)]
+            [TestCase(0)]
+            [TestCase(1)]
+            public void WhenApplyingPositionChange(int value)
+            {
+                _turn.Player1PositionChange = value;
+                _turn.Player2PositionChange = value;
+                var expectedPlayer1 = _player1Position+ value;
+                var expectedPlayer2 = _player2Position + value;
+                _turn.ApplyStateChanges();
+                Assert.AreEqual(expectedPlayer1, _player1Position);
+                Assert.AreEqual(expectedPlayer2, _player2Position);
+            }
+        }
+
+    }
+
+    public class ExecutesCombatCommandsCorrectly : TurnTest
+    {
+        int _calls;
+
+        [SetUp]
+        public new void SetUp()
+        {
+            base.SetUp();
+            _calls = 0;
+            _combatCommandsMock.Setup(m => m.ExecuteCombatCommands())
+                .Callback(() => _calls++);
+        }
+
+        [Test]
+        public void ByCallingCombatCommandExecutor()
+        {
+            _turn.ExecuteCombatCommands();
+            Assert.AreEqual(1, _calls);
+        }
+    }
+
+    public class ChecksAndSetsSpecialUsabilityCorrectly : TurnTest 
+    {
+        bool _player1SpecialEnabled;
+        bool _player2SpecialEnabled;
+
+        [SetUp] 
+        public new void SetUp()
+        {
+            base.SetUp();
+
+            _turn.Player1 = _player1Mock.Object;
+            _turn.Player2 = _player2Mock.Object;
+            Mock<IUsableMoveSet> player1UsableMoveSet = new();
+            Mock<IUsableMoveSet> player2UsableMoveSet = new();
+            player1UsableMoveSet.Setup(m => m.EnableMoveByType(Move.Type.Special)).Callback(() => _player1SpecialEnabled = true);
+            player2UsableMoveSet.Setup(m => m.EnableMoveByType(Move.Type.Special)).Callback(() => _player2SpecialEnabled = true);
+            player1UsableMoveSet.Setup(m => m.DisableMoveByType(Move.Type.Special)).Callback(() => _player1SpecialEnabled = false);
+            player2UsableMoveSet.Setup(m => m.DisableMoveByType(Move.Type.Special)).Callback(() => _player2SpecialEnabled= false);
+            _player1Mock.Setup(m => m.UsableMoveSet).Returns(player1UsableMoveSet.Object);
+            _player2Mock.Setup(m => m.UsableMoveSet).Returns(player2UsableMoveSet.Object);
+        }
+
+        [Test]
+        [TestCase(101f, true)]
+        [TestCase(100f, true)]
+        [TestCase(99f, false)]
+        [TestCase(0f, false)]
+        public void ForAGivenSpecialValue(float value, bool expected)
+        {
+            _player1Mock.SetupProperty(m => m.SpecialMeter, value);
+            _player2Mock.SetupProperty(m => m.SpecialMeter, value);
+            _turn.CheckAndSetSpecialUsability();
+            Assert.AreEqual(expected, _player1SpecialEnabled);
+            Assert.AreEqual(expected, _player2SpecialEnabled);
+        }
+    }
+
+    public class ProducesTurnResultData : TurnTest
+    {
+        [Test]
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, true)]
+        public void WhenGetTurnDataIsCalled(bool isDraw, bool player1Wins, bool player2Wins)
+        {
+            int turnNumber = 1;
+            float damageToPlayer1 = 10f;
+            float damageToPlayer2 = 5f;
+            PlayerData playerData1 = new PlayerData(99);
+            PlayerData playerData2 = new PlayerData(98);  
+            _player1Mock.Setup(m => m.PlayerData).Returns(playerData1);
+            _player2Mock.Setup(m => m.PlayerData).Returns(playerData2);
+            _turn.TurnNumber = turnNumber;
+            _turn.Player1 = _player1Mock.Object;
+            _turn.Player2 = _player2Mock.Object;
+            _turn.Player1DamageTaken = damageToPlayer1;
+            _turn.Player2DamageTaken = damageToPlayer2;
+            _turn.IsDraw = isDraw;
+            _turn.Player1Wins = player1Wins;
+            _turn.Player2Wins = player2Wins;
+
+            var turnData = _turn.GetTurnData();
+            Assert.AreEqual(turnNumber, turnData.TurnNumber);
+            Assert.AreEqual(playerData1, turnData.PlayerData1);
+            Assert.AreEqual(playerData2, turnData.PlayerData2);
+            Assert.AreEqual(damageToPlayer1, turnData.DamageToPlayer1);
+            Assert.AreEqual(damageToPlayer2, turnData.DamageToPlayer2);
+        }
     }
 
     public Move GetTestMoveByType(Move.Type type)

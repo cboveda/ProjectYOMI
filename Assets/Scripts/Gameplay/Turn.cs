@@ -161,9 +161,11 @@ public class Turn
         else if (Player1Wins)
         {
             Player1.IncrementComboCount();
+            Player2.ResetComboCount();
         }
         else if (Player2Wins)
         {
+            Player1.ResetComboCount();
             Player2.IncrementComboCount();
         }
     }
