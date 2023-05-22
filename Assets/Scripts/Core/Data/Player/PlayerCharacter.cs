@@ -5,7 +5,7 @@ using Zenject;
 public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
 {
     [SerializeField] private Character _character;
-    private CharacterBaseEffect _characterBaseEffect;
+    private ICharacterBaseEffect _characterBaseEffect;
     private IGameUIManager _gameUIManager;
     private int _playerNumber;
     private PlayerData _playerData;
@@ -13,7 +13,7 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
     private ulong _clientId;
     private IUsableMoveSet _usableMoveSet;
     public Character Character { get => _character; }
-    public CharacterBaseEffect Effect { get => _characterBaseEffect; }
+    public ICharacterBaseEffect Effect { get => _characterBaseEffect; }
     public IGameUIManager GameUIManager { set => _gameUIManager = value; }
     public PlayerData PlayerData { get => _playerData; set => _playerData = value; }
     public PlayerMovementController PlayerMovementController { get => _playerMovementController; }

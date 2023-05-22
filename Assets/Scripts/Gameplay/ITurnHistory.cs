@@ -6,4 +6,5 @@ public interface ITurnHistory
 
     void AddTurnData(TurnResult turnData);
     int GetCurrentTurnNumber();
+    bool GetLastTurn(out TurnResult lastTurn);
 }

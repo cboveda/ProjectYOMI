@@ -21,4 +21,15 @@ public class TurnHistory : NetworkBehaviour, ITurnHistory
     {
         return _turnDataList.Count + 1;
     }
+
+    public bool GetLastTurn(out TurnResult lastTurn)
+    {
+        if (_turnDataList.Count == 0)
+        {
+            lastTurn = new TurnResult();
+            return false;
+        }
+        lastTurn = _turnDataList[^1];
+        return true;
+    }
 }

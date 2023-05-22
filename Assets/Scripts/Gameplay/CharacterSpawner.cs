@@ -64,7 +64,7 @@ public class CharacterSpawner : NetworkBehaviour
         playerCharacter.GameUIManager = _gameUIManager;
         playerCharacter.ClientId = clientId;
         playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
-        playerCharacter.Effect.Contstruct(playerCharacter, _turnHistory, _players, _database, _combatEvaluator);
+        playerCharacter.Effect.Construct(playerCharacter, _turnHistory, _players, _database, _combatEvaluator);
     }
 
     private void SpawnPlayerObjectForGivenClientId(ulong clientId, Character character, out NetworkObject instance)

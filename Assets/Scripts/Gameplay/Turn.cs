@@ -36,10 +36,10 @@ public class Turn
         Player2 = _context.Players.GetByPlayerNumber(2);
         Player1Move = _context.Database.Moves.GetMoveById(Player1.Action);
         Player2Move = _context.Database.Moves.GetMoveById(Player2.Action);
-        if (TurnNumber > 1)
+        if (_context.TurnHistory.GetLastTurn(out var lastTurn))
         {
-            Player1LastMove = _context.Database.Moves.GetMoveById(_context.TurnHistory.TurnDataList[^1].PlayerData1.Action);
-            Player2LastMove = _context.Database.Moves.GetMoveById(_context.TurnHistory.TurnDataList[^1].PlayerData2.Action);
+            Player1LastMove = _context.Database.Moves.GetMoveById(lastTurn.PlayerData1.Action);
+            Player2LastMove = _context.Database.Moves.GetMoveById(lastTurn.PlayerData2.Action);
         }
         Player1DamageTaken = 0;
         Player2DamageTaken = 0;
@@ -161,9 +161,11 @@ public class Turn
         else if (Player1Wins)
         {
             Player1.IncrementComboCount();
+            Player2.ResetComboCount();
         }
         else if (Player2Wins)
         {
+            Player1.ResetComboCount();
             Player2.IncrementComboCount();
         }
     }
