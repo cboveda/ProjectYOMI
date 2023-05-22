@@ -453,7 +453,7 @@ public class TurnTest
                 int startPosition = -2;
                 _player1Mock.SetupProperty<int>(m => m.Position, startPosition);
                 _turn.CalculateStateChanges();
-                Assert.AreEqual(startPosition + 2, _player1Mock.Object.Position);
+                Assert.AreEqual(2, _turn.Player1PositionChange);
             }
 
             [Test]
@@ -462,7 +462,7 @@ public class TurnTest
                 int startPosition = 1;
                 _player1Mock.SetupProperty<int>(m => m.Position, startPosition);
                 _turn.CalculateStateChanges();
-                Assert.AreEqual(startPosition + 1, _player1Mock.Object.Position);
+                Assert.AreEqual(1, _turn.Player1PositionChange);
             }
 
             [Test]
@@ -503,21 +503,21 @@ public class TurnTest
             }
 
             [Test]
-            public void AndPlayer1PositionIsNegative()
+            public void AndPlayer2PositionIsNegative()
             {
                 int startPosition = -2;
                 _player2Mock.SetupProperty<int>(m => m.Position, startPosition);
                 _turn.CalculateStateChanges();
-                Assert.AreEqual(startPosition + 2, _player2Mock.Object.Position);
+                Assert.AreEqual(2, _turn.Player2PositionChange);
             }
 
             [Test]
-            public void AndPlayer1PositionIsPositive()
+            public void AndPlayer2PositionIsPositive()
             {
                 int startPosition = 1;
                 _player2Mock.SetupProperty<int>(m => m.Position, startPosition);
                 _turn.CalculateStateChanges();
-                Assert.AreEqual(startPosition + 1, _player2Mock.Object.Position);
+                Assert.AreEqual(1, _turn.Player2PositionChange);
             }
 
             [Test]
