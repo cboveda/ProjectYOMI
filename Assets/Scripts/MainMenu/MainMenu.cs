@@ -40,7 +40,7 @@ public class MainMenu : MonoBehaviour
 
         _connectingText.SetActive(false);
         _buttonPanel.SetActive(true);
-        _inputField.onEndEdit.AddListener((e) =>
+        _inputField.onSubmit.AddListener((e) =>
         {
             StartClient();
             FocusInputField();
