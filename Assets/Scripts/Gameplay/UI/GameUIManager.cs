@@ -44,7 +44,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     public override void OnNetworkDespawn()
     {
         _turnHistory.TurnDataList.OnListChanged -= HandleTurnData;
-        _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged += UpdateUsableMoveButtons;
+        _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged -= UpdateUsableMoveButtons;
     }
 
     private void HandleTurnData(NetworkListEvent<TurnResult> changeEvent)
@@ -67,7 +67,8 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
 
     private void DisplayComboIndicators(TurnResult turnData)
     {
-        var isMyCombo = DetermineIfLocalPlayerIsInCombo(turnData);
+        var isMyCombo = DetermineIfLocalPlayerIsInCombo();
+        var playerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
         if (isMyCombo)
         {
             var myLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
@@ -90,7 +91,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         }
     }
 
-    private bool DetermineIfLocalPlayerIsInCombo(TurnResult turnData)
+    private bool DetermineIfLocalPlayerIsInCombo()
     {
         return _localPlayerCharacter.ComboCount > 0;
     }
@@ -152,7 +153,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
             _player1Health.SetMaximum(health);
             _player1Health.SetCurrent(health);
             _player1Name.text = $"Player 1 [{name}]";
-        }
+        } 
         else if (playerNumber == 2)
         {
             _player2Health.SetMaximum(health);
