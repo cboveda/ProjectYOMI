@@ -20,6 +20,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     [SerializeField] private TMP_Text _player1Name;
     [SerializeField] private TMP_Text _player2ComboCountText;
     [SerializeField] private TMP_Text _player2Name;
+    [SerializeField] private TurnHistoryContent _turnHistoryContent;
     private IDatabase _database;
     private ITurnHistory _turnHistory;
     private NetworkManager _networkManager;
@@ -60,6 +61,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         UpdatePlayer1Combo(playerData1.ComboCount);
         UpdatePlayer2Combo(playerData2.ComboCount);
         DisplayRoundResult(turnData);
+        _turnHistoryContent.AddTurnHistoryRow(turnData);
     }
 
     public void DisplayRoundResult(TurnResult turnData)

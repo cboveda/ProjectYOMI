@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class TurnHistoryContainer : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class TurnHistoryDragHandler : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     [SerializeField] private float _maximumYOffset;
     private Vector3 _initialPosition;
