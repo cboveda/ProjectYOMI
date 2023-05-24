@@ -60,8 +60,39 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         UpdatePlayer2Special(playerData2.SpecialMeter);
         UpdatePlayer1Combo(playerData1.ComboCount);
         UpdatePlayer2Combo(playerData2.ComboCount);
-        DisplayRoundResult(turnData);
+        //DisplayRoundResult(turnData);
         _turnHistoryContent.AddTurnHistoryRow(turnData);
+        DisplayComboIndicators(turnData);
+    }
+
+    private void DisplayComboIndicators(TurnResult turnData)
+    {
+        var isMyCombo = DetermineIfLocalPlayerIsInCombo(turnData);
+        if (isMyCombo)
+        {
+            var myLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
+            var myLastMove = _database.Moves.GetMoveById(myLastPlayerData.Action);
+            if (_localPlayerCharacter.Character.ComboPathSet.TryGetValue(myLastMove.MoveType, out var comboPath))
+            {
+                var comboMoveType = (myLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
+                _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
+            }
+        }
+        else
+        {
+            var opponentLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
+            var opponentLastMove = _database.Moves.GetMoveById(opponentLastPlayerData.Action);
+            if (_localPlayerCharacter.Character.ComboPathSet.TryGetValue(opponentLastMove.MoveType, out var comboPath))
+            {
+                var comboMoveType = (opponentLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
+                _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
+            }
+        }
+    }
+
+    private bool DetermineIfLocalPlayerIsInCombo(TurnResult turnData)
+    {
+        return _localPlayerCharacter.ComboCount > 0;
     }
 
     public void DisplayRoundResult(TurnResult turnData)

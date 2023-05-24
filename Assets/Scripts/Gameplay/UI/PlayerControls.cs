@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,5 +46,21 @@ public class PlayerControls : MonoBehaviour
     public void ToggleHelperArrows()
     {
         _helperArrows.SetActive(!_helperArrows.activeSelf);
+    }
+
+    public void SetComboHighlight(Move.Type comboMoveType, bool isMyCombo)
+    {
+        foreach(Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        {
+            var button = GetButtonByType(type);
+            if (type == comboMoveType)
+            {
+                button.SetMyComboIndicator(isMyCombo);
+            }
+            else
+            {
+                button.ClearComboIndicator();
+            }
+        }
     }
 }
