@@ -90,11 +90,15 @@ public class PlayerControls : MonoBehaviour
         }
     }
 
-    public void ClearComboHighlights()
+    public void ClearAllComboHighlights()
     {
         foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
             var button = GetButtonByType(type);
+            if (button == null)
+            {
+                continue;
+            }
             button.ClearComboIndicator();
         }
     }

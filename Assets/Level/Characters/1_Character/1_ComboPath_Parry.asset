@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: 1_ComboPath_Parry
   m_EditorClassIdentifier: 
   _comboMove: 16
-  _freshComboMove: 8
-  _mixUp: 0802
-  _freshMixUp: 04
+  _freshComboMove: 16
