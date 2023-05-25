@@ -99,7 +99,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         }
         else
         {
-            _playerControls.ClearComboHighlights();
+            _playerControls.ClearAllComboHighlights();
         }
     }
 
