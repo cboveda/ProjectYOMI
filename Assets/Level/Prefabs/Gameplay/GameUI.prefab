@@ -5644,7 +5644,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 311021361504173924, guid: 12907a592773be94d89b1f2dc11ff8b7, type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4637152139101508201, guid: 12907a592773be94d89b1f2dc11ff8b7, type: 3}
       propertyPath: m_Name

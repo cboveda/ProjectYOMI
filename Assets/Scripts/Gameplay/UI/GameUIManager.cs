@@ -44,7 +44,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     public override void OnNetworkDespawn()
     {
         _turnHistory.TurnDataList.OnListChanged -= HandleTurnData;
-        _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged += UpdateUsableMoveButtons;
+        _localPlayerCharacter.UsableMoveSet.Moves.OnValueChanged -= UpdateUsableMoveButtons;
     }
 
     private void HandleTurnData(NetworkListEvent<TurnResult> changeEvent)
@@ -60,8 +60,47 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         UpdatePlayer2Special(playerData2.SpecialMeter);
         UpdatePlayer1Combo(playerData1.ComboCount);
         UpdatePlayer2Combo(playerData2.ComboCount);
-        DisplayRoundResult(turnData);
+        //DisplayRoundResult(turnData);
         _turnHistoryContent.AddTurnHistoryRow(turnData);
+        DisplayComboIndicators(turnData);
+    }
+
+    private void DisplayComboIndicators(TurnResult turnData)
+    {
+        var localPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
+        var otherPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
+        var localNextComboType = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.Player1NextComboMove : turnData.Player2NextComboMove;
+        var otherNextComboType = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.Player2NextComboMove : turnData.Player1NextComboMove;
+        var isMyCombo = localPlayerData.ComboCount > 0; 
+        var isOtherCombo = otherPlayerData.ComboCount > 0;
+        if (isMyCombo)
+        {
+            var myLastMove = _database.Moves.GetMoveById(localPlayerData.Action);
+            if (myLastMove.MoveType == Move.Type.Special)
+            {
+                _playerControls.SetComboHighlightForAllButtonsAfterSpecial(true);
+            }
+            else
+            {
+                _playerControls.SetComboHighlight(localNextComboType, isMyCombo);
+            }
+        }
+        else if (isOtherCombo)
+        {
+            var otherLastMove = _database.Moves.GetMoveById(otherPlayerData.Action);
+            if (otherLastMove.MoveType == Move.Type.Special)
+            {
+                _playerControls.SetComboHighlightForAllButtonsAfterSpecial(false);
+            }
+            else
+            {
+                _playerControls.SetComboHighlight(otherNextComboType, isMyCombo);
+            }
+        }
+        else
+        {
+            _playerControls.ClearComboHighlights();
+        }
     }
 
     public void DisplayRoundResult(TurnResult turnData)
@@ -87,7 +126,11 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     {
         foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
-            _playerControls.GetButtonByType(type).Button.interactable = (newValue & (byte)type) == (byte)type;
+            var button = _playerControls.GetButtonByType(type);
+            if (button != null)
+            {
+                button.Button.interactable = (newValue & (byte)type) == (byte)type;
+            }
         }
     }
 
@@ -121,7 +164,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
             _player1Health.SetMaximum(health);
             _player1Health.SetCurrent(health);
             _player1Name.text = $"Player 1 [{name}]";
-        }
+        } 
         else if (playerNumber == 2)
         {
             _player2Health.SetMaximum(health);

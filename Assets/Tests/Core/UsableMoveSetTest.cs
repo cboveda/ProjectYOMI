@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Unity.Netcode;
 using System;
+using System.Linq;
 
 public class UsableMoveSetTest
 {
@@ -40,6 +41,10 @@ public class UsableMoveSetTest
         _initialCheckByte = 0;
         foreach (Move.Type type in moveTypeList)
         {
+            if (type == Move.Type.None)
+            {
+                continue;
+            }
             byte isUsable = (byte)(moveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
             byte typeAsByte = (byte)type;
             _initialCheckByte |= (byte)(typeAsByte * isUsable);

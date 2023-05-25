@@ -1,10 +1,11 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
 public class PlayerControls : MonoBehaviour
-{ 
+{
     private IDatabase _database;
 
     [SerializeField] private MoveButton _lightAttackButton;
@@ -45,5 +46,56 @@ public class PlayerControls : MonoBehaviour
     public void ToggleHelperArrows()
     {
         _helperArrows.SetActive(!_helperArrows.activeSelf);
+    }
+
+    public void SetComboHighlight(Move.Type comboMoveType, bool isMyCombo)
+    {
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        {
+            var button = GetButtonByType(type);
+            if (button == null)
+            {
+                continue;
+            }
+
+            if (type == comboMoveType)
+            {
+                button.SetMyComboIndicator(isMyCombo);
+            }
+            else
+            {
+                button.ClearComboIndicator();
+            }
+        }
+    }
+
+    public void SetComboHighlightForAllButtonsAfterSpecial(bool isMyCombo)
+    {
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        {
+            var button = GetButtonByType(type);
+            if (button == null)
+            {
+                continue;
+            }
+
+            if (type != Move.Type.Special)
+            {
+                button.SetMyComboIndicator(isMyCombo);
+            }
+            else
+            {
+                button.ClearComboIndicator();
+            }
+        }
+    }
+
+    public void ClearComboHighlights()
+    {
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        {
+            var button = GetButtonByType(type);
+            button.ClearComboIndicator();
+        }
     }
 }

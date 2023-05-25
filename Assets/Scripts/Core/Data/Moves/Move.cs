@@ -13,7 +13,8 @@ public class Move : ScriptableObject
         HeavyAttack = 8,
         Parry = 4,
         Grab = 2,
-        Special = 1
+        Special = 1,
+        None = 0
     }
 
     [SerializeField] private string _moveName;

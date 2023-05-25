@@ -10,6 +10,8 @@ public class MoveButton : MonoBehaviour
     [SerializeField] TMP_Text _typeText;
     [SerializeField] Button _button;
     [SerializeField] private GameObject _highlight;
+    [SerializeField] private GameObject _myComboIndicator;
+    [SerializeField] private GameObject _enemyComboIndicator;
     private Move _move;
     private IGameUIManager _gameUIManager;
     
@@ -39,5 +41,25 @@ public class MoveButton : MonoBehaviour
     public void SetHighlight(bool value)
     {
         _highlight.SetActive(value);
+    }
+
+    public void SetMyComboIndicator(bool isMyCombo)
+    {
+        if (isMyCombo)
+        {
+            _myComboIndicator.SetActive(true);
+            _enemyComboIndicator.SetActive(false);
+        }
+        else
+        {
+            _enemyComboIndicator.SetActive(true);
+            _myComboIndicator.SetActive(false);
+        }
+    }
+
+    public void ClearComboIndicator()
+    {
+        _myComboIndicator.SetActive(false);
+        _enemyComboIndicator.SetActive(false);
     }
 }

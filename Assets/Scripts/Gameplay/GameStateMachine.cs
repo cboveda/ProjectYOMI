@@ -92,34 +92,4 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
         _timerActive = true;
         _timerComplete = false;
     }
-
-#if !UNITY_INCLUDE_TESTS
-    void OnGUI()
-    {
-        if (!IsServer) return;
-        if (_players == null) return;
-
-        var player1 = _players.GetByPlayerNumber(1);
-        var player2 = _players.GetByPlayerNumber(2);
-
-        GUILayout.BeginArea(new Rect(20, 20, 100, 100));
-
-        if (GUILayout.Button("Knockback P1"))
-        {
-            player1.Position -= 1;
-            player2.Position += 1;
-            player1.PlayerMovementController.UpdatePosition();
-            player2.PlayerMovementController.UpdatePosition();
-        }        
-        if (GUILayout.Button("Knockback P2"))
-        {
-            player1.Position += 1;
-            player2.Position -= 1;
-            player1.PlayerMovementController.UpdatePosition();
-            player2.PlayerMovementController.UpdatePosition();
-        }
-
-        GUILayout.EndArea();
-    }
-#endif
 }
