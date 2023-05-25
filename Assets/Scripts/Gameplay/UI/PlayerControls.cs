@@ -64,6 +64,22 @@ public class PlayerControls : MonoBehaviour
         }
     }
 
+    public void SetComboHighlightForAllButtonsAfterSpecial(bool isMyCombo)
+    {
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        {
+            var button = GetButtonByType(type);
+            if (type != Move.Type.Special)
+            {
+                button.SetMyComboIndicator(isMyCombo);
+            }
+            else
+            {
+                button.ClearComboIndicator();
+            }
+        }
+    }
+
     public void ClearComboHighlights()
     {
         foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))

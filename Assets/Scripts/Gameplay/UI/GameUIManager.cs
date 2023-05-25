@@ -75,7 +75,11 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         {
             var myLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
             var myLastMove = _database.Moves.GetMoveById(myLastPlayerData.Action);
-            if (_localPlayerCharacter.Character.ComboPathSet.TryGetValue(myLastMove.MoveType, out var comboPath))
+            if (myLastMove.MoveType == Move.Type.Special)
+            {
+                _playerControls.SetComboHighlightForAllButtonsAfterSpecial(true);
+            }
+            else if (_localPlayerCharacter.Character.ComboPathSet.TryGetValue(myLastMove.MoveType, out var comboPath))
             {
                 var comboMoveType = (myLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
                 _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
@@ -85,7 +89,12 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         {
             var opponentLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
             var opponentLastMove = _database.Moves.GetMoveById(opponentLastPlayerData.Action);
-            if (_localPlayerCharacter.Character.ComboPathSet.TryGetValue(opponentLastMove.MoveType, out var comboPath))
+            if (opponentLastMove.MoveType == Move.Type.Special)
+            {
+                _playerControls.SetComboHighlightForAllButtonsAfterSpecial(false);
+            }
+            // this doesn't work?
+            if (_players.GetByOpponentClientId(_localPlayerCharacter.ClientId).Character.ComboPathSet.TryGetValue(opponentLastMove.MoveType, out var comboPath))
             {
                 var comboMoveType = (opponentLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
                 _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
@@ -95,11 +104,6 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         {
             _playerControls.ClearComboHighlights();
         }
-    }
-
-    private bool DetermineIfLocalPlayerIsInCombo()
-    {
-        return _localPlayerCharacter.ComboCount > 0;
     }
 
     public void DisplayRoundResult(TurnResult turnData)
