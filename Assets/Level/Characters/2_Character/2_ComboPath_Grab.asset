@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: 2_ComboPath_Grab
   m_EditorClassIdentifier: 
   _comboMove: 2
-  _freshComboMove: 16
+  _freshComboMove: 8

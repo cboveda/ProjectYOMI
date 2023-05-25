@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1febc245a1a102e42aa5de53c5377d7c, type: 3}
   m_Name: 2_ComboPath_Parry
   m_EditorClassIdentifier: 
-  _comboMove: 8
+  _comboMove: 16
   _freshComboMove: 16

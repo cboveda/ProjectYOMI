@@ -241,10 +241,10 @@ public class TurnTest
                 [Test]
                 [TestCase(Move.Type.LightAttack, Move.Type.HeavyAttack, true, ComboType.Combo)] //fresh combo
                 [TestCase(Move.Type.LightAttack, Move.Type.Parry, true, ComboType.MixUp)] //fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.HeavyAttack, false, ComboType.Combo)] //not fresh combo
-                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.MixUp)] //not fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.Parry, true, ComboType.Normal)] //fresh normal
-                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.Normal)] //not fresh normal
+                [TestCase(Move.Type.Grab, Move.Type.LightAttack, false, ComboType.Combo)] //not fresh combo
+                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.MixUp)] //not fresh mixup
+                [TestCase(Move.Type.Grab, Move.Type.Grab, true, ComboType.Normal)] //fresh normal
+                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.Normal)] //not fresh normal
                 public void ForGivenLastMoveAndCurrentMoveAndFreshness(Move.Type lastMove, Move.Type currentMove, bool isFresh, ComboType expected)
                 {
                     _player1Mock.Setup(m => m.ComboIsFresh).Returns(isFresh);
@@ -318,10 +318,10 @@ public class TurnTest
                 [Test]
                 [TestCase(Move.Type.LightAttack, Move.Type.HeavyAttack, true, ComboType.Combo)] //fresh combo
                 [TestCase(Move.Type.LightAttack, Move.Type.Parry, true, ComboType.MixUp)] //fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.HeavyAttack, false, ComboType.Combo)] //not fresh combo
-                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.MixUp)] //not fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.Parry, true, ComboType.Normal)] //fresh normal
-                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.Normal)] //not fresh normal
+                [TestCase(Move.Type.Grab, Move.Type.LightAttack, false, ComboType.Combo)] //not fresh combo
+                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.MixUp)] //not fresh mixup
+                [TestCase(Move.Type.Grab, Move.Type.Grab, true, ComboType.Normal)] //fresh normal
+                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.Normal)] //not fresh normal
                 public void ForGivenLastMoveAndCurrentMoveAndFreshness(Move.Type lastMove, Move.Type currentMove, bool isFresh, ComboType expected)
                 {
                     _player2Mock.Setup(m => m.ComboIsFresh).Returns(isFresh);
