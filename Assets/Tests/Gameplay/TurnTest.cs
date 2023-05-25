@@ -850,6 +850,56 @@ public class TurnTest
         }
     }
 
+    public class DeterminesNextComboMoveCorrectly : TurnTest
+    {
+        ComboPath _comboPath;
+
+        [SetUp]
+        public new void SetUp()
+        {
+            base.SetUp();
+
+            _turn.Player1 = _player1Mock.Object;
+            _turn.Player2 = _player2Mock.Object;
+
+            _player1Mock.SetupProperty(m => m.ComboCount, 0);
+            _player2Mock.SetupProperty(m => m.ComboCount, 0);
+            _turn.Player1.ComboCount = 1;
+            _turn.Player2.ComboCount = 1;
+
+            _player1Mock.SetupProperty(m => m.ComboIsFresh, true);
+            _player2Mock.SetupProperty(m => m.ComboIsFresh, true);
+
+            Character character = Resources.Load<Character>("Tests/101_TestCharacter");
+            foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+            {
+                if (character.ComboPathSet.TryGetValue(type, out var comboPath))
+                {
+                    comboPath.Construct(_databaseMock.Object);
+                }
+            }
+            _player1Mock.Setup(m => m.Character).Returns(character);
+            _player2Mock.Setup(m => m.Character).Returns(character);
+            character.ComboPathSet.TryGetValue(Move.Type.LightAttack, out _comboPath);
+            _turn.Player1Move = character.CharacterMoveSet.LightAttack;
+            _turn.Player2Move = character.CharacterMoveSet.LightAttack;
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void DeterminesNextComboMove(bool freshness)
+        {
+            _player1Mock.Object.ComboIsFresh = freshness;
+            _player2Mock.Object.ComboIsFresh = freshness;
+            Move.Type expected = (freshness) ? _comboPath.FreshComboMove : _comboPath.ComboMove;
+
+            _turn.DetermineNextComboMove();
+            Assert.AreEqual(expected, _turn.Player1NextCombo);
+            Assert.AreEqual(expected, _turn.Player2NextCombo);
+        }
+    }
+
     public class ProducesTurnResultData : TurnTest
     {
         [Test]
