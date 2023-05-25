@@ -67,8 +67,10 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
 
     private void DisplayComboIndicators(TurnResult turnData)
     {
-        var isMyCombo = DetermineIfLocalPlayerIsInCombo();
-        var playerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
+        var localPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
+        var otherPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
+        var isMyCombo = localPlayerData.ComboCount > 0; 
+        var isOtherCombo = otherPlayerData.ComboCount > 0;
         if (isMyCombo)
         {
             var myLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
@@ -79,7 +81,7 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
                 _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
             }
         }
-        else
+        else if (isOtherCombo)
         {
             var opponentLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
             var opponentLastMove = _database.Moves.GetMoveById(opponentLastPlayerData.Action);
@@ -88,6 +90,10 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
                 var comboMoveType = (opponentLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
                 _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
             }
+        }
+        else
+        {
+            _playerControls.ClearComboHighlights();
         }
     }
 

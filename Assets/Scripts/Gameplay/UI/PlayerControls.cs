@@ -63,4 +63,13 @@ public class PlayerControls : MonoBehaviour
             }
         }
     }
+
+    public void ClearComboHighlights()
+    {
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        {
+            var button = GetButtonByType(type);
+            button.ClearComboIndicator();
+        }
+    }
 }

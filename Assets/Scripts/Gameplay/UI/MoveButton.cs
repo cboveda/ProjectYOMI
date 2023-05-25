@@ -48,10 +48,12 @@ public class MoveButton : MonoBehaviour
         if (isMyCombo)
         {
             _myComboIndicator.SetActive(true);
+            _enemyComboIndicator.SetActive(false);
         }
         else
         {
             _enemyComboIndicator.SetActive(true);
+            _myComboIndicator.SetActive(false);
         }
     }
 
