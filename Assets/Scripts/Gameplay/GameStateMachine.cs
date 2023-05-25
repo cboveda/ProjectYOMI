@@ -92,23 +92,4 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
         _timerActive = true;
         _timerComplete = false;
     }
-
-    void OnGUI()
-    {
-        if (!IsServer) return;
-
-        GUILayout.BeginArea(new Rect(20, 20, 100, 100));
-
-        if (GUILayout.Button("Toggle Timer"))
-        {
-            if (!_timerActive)
-            {
-                _timer = _timerMax;
-            }
-            _timerActive = !_timerActive;
-        }        
-        GUILayout.Label($"Timer: {_timer:0.0}/{_timerMax}");
-
-        GUILayout.EndArea();
-    }
 }
