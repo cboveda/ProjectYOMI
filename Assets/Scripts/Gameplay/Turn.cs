@@ -17,6 +17,8 @@ public class Turn
     public Move Player1Move;
     public Move Player2LastMove;
     public Move Player2Move;
+    public Move.Type Player1NextCombo;
+    public Move.Type Player2NextCombo;
     public ComboType Player1ComboType;
     public ComboType Player2ComboType;
     public IPlayerCharacter Player1;
@@ -138,6 +140,29 @@ public class Turn
         return this;
     }
 
+    public Turn DetermineNextComboMove()
+    {
+        Player1NextCombo = Move.Type.None;
+        Player2NextCombo = Move.Type.None;
+
+        if (Player1.ComboCount > 0)
+        {
+            if (Player1.Character.ComboPathSet.TryGetValue(Player1Move.MoveType, out var player1ComboPath))
+            {
+                Player1NextCombo = (Player1.ComboIsFresh) ? player1ComboPath.FreshComboMove : player1ComboPath.ComboMove;
+            }
+        }
+
+        if (Player2.ComboCount > 0)
+        {
+            if (Player2.Character.ComboPathSet.TryGetValue(Player2Move.MoveType, out var player2ComboPath))
+            {
+                Player2NextCombo = (Player2.ComboIsFresh) ? player2ComboPath.FreshComboMove : player2ComboPath.ComboMove;
+            }
+        }
+        return this;
+    }
+
     public TurnResult GetTurnData()
     {
         return new TurnResult
@@ -147,7 +172,9 @@ public class Turn
             PlayerData2 = Player2.PlayerData,
             DamageToPlayer1 = Player1DamageTaken,
             DamageToPlayer2 = Player2DamageTaken,
-            Summary = GetResultString()
+            Summary = GetResultString(),
+            Player1NextComboMove = Player1NextCombo,
+            Player2NextComboMove = Player2NextCombo
         };
     }
 

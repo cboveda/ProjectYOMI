@@ -16,6 +16,11 @@ public class UsableMoveSet : NetworkBehaviour, IUsableMoveSet
     {
         foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
+            var move = moveSet.GetMoveByType(type);
+            if (move == null)
+            {
+                continue;
+            }
             byte isUsable = (byte)(moveSet.GetMoveByType(type).UsableByDefault ? 1 : 0);
             byte typeAsByte = (byte)type;
             _moves.Value |= (byte)(typeAsByte * isUsable);

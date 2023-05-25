@@ -34,6 +34,7 @@ public class GameTurnResolveState : GameBaseState
             .ApplyStateChanges()
             .ExecuteCombatCommands()
             .CheckAndSetSpecialUsability()
+            .DetermineNextComboMove()
             .GetTurnData();
         _context.TurnHistory.AddTurnData(turnResult);
         _context.Players.ResetActions();

@@ -69,35 +69,32 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     {
         var localPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
         var otherPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
+        var localNextComboType = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.Player1NextComboMove : turnData.Player2NextComboMove;
+        var otherNextComboType = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.Player2NextComboMove : turnData.Player1NextComboMove;
         var isMyCombo = localPlayerData.ComboCount > 0; 
         var isOtherCombo = otherPlayerData.ComboCount > 0;
         if (isMyCombo)
         {
-            var myLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
-            var myLastMove = _database.Moves.GetMoveById(myLastPlayerData.Action);
+            var myLastMove = _database.Moves.GetMoveById(localPlayerData.Action);
             if (myLastMove.MoveType == Move.Type.Special)
             {
                 _playerControls.SetComboHighlightForAllButtonsAfterSpecial(true);
             }
-            else if (_localPlayerCharacter.Character.ComboPathSet.TryGetValue(myLastMove.MoveType, out var comboPath))
+            else
             {
-                var comboMoveType = (myLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
-                _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
+                _playerControls.SetComboHighlight(localNextComboType, isMyCombo);
             }
         }
         else if (isOtherCombo)
         {
-            var opponentLastPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
-            var opponentLastMove = _database.Moves.GetMoveById(opponentLastPlayerData.Action);
-            if (opponentLastMove.MoveType == Move.Type.Special)
+            var otherLastMove = _database.Moves.GetMoveById(otherPlayerData.Action);
+            if (otherLastMove.MoveType == Move.Type.Special)
             {
                 _playerControls.SetComboHighlightForAllButtonsAfterSpecial(false);
             }
-            // this doesn't work?
-            if (_players.GetByOpponentClientId(_localPlayerCharacter.ClientId).Character.ComboPathSet.TryGetValue(opponentLastMove.MoveType, out var comboPath))
+            else
             {
-                var comboMoveType = (opponentLastPlayerData.ComboIsFresh) ? comboPath.FreshComboMove : comboPath.ComboMove;
-                _playerControls.SetComboHighlight(comboMoveType, isMyCombo);
+                _playerControls.SetComboHighlight(otherNextComboType, isMyCombo);
             }
         }
         else
@@ -129,7 +126,11 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
     {
         foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
-            _playerControls.GetButtonByType(type).Button.interactable = (newValue & (byte)type) == (byte)type;
+            var button = _playerControls.GetButtonByType(type);
+            if (button != null)
+            {
+                button.Button.interactable = (newValue & (byte)type) == (byte)type;
+            }
         }
     }
 

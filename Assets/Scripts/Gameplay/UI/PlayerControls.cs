@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Zenject;
 
 public class PlayerControls : MonoBehaviour
-{ 
+{
     private IDatabase _database;
 
     [SerializeField] private MoveButton _lightAttackButton;
@@ -50,9 +50,14 @@ public class PlayerControls : MonoBehaviour
 
     public void SetComboHighlight(Move.Type comboMoveType, bool isMyCombo)
     {
-        foreach(Move.Type type in Enum.GetValues(typeof(Move.Type)))
+        foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
             var button = GetButtonByType(type);
+            if (button == null)
+            {
+                continue;
+            }
+
             if (type == comboMoveType)
             {
                 button.SetMyComboIndicator(isMyCombo);
@@ -69,6 +74,11 @@ public class PlayerControls : MonoBehaviour
         foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
         {
             var button = GetButtonByType(type);
+            if (button == null)
+            {
+                continue;
+            }
+
             if (type != Move.Type.Special)
             {
                 button.SetMyComboIndicator(isMyCombo);
