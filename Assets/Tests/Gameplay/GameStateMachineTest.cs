@@ -80,18 +80,6 @@ public class GameStateMachineTest
         Assert.AreEqual(_turnHistoryMock.Object, _gameStateMachine.TurnHistory);
     }
 
-    [Test]
-    public void DurationAccessorsSetAndReturnCorrectValues()
-    {
-        float testValue = 1.123f;
-        _gameStateMachine.GameStartDuration = testValue;
-        _gameStateMachine.RoundActiveDuration = testValue;
-        _gameStateMachine.RoundResolveDuration = testValue;
-        Assert.AreEqual(testValue, _gameStateMachine.GameStartDuration);
-        Assert.AreEqual(testValue, _gameStateMachine.RoundActiveDuration);
-        Assert.AreEqual(testValue, _gameStateMachine.RoundResolveDuration);
-    }
-
     [OneTimeTearDown]
     public void TearDown()
     {

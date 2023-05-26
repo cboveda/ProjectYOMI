@@ -1,4 +1,5 @@
 using Castle.Core.Configuration;
+using System.Linq;
 
 public class GameTurnResolveState : GameBaseState
 {
@@ -10,7 +11,7 @@ public class GameTurnResolveState : GameBaseState
     {
         if (_context.TimerComplete)
         {
-            if (_context.Players.GameShouldEnd())
+            if (GameShouldEnd())
             {
                 SwitchState(_factory.End());
             }
@@ -23,7 +24,7 @@ public class GameTurnResolveState : GameBaseState
 
     public override void EnterState()
     {
-        _context.SetTimer(_context.RoundResolveDuration);
+        _context.SetTimer(_context.CombatConfiguration.RoundResolveDuration);
         var turn = _context.TurnFactory.GetTurn();
         var turnResult = turn
             .Initialize()
@@ -49,5 +50,13 @@ public class GameTurnResolveState : GameBaseState
     public override void UpdateState()
     {
         CheckSwitchStates();
+    }
+
+
+    private bool GameShouldEnd()
+    {
+        return _context.Players.GetAll().Any(pc => 
+            pc.PlayerData.Health <= 0 || 
+            pc.PlayerData.Position < _context.CombatConfiguration.PositionMinimumForRingOut);
     }
 }

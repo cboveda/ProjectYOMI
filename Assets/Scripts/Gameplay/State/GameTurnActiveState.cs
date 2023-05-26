@@ -14,8 +14,8 @@ public class GameTurnActiveState : GameBaseState
 
     public override void EnterState()
     {
-        _context.SetTimer(_context.RoundActiveDuration);
-        _context.GameplayUI.StartRoundTimerClientRpc(_context.RoundActiveDuration);
+        _context.SetTimer(_context.CombatConfiguration.RoundActiveDuration);
+        _context.GameplayUI.StartRoundTimerClientRpc(_context.CombatConfiguration.RoundActiveDuration);
     }
 
     public override void ExitState()

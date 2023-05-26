@@ -67,10 +67,6 @@ public class PlayerDataCollection : IPlayerDataCollection
         return playerCharacter;
     }
 
-    public bool GameShouldEnd()
-    {
-        return _playerCharacters.Values.Any(pc => pc.PlayerData.Health <= 0 || pc.PlayerData.Position < -6);
-    }
 
     public void UpdatePositions()
     {

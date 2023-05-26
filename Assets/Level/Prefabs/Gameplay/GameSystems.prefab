@@ -78,10 +78,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ea1d11f6fa3e5459e3bee87ff07ced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameStartDuration: 3
-  _roundActiveDuration: 7
-  _roundResolveDuration: 3
-  _timer: 0
 --- !u!114 &6346495220142219102
 MonoBehaviour:
   m_ObjectHideFlags: 0

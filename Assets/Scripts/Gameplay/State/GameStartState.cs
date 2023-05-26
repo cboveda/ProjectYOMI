@@ -14,7 +14,7 @@ public class GameStartState : GameBaseState
 
     public override void EnterState()
     {
-        _context.SetTimer(_context.GameStartDuration);
+        _context.SetTimer(_context.CombatConfiguration.GameStartDuration);
     }
 
     public override void ExitState()

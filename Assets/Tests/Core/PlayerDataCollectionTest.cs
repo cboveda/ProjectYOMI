@@ -114,22 +114,6 @@ public class PlayerDataCollectionTest
         Assert.Throws<System.Exception>(() => _collection.GetByOpponentClientId(ulong.MaxValue));
     }
 
-    [Test]
-    public void GameShouldEndReturnsFalseWhenBothPlayerHealthsAreNotZero()
-    {
-        Assert.IsFalse(_collection.GameShouldEnd());
-    }
-
-    [Test]
-    [TestCase((ulong) 0)]
-    [TestCase((ulong) 1)]
-    public void GameShouldEndReturnsTrueWhenAPlayerHealthIsZero(ulong index)
-    {
-        _collection.GetByClientId(index).Health = 0;
-        Assert.IsTrue(_collection.GameShouldEnd());
-        _collection.GetByClientId(index).Health = 1;
-    }
-
     [OneTimeTearDown]
     public void TearDown()
     {
