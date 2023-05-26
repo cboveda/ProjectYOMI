@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80297e3d687c6c4285903e89fc28703, type: 3}
   m_Name: DefaultCombatConfiguration
   m_EditorClassIdentifier: 
-  _baseDamage: 10
+  _baseDamage: 12.5
   _baseSpecialGain: 25
-  _chipDamageModifier: 0.5
+  _chipDamageModifier: 0.35
   _specialGainOnLossModifier: 0.35
   _comboDamageMultiplier: 1.5
+  _gameStartDuration: 4
+  _roundActiveDuration: 7
+  _roundResolveDuration: 3
+  _positionMinimumForRingOut: -5

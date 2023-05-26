@@ -4,10 +4,7 @@ using Zenject;
 
 public class GameStateMachine : NetworkBehaviour, IGameStateMachine
 {
-    [SerializeField] private float _gameStartDuration;
-    [SerializeField] private float _roundActiveDuration;
-    [SerializeField] private float _roundResolveDuration;
-    [SerializeField] private float _timer;
+    private float _timer;
     private bool _timerActive = false;
     private bool _timerComplete = false;
     private CombatConfiguration _combatConfiguration;
@@ -25,9 +22,6 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
     public bool TimerComplete { get { return _timerComplete; } }
     public CombatConfiguration CombatConfiguration { get => _combatConfiguration; }
     public CombatCommandExecutor CombatEvaluator { get { return _combatEvaluator; } }
-    public float GameStartDuration { get { return _gameStartDuration; } set { _gameStartDuration = value; } }
-    public float RoundActiveDuration { get { return _roundActiveDuration; } set { _roundActiveDuration = value; } }
-    public float RoundResolveDuration { get { return _roundResolveDuration; } set { _roundResolveDuration = value; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
     public IPlayerDataCollection Players { get { return _players; } }
@@ -62,8 +56,6 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
         if (!IsServer) return;
 
         _states = new GameStateFactory(this);
-        _currentState = _states.Start();
-        _currentState.EnterState();
     }
 
     void Update()
@@ -72,6 +64,14 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
 
         UpdateTimer();
         _currentState.UpdateState();
+    }
+
+    private void Start()
+    {
+        if (!IsServer) return;
+
+        _currentState = _states.Start();
+        _currentState.EnterState();
     }
 
     private void UpdateTimer()
