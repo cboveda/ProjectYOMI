@@ -19,8 +19,6 @@ public class Turn
     public Move Player2Move;
     public Move.Type Player1NextCombo;
     public Move.Type Player2NextCombo;
-    public ComboType Player1ComboType;
-    public ComboType Player2ComboType;
     public IPlayerCharacter Player1;
     public IPlayerCharacter Player2;
 
@@ -64,19 +62,6 @@ public class Turn
         return this;
     }
 
-    public Turn DetermineComboStatus()
-    {
-        if (ShouldDetermineComboForPlayer(1))
-        {
-            Player1ComboType = DetermineComboForPlayer(1);
-        }
-        if (ShouldDetermineComboForPlayer(2))
-        {
-            Player2ComboType = DetermineComboForPlayer(2);
-        }
-        return this;
-    }
-
     public Turn CheckForSpecialMovesAndExecute()
     {
         if (ShouldExecuteSpecialForPlayer(1))
@@ -101,7 +86,6 @@ public class Turn
 
     public Turn ApplyStateChanges()
     {
-        SetComboFreshness();
         AdjustComboCounts();
         Player1.DecreaseHealth(Player1DamageTaken);
         Player2.DecreaseHealth(Player2DamageTaken);
@@ -140,29 +124,6 @@ public class Turn
         return this;
     }
 
-    public Turn DetermineNextComboMove()
-    {
-        Player1NextCombo = Move.Type.None;
-        Player2NextCombo = Move.Type.None;
-
-        if (Player1.ComboCount > 0)
-        {
-            if (Player1.Character.ComboPathSet.TryGetValue(Player1Move.MoveType, out var player1ComboPath))
-            {
-                Player1NextCombo = (Player1.ComboIsFresh) ? player1ComboPath.FreshComboMove : player1ComboPath.ComboMove;
-            }
-        }
-
-        if (Player2.ComboCount > 0)
-        {
-            if (Player2.Character.ComboPathSet.TryGetValue(Player2Move.MoveType, out var player2ComboPath))
-            {
-                Player2NextCombo = (Player2.ComboIsFresh) ? player2ComboPath.FreshComboMove : player2ComboPath.ComboMove;
-            }
-        }
-        return this;
-    }
-
     public TurnResult GetTurnData()
     {
         return new TurnResult
@@ -172,9 +133,7 @@ public class Turn
             PlayerData2 = Player2.PlayerData,
             DamageToPlayer1 = Player1DamageTaken,
             DamageToPlayer2 = Player2DamageTaken,
-            Summary = GetResultString(),
-            Player1NextComboMove = Player1NextCombo,
-            Player2NextComboMove = Player2NextCombo
+            Summary = GetResultString()
         };
     }
 
@@ -197,19 +156,6 @@ public class Turn
         }
     }
 
-    private void SetComboFreshness()
-    {
-        Player1.ComboIsFresh = 
-            IsDraw || 
-            Player2Wins || 
-            Player1ComboType != ComboType.Combo;
-
-        Player2.ComboIsFresh = 
-            IsDraw ||
-            Player1Wins ||
-            Player2ComboType != ComboType.Combo;
-    }
-
     private void CalculateSpecialMeterGained()
     {
         Player1SpecialGain = _context.Config.BaseSpecialGain;
@@ -230,12 +176,10 @@ public class Turn
         {
             Player1DamageTaken = 0;
             Player2DamageTaken = _context.Config.BaseDamage;
-            Player2DamageTaken *= CalculateComboDamageModifier(Player1ComboType);
         }
         else if (Player2Wins)
         {
             Player1DamageTaken = _context.Config.BaseDamage;
-            Player1DamageTaken *= CalculateComboDamageModifier(Player2ComboType);
             Player2DamageTaken = 0;
         }
     }
@@ -259,17 +203,6 @@ public class Turn
             Player1PositionChange = -1 * movementAmount;
             Player2PositionChange = movementAmount;
         }
-    }
-
-    private float CalculateComboDamageModifier(ComboType type)
-    {
-        return type switch
-        {
-            ComboType.Combo => _context.Config.ComboDamageMultiplier,
-            ComboType.MixUp => _context.Config.ComboDamageMultiplier,
-            ComboType.Special => _context.Config.ComboDamageMultiplier,
-            _ => 1.0f
-        };
     }
 
     private void ExecuteSpecialForPlayer(int playerNumber)
@@ -301,57 +234,6 @@ public class Turn
             return false;
         }
         return move.MoveType == Move.Type.Special;
-    }
-
-    private ComboType DetermineComboForPlayer(int playerNumber)
-    {
-        var lastMove = (playerNumber == 1) ? Player1LastMove : Player2LastMove;
-        if (lastMove == null)
-        {
-            return ComboType.None;
-        }
-
-        if (lastMove.MoveType == Move.Type.Special)
-        {
-            return ComboType.Special;
-        }
-
-        var player = (playerNumber == 1) ? Player1 : Player2;
-        var currentMove = (playerNumber == 1) ? Player1Move : Player2Move;
-        ComboType comboType = DetermineComboType(player, lastMove, currentMove);
-        return comboType;
-    }
-
-    private ComboType DetermineComboType(IPlayerCharacter player, Move lastMove, Move currentMove)
-    {
-        ComboType comboType = ComboType.Normal;
-        if (player.Character.ComboPathSet.TryGetValue(lastMove.MoveType, out var comboPath))
-        {
-            if (player.ComboIsFresh)
-            {
-                if (comboPath.FreshComboMove == currentMove.MoveType)
-                {
-                    comboType = ComboType.Combo;
-                }
-                else if (comboPath.FreshMixUp.Contains(currentMove.MoveType))
-                {
-                    comboType = ComboType.MixUp;
-                }
-            }
-            else
-            {
-                if (comboPath.ComboMove == currentMove.MoveType)
-                {
-                    comboType = ComboType.Combo;
-                }
-                else if (comboPath.MixUp.Contains<Move.Type>(currentMove.MoveType))
-                {
-                    comboType = ComboType.MixUp;
-
-                }
-            }
-        }
-        return comboType;
     }
 
     private bool ShouldDetermineComboForPlayer(int playerNumber)

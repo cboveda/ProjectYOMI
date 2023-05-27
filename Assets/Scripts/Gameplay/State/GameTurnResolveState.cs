@@ -29,13 +29,11 @@ public class GameTurnResolveState : GameBaseState
         var turnResult = turn
             .Initialize()
             .DetermineWinner()
-            .DetermineComboStatus()
             .CheckForSpecialMovesAndExecute()
             .CalculateStateChanges()
             .ApplyStateChanges()
             .ExecuteCombatCommands()
             .CheckAndSetSpecialUsability()
-            .DetermineNextComboMove()
             .GetTurnData();
         _context.TurnHistory.AddTurnData(turnResult);
         _context.Players.ResetActions();
