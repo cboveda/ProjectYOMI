@@ -62,45 +62,6 @@ public class GameUIManager : NetworkBehaviour, IGameUIManager
         UpdatePlayer2Combo(playerData2.ComboCount);
         //DisplayRoundResult(turnData);
         _turnHistoryContent.AddTurnHistoryRow(turnData);
-        DisplayComboIndicators(turnData);
-    }
-
-    private void DisplayComboIndicators(TurnResult turnData)
-    {
-        var localPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData1 : turnData.PlayerData2;
-        var otherPlayerData = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.PlayerData2 : turnData.PlayerData1;
-        var localNextComboType = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.Player1NextComboMove : turnData.Player2NextComboMove;
-        var otherNextComboType = (_localPlayerCharacter.PlayerNumber == 1) ? turnData.Player2NextComboMove : turnData.Player1NextComboMove;
-        var isMyCombo = localPlayerData.ComboCount > 0; 
-        var isOtherCombo = otherPlayerData.ComboCount > 0;
-        if (isMyCombo)
-        {
-            var myLastMove = _database.Moves.GetMoveById(localPlayerData.Action);
-            if (myLastMove.MoveType == Move.Type.Special)
-            {
-                _playerControls.SetComboHighlightForAllButtonsAfterSpecial(true);
-            }
-            else
-            {
-                _playerControls.SetComboHighlight(localNextComboType, isMyCombo);
-            }
-        }
-        else if (isOtherCombo)
-        {
-            var otherLastMove = _database.Moves.GetMoveById(otherPlayerData.Action);
-            if (otherLastMove.MoveType == Move.Type.Special)
-            {
-                _playerControls.SetComboHighlightForAllButtonsAfterSpecial(false);
-            }
-            else
-            {
-                _playerControls.SetComboHighlight(otherNextComboType, isMyCombo);
-            }
-        }
-        else
-        {
-            _playerControls.ClearAllComboHighlights();
-        }
     }
 
     public void DisplayRoundResult(TurnResult turnData)

@@ -12,7 +12,6 @@ public class Character : ScriptableObject
     [SerializeField] private GameObject _introPrefab;
     [SerializeField] private NetworkObject _gameplayPrefab;
     [SerializeField] private CharacterMoveSet _characterMoveSet;
-    [SerializeField] private ComboPathSet _comboPathSet;
     [SerializeField] private int _maximumHealth;
     [SerializeField] private CharacterBaseEffect _effect;
 
@@ -25,5 +24,4 @@ public class Character : ScriptableObject
     public CharacterMoveSet CharacterMoveSet => _characterMoveSet;
     public int MaximumHealth => _maximumHealth;
     public CharacterBaseEffect Effect => _effect;
-    public ComboPathSet ComboPathSet => _comboPathSet;
 }

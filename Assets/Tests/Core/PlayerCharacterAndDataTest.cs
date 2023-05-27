@@ -63,7 +63,6 @@ public class PlayerCharacterAndDataTest
         Assert.AreEqual(playerDataCompare, playerData);
         Assert.That(character.Effect, Is.InstanceOf(typeof(CharacterBaseEffect)));
         Assert.That(characterEffect, Is.InstanceOf(typeof(CharacterBaseEffect)));
-        Assert.NotNull(character.ComboPathSet);
         Assert.NotNull(usableMoveSet);
         Assert.NotNull(movementController);
         Assert.NotNull(character.GameplayPrefab);

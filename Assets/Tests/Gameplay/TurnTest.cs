@@ -178,162 +178,6 @@ public class TurnTest
         }
     }
 
-    public class DeterminesComboStatusCorrectly : TurnTest
-    {
-        public class ForPlayer1 : DeterminesComboStatusCorrectly
-        {
-            [SetUp]
-            public new void SetUp()
-            {
-                base.SetUp();
-
-                _turn.Player1Wins = true;
-                _player1Mock.Setup(m => m.ComboCount).Returns(1);
-                _turn.Player1Move = _lightMove;
-                _turn.Player1 = _player1Mock.Object;
-
-                _turn.Player2Wins = false;
-                _player2Mock.Setup(m => m.ComboCount).Returns(0);
-                _turn.Player2Move = _lightMove;
-                _turn.Player2 = _player2Mock.Object;
-
-                _turn.TurnNumber = 1;
-                _turn.IsDraw = false;
-            }
-
-            public class WhenLastMoveWasSpecialOrNull : ForPlayer1
-            {
-                [Test]
-                public void WhenLastMoveWasNull()
-                {
-                    _turn.Player1LastMove = null;
-                    _turn.DetermineComboStatus();
-                    Assert.AreEqual(ComboType.None, _turn.Player1ComboType);
-                }
-
-                [Test]
-                public void WhenLastMoveWasSpecial()
-                {
-                    _turn.Player1LastMove = _specialMove;
-                    _turn.DetermineComboStatus();
-                    Assert.AreEqual(ComboType.Special, _turn.Player1ComboType);
-                }
-            }
-
-            public class WhenLastMoveWasNotSpecialOrNull : ForPlayer1
-            {
-                [SetUp]
-                public new void SetUp()
-                {
-                    base.SetUp();
-
-                    Character character = Resources.Load<Character>("Tests/101_TestCharacter");
-                    foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
-                    {
-                        if (character.ComboPathSet.TryGetValue(type, out var comboPath))
-                        {
-                            comboPath.Construct(_databaseMock.Object);
-                        }
-                    }
-                    _player1Mock.Setup(m => m.Character).Returns(character);
-                }
-
-                [Test]
-                [TestCase(Move.Type.LightAttack, Move.Type.HeavyAttack, true, ComboType.Combo)] //fresh combo
-                [TestCase(Move.Type.LightAttack, Move.Type.Parry, true, ComboType.MixUp)] //fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.LightAttack, false, ComboType.Combo)] //not fresh combo
-                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.MixUp)] //not fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.Grab, true, ComboType.Normal)] //fresh normal
-                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.Normal)] //not fresh normal
-                public void ForGivenLastMoveAndCurrentMoveAndFreshness(Move.Type lastMove, Move.Type currentMove, bool isFresh, ComboType expected)
-                {
-                    _player1Mock.Setup(m => m.ComboIsFresh).Returns(isFresh);
-                    _turn.Player1Move = GetTestMoveByType(currentMove);
-                    _turn.Player1LastMove = GetTestMoveByType(lastMove);
-                    _turn.DetermineComboStatus();
-                    Assert.AreEqual(expected, _turn.Player1ComboType);
-                }
-
-            }
-        }
-
-        public class ForPlayer2 : DeterminesComboStatusCorrectly
-        {
-            [SetUp]
-            public new void SetUp()
-            {
-                base.SetUp();
-
-                _turn.Player1Wins = false;
-                _player1Mock.Setup(m => m.ComboCount).Returns(0);
-                _turn.Player1Move = _lightMove;
-                _turn.Player1 = _player1Mock.Object;
-
-                _turn.Player2Wins = true;
-                _player2Mock.Setup(m => m.ComboCount).Returns(1);
-                _turn.Player2Move = _lightMove;
-                _turn.Player2 = _player2Mock.Object;
-
-                _turn.TurnNumber = 1;
-                _turn.IsDraw = false;
-            }
-
-            public class WhenLastMoveWasSpecialOrNull : ForPlayer2
-            {
-                [Test]
-                public void WhenLastMoveWasNull()
-                {
-                    _turn.Player2LastMove = null;
-                    _turn.DetermineComboStatus();
-                    Assert.AreEqual(ComboType.None, _turn.Player2ComboType);
-                }
-
-                [Test]
-                public void WhenLastMoveWasSpecial()
-                {
-                    _turn.Player2LastMove = _specialMove;
-                    _turn.DetermineComboStatus();
-                    Assert.AreEqual(ComboType.Special, _turn.Player2ComboType);
-                }
-            }
-
-            public class WhenLastMoveWasNotSpecialOrNull : ForPlayer2
-            {
-                [SetUp]
-                public new void SetUp()
-                {
-                    base.SetUp();
-
-                    Character character = Resources.Load<Character>("Tests/101_TestCharacter");
-                    foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
-                    {
-                        if (character.ComboPathSet.TryGetValue(type, out var comboPath))
-                        {
-                            comboPath.Construct(_databaseMock.Object);
-                        }
-                    }
-                    _player2Mock.Setup(m => m.Character).Returns(character);
-                }
-
-                [Test]
-                [TestCase(Move.Type.LightAttack, Move.Type.HeavyAttack, true, ComboType.Combo)] //fresh combo
-                [TestCase(Move.Type.LightAttack, Move.Type.Parry, true, ComboType.MixUp)] //fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.LightAttack, false, ComboType.Combo)] //not fresh combo
-                [TestCase(Move.Type.Grab, Move.Type.Grab, false, ComboType.MixUp)] //not fresh mixup
-                [TestCase(Move.Type.Grab, Move.Type.Grab, true, ComboType.Normal)] //fresh normal
-                [TestCase(Move.Type.Grab, Move.Type.Parry, false, ComboType.Normal)] //not fresh normal
-                public void ForGivenLastMoveAndCurrentMoveAndFreshness(Move.Type lastMove, Move.Type currentMove, bool isFresh, ComboType expected)
-                {
-                    _player2Mock.Setup(m => m.ComboIsFresh).Returns(isFresh);
-                    _turn.Player2Move = GetTestMoveByType(currentMove);
-                    _turn.Player2LastMove = GetTestMoveByType(lastMove);
-                    _turn.DetermineComboStatus();
-                    Assert.AreEqual(expected, _turn.Player2ComboType);
-                }
-            }
-        }
-    }
-
     public class ChecksForSpecialMovesAndExecutesCorrectly : TurnTest
     {
         private int _calls = 0;
@@ -445,8 +289,6 @@ public class TurnTest
             }
         }
 
-
-
         public class WhenPlayer1Wins : CalculatesStateChangesCorrectly
         {
             [SetUp]
@@ -474,23 +316,6 @@ public class TurnTest
                 _player1Mock.SetupProperty<int>(m => m.Position, startPosition);
                 _turn.CalculateStateChanges();
                 Assert.AreEqual(1, _turn.Player1PositionChange);
-            }
-
-            [Test]
-            [TestCase(ComboType.Combo)]
-            [TestCase(ComboType.Normal)]
-            [TestCase(ComboType.Special)]
-            [TestCase(ComboType.None)]
-            [TestCase(ComboType.MixUp)]
-            public void AndPlayer1ComboTypeIs(ComboType type)
-            {
-                var expectedMultiplier = DetermineExpectedMultiplier(type);
-                var expectedOutgoingDamage = _configuration.BaseDamage * expectedMultiplier;
-
-                _turn.Player1ComboType = type;
-                _turn.CalculateStateChanges();
-                Assert.AreEqual(0, _turn.Player1DamageTaken);
-                Assert.AreEqual(expectedOutgoingDamage, _turn.Player2DamageTaken);
             }
 
             [Test]
@@ -532,38 +357,12 @@ public class TurnTest
             }
 
             [Test]
-            [TestCase(ComboType.Combo)]
-            [TestCase(ComboType.Normal)]
-            [TestCase(ComboType.Special)]
-            [TestCase(ComboType.None)]
-            [TestCase(ComboType.MixUp)]
-            public void AndPlayer2ComboTypeIs(ComboType type)
-            {
-                var expectedMultiplier = DetermineExpectedMultiplier(type);
-                var expectedOutgoingDamage = _configuration.BaseDamage * expectedMultiplier;
-
-                _turn.Player2ComboType = type;
-                _turn.CalculateStateChanges();
-                Assert.AreEqual(0, _turn.Player2DamageTaken);
-                Assert.AreEqual(expectedOutgoingDamage, _turn.Player1DamageTaken);
-            }
-
-            [Test]
             public void CheckSpecialGain()
             {
                 _turn.CalculateStateChanges();
                 Assert.AreEqual(_configuration.BaseSpecialGain * _configuration.SpecialGainOnLossModifier, _turn.Player1SpecialGain);
                 Assert.AreEqual(_configuration.BaseSpecialGain, _turn.Player2SpecialGain);
             }
-        }
-
-        private float DetermineExpectedMultiplier(ComboType type)
-        {
-            return (type == ComboType.Combo ||
-                 type == ComboType.MixUp ||
-                 type == ComboType.Special) ?
-                    _configuration.ComboDamageMultiplier :
-                    1.0f;
         }
     }
 
@@ -575,84 +374,6 @@ public class TurnTest
             base.SetUp();
             _turn.Player1 = _player1Mock.Object;
             _turn.Player2 = _player2Mock.Object;
-        }
-
-        public class ForComboFreshness : AppliesStateChangesCorrectly
-        {
-            [SetUp]
-            public new void SetUp()
-            {
-                base.SetUp();
-                _player1Mock.SetupProperty(m => m.ComboIsFresh, false);
-                _player2Mock.SetupProperty(m => m.ComboIsFresh, false);
-            }
-
-            [Test]
-            public void WhenGameIsADraw()
-            {
-                _turn.IsDraw = true;
-                _turn.ApplyStateChanges();
-                Assert.IsTrue(_turn.Player1.ComboIsFresh);
-                Assert.IsTrue(_turn.Player2.ComboIsFresh);
-            }
-
-            [Test]
-            public void WhenPlayer1WinsAndIsNotInExtendedCombo()
-            {
-                _turn.IsDraw = false;
-                _turn.Player1Wins = true;
-                _turn.Player1ComboType = ComboType.Normal;
-                _turn.ApplyStateChanges();
-                Assert.IsTrue(_turn.Player1.ComboIsFresh);
-            } 
-            
-            [Test]
-            public void WhenPlayer2WinsAndIsNotInExtendedCombo()
-            {
-                _turn.IsDraw = false;
-                _turn.Player2Wins = true;
-                _turn.Player2ComboType = ComboType.Normal;
-                _turn.ApplyStateChanges();
-                Assert.IsTrue(_turn.Player2.ComboIsFresh);
-            }
-            
-            [Test]
-            public void WhenPlayer1WinsButIsInExtendedCombo()
-            {
-                _turn.IsDraw = false;
-                _turn.Player1Wins = true;
-                _turn.Player1ComboType = ComboType.Combo;
-                _turn.ApplyStateChanges();
-                Assert.IsFalse(_turn.Player1.ComboIsFresh);
-            }
-            
-            [Test]
-            public void WhenPlayer2WinsButIsInExtendedCombo()
-            {
-                _turn.IsDraw = false;
-                _turn.Player2Wins = true;
-                _turn.Player2ComboType = ComboType.Combo;
-                _turn.ApplyStateChanges();
-                Assert.IsFalse(_turn.Player2.ComboIsFresh);
-            }
-
-            [Test]
-            public void WhenPlayer1DoesNotWin()
-            {
-                _turn.IsDraw = false;
-                _turn.Player1Wins = false;
-                _turn.ApplyStateChanges();
-                Assert.IsTrue(_turn.Player1.ComboIsFresh);
-            }
-            
-            [Test]
-            public void WhenPlayer2DoesNotWin()
-            {
-                _turn.IsDraw = false;
-                _turn.Player2Wins = false;
-                _turn.ApplyStateChanges();
-                Assert.IsTrue(_turn.Player2.ComboIsFresh);
-            }
         }
 
         public class ForComboCounts : AppliesStateChangesCorrectly
@@ -847,56 +568,6 @@ public class TurnTest
             _turn.CheckAndSetSpecialUsability();
             Assert.AreEqual(expected, _player1SpecialEnabled);
             Assert.AreEqual(expected, _player2SpecialEnabled);
-        }
-    }
-
-    public class DeterminesNextComboMoveCorrectly : TurnTest
-    {
-        ComboPath _comboPath;
-
-        [SetUp]
-        public new void SetUp()
-        {
-            base.SetUp();
-
-            _turn.Player1 = _player1Mock.Object;
-            _turn.Player2 = _player2Mock.Object;
-
-            _player1Mock.SetupProperty(m => m.ComboCount, 0);
-            _player2Mock.SetupProperty(m => m.ComboCount, 0);
-            _turn.Player1.ComboCount = 1;
-            _turn.Player2.ComboCount = 1;
-
-            _player1Mock.SetupProperty(m => m.ComboIsFresh, true);
-            _player2Mock.SetupProperty(m => m.ComboIsFresh, true);
-
-            Character character = Resources.Load<Character>("Tests/101_TestCharacter");
-            foreach (Move.Type type in Enum.GetValues(typeof(Move.Type)))
-            {
-                if (character.ComboPathSet.TryGetValue(type, out var comboPath))
-                {
-                    comboPath.Construct(_databaseMock.Object);
-                }
-            }
-            _player1Mock.Setup(m => m.Character).Returns(character);
-            _player2Mock.Setup(m => m.Character).Returns(character);
-            character.ComboPathSet.TryGetValue(Move.Type.LightAttack, out _comboPath);
-            _turn.Player1Move = character.CharacterMoveSet.LightAttack;
-            _turn.Player2Move = character.CharacterMoveSet.LightAttack;
-        }
-
-        [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void DeterminesNextComboMove(bool freshness)
-        {
-            _player1Mock.Object.ComboIsFresh = freshness;
-            _player2Mock.Object.ComboIsFresh = freshness;
-            Move.Type expected = (freshness) ? _comboPath.FreshComboMove : _comboPath.ComboMove;
-
-            _turn.DetermineNextComboMove();
-            Assert.AreEqual(expected, _turn.Player1NextCombo);
-            Assert.AreEqual(expected, _turn.Player2NextCombo);
         }
     }
 
