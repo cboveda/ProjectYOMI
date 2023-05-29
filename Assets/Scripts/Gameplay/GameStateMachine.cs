@@ -8,7 +8,6 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
     private bool _timerActive = false;
     private bool _timerComplete = false;
     private CombatConfiguration _combatConfiguration;
-    private CombatCommandExecutor _combatEvaluator;
     private float _timerMax;
     private GameBaseState _currentState;
     private GameStateFactory _states;
@@ -21,7 +20,6 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
 
     public bool TimerComplete { get { return _timerComplete; } }
     public CombatConfiguration CombatConfiguration { get => _combatConfiguration; }
-    public CombatCommandExecutor CombatEvaluator { get { return _combatEvaluator; } }
     public GameBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public IGameUIManager GameplayUI { get { return _gameUIManager; } }
     public IPlayerDataCollection Players { get { return _players; } }
@@ -32,7 +30,6 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
     [Inject]
     public void Construct(
         CombatConfiguration configuration,
-        CombatCommandExecutor combatEvaluator,
         IDatabase database,
         IGameUIManager gameUIManager,
         IPlayerDataCollection players,
@@ -41,7 +38,6 @@ public class GameStateMachine : NetworkBehaviour, IGameStateMachine
         TurnFactory turnFactory)
     {
         _combatConfiguration = configuration;
-        _combatEvaluator = combatEvaluator;
         _database = database;
         _gameUIManager = gameUIManager;
         _networkManager = networkManager;

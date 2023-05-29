@@ -30,10 +30,6 @@ public class GameplayInstaller : MonoInstaller
             .FromNew()
             .AsSingle();
 
-        Container.Bind<CombatCommandExecutor>()
-            .FromNew()
-            .AsSingle();
-
         Container.Bind<TurnFactory>()
             .FromNew()
             .AsSingle();

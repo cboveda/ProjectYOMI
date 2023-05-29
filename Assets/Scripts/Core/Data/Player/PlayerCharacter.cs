@@ -5,7 +5,6 @@ using Zenject;
 public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
 {
     [SerializeField] private Character _character;
-    private ICharacterBaseEffect _characterBaseEffect;
     private IGameUIManager _gameUIManager;
     private int _playerNumber;
     private PlayerData _playerData;
@@ -13,7 +12,6 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
     private ulong _clientId;
     private IUsableMoveSet _usableMoveSet;
     public Character Character { get => _character; }
-    public ICharacterBaseEffect Effect { get => _characterBaseEffect; }
     public IGameUIManager GameUIManager { set => _gameUIManager = value; }
     public PlayerData PlayerData { get => _playerData; set => _playerData = value; }
     public PlayerMovementController PlayerMovementController { get => _playerMovementController; }
@@ -34,7 +32,6 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
     {
         _playerData = new PlayerData(health: _character.MaximumHealth);
         _usableMoveSet = GetComponent<UsableMoveSet>();
-        _characterBaseEffect = GetComponent<CharacterBaseEffect>();
         _playerMovementController = GetComponent<PlayerMovementController>();
     }
 
@@ -53,8 +50,7 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
                 ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position,
-                ComboIsFresh = _playerData.ComboIsFresh
+                Position = _playerData.Position
             };
         }
     }
@@ -74,8 +70,7 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = value,
                 Action = _playerData.Action,
                 ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position,
-                ComboIsFresh = _playerData.ComboIsFresh
+                Position = _playerData.Position
             };
         }
     }
@@ -95,8 +90,7 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = value,
                 ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position,
-                ComboIsFresh = _playerData.ComboIsFresh
+                Position = _playerData.Position
             };
             var clientRpcParams = new ClientRpcParams
             {
@@ -124,8 +118,7 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
                 ComboCount = value,
-                Position = _playerData.Position,
-                ComboIsFresh = _playerData.ComboIsFresh
+                Position = _playerData.Position
             };
         }
     }
@@ -144,28 +137,7 @@ public class PlayerCharacter : NetworkBehaviour, IPlayerCharacter
                 SpecialMeter = _playerData.SpecialMeter,
                 Action = _playerData.Action,
                 ComboCount = _playerData.ComboCount,
-                Position = value,
-                ComboIsFresh = _playerData.ComboIsFresh
-            };
-        }
-    }
-
-    public bool ComboIsFresh
-    {
-        get
-        {
-            return _playerData.ComboIsFresh;
-        }
-        set
-        {
-            _playerData = new PlayerData
-            {
-                Health = _playerData.Health,
-                SpecialMeter = _playerData.SpecialMeter,
-                Action = _playerData.Action,
-                ComboCount = _playerData.ComboCount,
-                Position = _playerData.Position,
-                ComboIsFresh = value
+                Position = value
             };
         }
     }

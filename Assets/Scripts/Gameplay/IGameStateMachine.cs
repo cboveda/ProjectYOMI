@@ -7,7 +7,6 @@ public interface IGameStateMachine
     IGameUIManager GameplayUI { get; }
     ITurnHistory TurnHistory { get; }
     IPlayerDataCollection Players { get; }
-    CombatCommandExecutor CombatEvaluator { get; }
     CombatConfiguration CombatConfiguration { get; }
     IDatabase Database { get; }
     TurnFactory TurnFactory { get; }

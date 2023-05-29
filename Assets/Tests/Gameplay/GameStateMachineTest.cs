@@ -15,7 +15,6 @@ public class GameStateMachineTest
     Mock<IGameUIManager> _gameUIManagerMock;
     Mock<ITurnHistory> _turnHistoryMock;
     Mock<PlayerDataCollection> _playerDataCollectionMock;
-    Mock<CombatCommandExecutor> _combatEvaluatorMock;
     Mock<TurnFactory> _turnFactoryMock;
     Mock<IDatabase> _databaseMock;
     CombatConfiguration _combatConfiguration;
@@ -38,12 +37,10 @@ public class GameStateMachineTest
             _gameUIManagerMock = new Mock<IGameUIManager>();
             _turnHistoryMock = new Mock<ITurnHistory>();
             _playerDataCollectionMock = new Mock<PlayerDataCollection>();
-            _combatEvaluatorMock = new Mock<CombatCommandExecutor>();
             _turnFactoryMock = new Mock<TurnFactory>();
             _databaseMock = new Mock<IDatabase>();
             _combatConfiguration = ScriptableObject.CreateInstance<CombatConfiguration>();
             _gameStateMachine.Construct(
-                combatEvaluator: _combatEvaluatorMock.Object,
                 configuration: _combatConfiguration,
                 database: _databaseMock.Object,
                 gameUIManager: _gameUIManagerMock.Object,
@@ -74,7 +71,6 @@ public class GameStateMachineTest
     [Test]
     public void DependencyGettersReturnCorrectObject()
     {
-        Assert.AreEqual(_combatEvaluatorMock.Object, _gameStateMachine.CombatEvaluator);
         Assert.AreEqual(_gameUIManagerMock.Object, _gameStateMachine.GameplayUI);
         Assert.AreEqual(_playerDataCollectionMock.Object, _gameStateMachine.Players);
         Assert.AreEqual(_turnHistoryMock.Object, _gameStateMachine.TurnHistory);

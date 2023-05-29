@@ -29,13 +29,8 @@ public class GameTurnResolveState : GameBaseState
         var turnResult = turn
             .Initialize()
             .DetermineWinner()
-<<<<<<< HEAD
-            .CheckForSpecialMovesAndExecute()
-=======
->>>>>>> c1b107977f50cfe1f358e96f0f71c52a0ceca50a
             .CalculateStateChanges()
             .ApplyStateChanges()
-            .CheckAndSetSpecialUsability()
             .GetTurnData();
         _context.TurnHistory.AddTurnData(turnResult);
         _context.Players.ResetActions();

@@ -2,9 +2,7 @@
 
 public interface IPlayerCharacter
 {
-    bool ComboIsFresh { get; set; }
     Character Character { get; }
-    ICharacterBaseEffect Effect { get; }
     float Health { get; set; }
     float SpecialMeter { get; set; }
     IGameUIManager GameUIManager { set; }

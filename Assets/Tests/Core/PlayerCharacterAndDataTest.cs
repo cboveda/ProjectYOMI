@@ -59,10 +59,7 @@ public class PlayerCharacterAndDataTest
         var playerDataCompare = new PlayerData(health: character.MaximumHealth);
         var usableMoveSet = _playerCharacter.UsableMoveSet;
         var movementController = _playerCharacter.PlayerMovementController;
-        var characterEffect = _playerCharacter.Effect;
         Assert.AreEqual(playerDataCompare, playerData);
-        Assert.That(character.Effect, Is.InstanceOf(typeof(CharacterBaseEffect)));
-        Assert.That(characterEffect, Is.InstanceOf(typeof(CharacterBaseEffect)));
         Assert.NotNull(usableMoveSet);
         Assert.NotNull(movementController);
         Assert.NotNull(character.GameplayPrefab);
@@ -110,15 +107,6 @@ public class PlayerCharacterAndDataTest
     {
         _playerCharacter.Position = value;
         Assert.AreEqual(expected, _playerCharacter.Position);
-    }
-
-    [Test]
-    [TestCase(true)]
-    [TestCase(false)]
-    public void ComboIsFreshSetterChangesValueCorrectly(bool value)
-    {
-        _playerCharacter.ComboIsFresh = value;
-        Assert.AreEqual(value, _playerCharacter.ComboIsFresh);
     }
 
     [Test]

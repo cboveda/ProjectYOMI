@@ -12,7 +12,6 @@ public class CharacterSpawner : NetworkBehaviour
     private IGameUIManager _gameUIManager;
     private IServerManager _serverManager;
     private IPlayerDataCollection _players;
-    private CombatCommandExecutor _combatEvaluator;
     private ITurnHistory _turnHistory;
     private ICameraFocusObject _cameraFocusObject;
 
@@ -22,7 +21,6 @@ public class CharacterSpawner : NetworkBehaviour
         IServerManager serverManager,
         IDatabase database,
         IPlayerDataCollection players,
-        CombatCommandExecutor combatEvaluator,
         ITurnHistory turnHistory,
         ICameraFocusObject cameraFocusObject)
     {
@@ -30,7 +28,6 @@ public class CharacterSpawner : NetworkBehaviour
         _serverManager = serverManager;
         _database = database;
         _players = players;
-        _combatEvaluator = combatEvaluator;
         _turnHistory = turnHistory;
         _cameraFocusObject = cameraFocusObject;
     }
@@ -64,7 +61,6 @@ public class CharacterSpawner : NetworkBehaviour
         playerCharacter.GameUIManager = _gameUIManager;
         playerCharacter.ClientId = clientId;
         playerCharacter.PlayerNumber = (_hasSpawnedPlayer1) ? 2 : 1;
-        playerCharacter.Effect.Construct(playerCharacter, _turnHistory, _players, _database, _combatEvaluator);
     }
 
     private void SpawnPlayerObjectForGivenClientId(ulong clientId, Character character, out NetworkObject instance)
