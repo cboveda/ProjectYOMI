@@ -62,19 +62,6 @@ public class Turn
         return this;
     }
 
-    public Turn CheckForSpecialMovesAndExecute()
-    {
-        if (ShouldExecuteSpecialForPlayer(1))
-        {
-            ExecuteSpecialForPlayer(1);
-        }
-        if (ShouldExecuteSpecialForPlayer(2))
-        {
-            ExecuteSpecialForPlayer(2);
-        }
-        return this;
-    }
-
     public Turn CalculateStateChanges()
     {
         CalculatePositionChanges();
@@ -93,12 +80,6 @@ public class Turn
         Player2.IncreaseSpecialMeter(Player2SpecialGain);
         Player1.IncreasePosition(Player1PositionChange);
         Player2.IncreasePosition(Player2PositionChange);
-        return this;
-    }
-
-    public Turn ExecuteCombatCommands()
-    {
-        _context.CombatEvaluator.ExecuteCombatCommands();
         return this;
     }
 
@@ -224,16 +205,6 @@ public class Turn
         {
             Player2SpecialGain = 0;
         }
-    }
-
-    private bool ShouldExecuteSpecialForPlayer(int playerNumber)
-    {
-        var move = (playerNumber == 1) ? Player1Move : Player2Move;
-        if (move == null)
-        {
-            return false;
-        }
-        return move.MoveType == Move.Type.Special;
     }
 
     private bool ShouldDetermineComboForPlayer(int playerNumber)

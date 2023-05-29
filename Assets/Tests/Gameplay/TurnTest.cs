@@ -178,87 +178,6 @@ public class TurnTest
         }
     }
 
-    public class ChecksForSpecialMovesAndExecutesCorrectly : TurnTest
-    {
-        private int _calls = 0;
-
-        [SetUp]
-        public new void SetUp()
-        {
-            base.SetUp();
-
-            _turn.Player1 = _player1Mock.Object;
-            _turn.Player2 = _player2Mock.Object;
-            var effectMock = new Mock<ICharacterBaseEffect>();
-            effectMock.Setup(m => m.DoSpecial(It.IsAny<bool>())).Callback(() => _calls++);
-            _player1Mock.Setup(m => m.Effect).Returns(effectMock.Object);
-            _player2Mock.Setup(m => m.Effect).Returns(effectMock.Object);
-        }
-
-        [Test]
-        public void WhenPlayer1WonTurnAndUsedSpecial()
-        {
-            _turn.Player1Wins = true;
-            _turn.IsDraw = false;
-            _turn.Player1Move = _specialMove;
-            _turn.Player2Move = _lightMove;
-
-            var initial = _calls;
-            _turn.CheckForSpecialMovesAndExecute();
-            Assert.AreEqual(initial + 1, _calls);
-        }
-
-        [Test]
-        public void WhenPlayer1WonTurnAndDidNotUseSpecial()
-        {
-            _turn.Player1Wins = true;
-            _turn.IsDraw = false;
-            _turn.Player1Move = _parryMove;
-            _turn.Player2Move = _lightMove;
-
-            var initial = _calls;
-            _turn.CheckForSpecialMovesAndExecute();
-            Assert.AreEqual(initial, _calls);
-        }
-
-        [Test]
-        public void WhenPlayerDidNotSelectAMove()
-        {
-            _turn.Player1Move = null;
-            _turn.Player2Move = null;
-
-            var initial = _calls;
-            _turn.CheckForSpecialMovesAndExecute();
-            Assert.AreEqual(initial, _calls);
-        }
-
-        [Test]
-        public void WhenPlayer2WonTurnAndUsedSpecial()
-        {
-            _turn.Player2Wins = true;
-            _turn.IsDraw = false;
-            _turn.Player2Move = _specialMove;
-            _turn.Player1Move = _lightMove;
-
-            var initial = _calls;
-            _turn.CheckForSpecialMovesAndExecute();
-            Assert.AreEqual(initial + 1, _calls);
-        }
-
-        [Test]
-        public void WhenPlayer2WonTurnAndDidNotUseSpecial()
-        {
-            _turn.Player2Wins = true;
-            _turn.IsDraw = false;
-            _turn.Player2Move = _parryMove;
-            _turn.Player1Move = _lightMove;
-
-            var initial = _calls;
-            _turn.CheckForSpecialMovesAndExecute();
-            Assert.AreEqual(initial, _calls);
-        }
-    }
-
     public class CalculatesStateChangesCorrectly : TurnTest
     {
         [SetUp]
@@ -509,28 +428,6 @@ public class TurnTest
                 Assert.AreEqual(expectedPlayer1, _player1Position);
                 Assert.AreEqual(expectedPlayer2, _player2Position);
             }
-        }
-
-    }
-
-    public class ExecutesCombatCommandsCorrectly : TurnTest
-    {
-        int _calls;
-
-        [SetUp]
-        public new void SetUp()
-        {
-            base.SetUp();
-            _calls = 0;
-            _combatCommandsMock.Setup(m => m.ExecuteCombatCommands())
-                .Callback(() => _calls++);
-        }
-
-        [Test]
-        public void ByCallingCombatCommandExecutor()
-        {
-            _turn.ExecuteCombatCommands();
-            Assert.AreEqual(1, _calls);
         }
     }
 
