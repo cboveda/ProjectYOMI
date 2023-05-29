@@ -62,19 +62,6 @@ public class Turn
         return this;
     }
 
-    public Turn CheckForSpecialMovesAndExecute()
-    {
-        if (ShouldExecuteSpecialForPlayer(1))
-        {
-            ExecuteSpecialForPlayer(1);
-        }
-        if (ShouldExecuteSpecialForPlayer(2))
-        {
-            ExecuteSpecialForPlayer(2);
-        }
-        return this;
-    }
-
     public Turn CalculateStateChanges()
     {
         CalculatePositionChanges();
@@ -93,34 +80,6 @@ public class Turn
         Player2.IncreaseSpecialMeter(Player2SpecialGain);
         Player1.IncreasePosition(Player1PositionChange);
         Player2.IncreasePosition(Player2PositionChange);
-        return this;
-    }
-
-    public Turn ExecuteCombatCommands()
-    {
-        _context.CombatEvaluator.ExecuteCombatCommands();
-        return this;
-    }
-
-    public Turn CheckAndSetSpecialUsability()
-    {
-        if (Player1.SpecialMeter >= 100f)
-        {
-            Player1.UsableMoveSet.EnableMoveByType(Move.Type.Special);
-        }
-        else
-        {
-            Player1.UsableMoveSet.DisableMoveByType(Move.Type.Special);
-        }
-
-        if (Player2.SpecialMeter >= 100f)
-        {
-            Player2.UsableMoveSet.EnableMoveByType(Move.Type.Special);
-        }
-        else
-        {
-            Player2.UsableMoveSet.DisableMoveByType(Move.Type.Special);
-        }
         return this;
     }
 
@@ -205,15 +164,6 @@ public class Turn
         }
     }
 
-    private void ExecuteSpecialForPlayer(int playerNumber)
-    {
-        var player = (playerNumber == 1) ? Player1 : Player2;
-        var didWin = (playerNumber == 1) ? Player1Wins : Player2Wins;
-        player.Effect.DoSpecial(didWin && !IsDraw);
-        player.SpecialMeter = 0;
-        ClearSpecialGainForPlayer(playerNumber);
-    }
-
     private void ClearSpecialGainForPlayer(int playerNumber)
     {
         if (playerNumber == 1)
@@ -224,16 +174,6 @@ public class Turn
         {
             Player2SpecialGain = 0;
         }
-    }
-
-    private bool ShouldExecuteSpecialForPlayer(int playerNumber)
-    {
-        var move = (playerNumber == 1) ? Player1Move : Player2Move;
-        if (move == null)
-        {
-            return false;
-        }
-        return move.MoveType == Move.Type.Special;
     }
 
     private FixedString32Bytes GetResultString()

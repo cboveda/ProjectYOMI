@@ -178,6 +178,7 @@ public class TurnTest
         }
     }
 
+<<<<<<< HEAD
     public class ChecksForSpecialMovesAndExecutesCorrectly : TurnTest
     {
         private int _calls = 0;
@@ -259,6 +260,8 @@ public class TurnTest
         }
     }
 
+=======
+>>>>>>> c1b107977f50cfe1f358e96f0f71c52a0ceca50a
     public class CalculatesStateChangesCorrectly : TurnTest
     {
         [SetUp]
@@ -509,28 +512,6 @@ public class TurnTest
                 Assert.AreEqual(expectedPlayer1, _player1Position);
                 Assert.AreEqual(expectedPlayer2, _player2Position);
             }
-        }
-
-    }
-
-    public class ExecutesCombatCommandsCorrectly : TurnTest
-    {
-        int _calls;
-
-        [SetUp]
-        public new void SetUp()
-        {
-            base.SetUp();
-            _calls = 0;
-            _combatCommandsMock.Setup(m => m.ExecuteCombatCommands())
-                .Callback(() => _calls++);
-        }
-
-        [Test]
-        public void ByCallingCombatCommandExecutor()
-        {
-            _turn.ExecuteCombatCommands();
-            Assert.AreEqual(1, _calls);
         }
     }
 

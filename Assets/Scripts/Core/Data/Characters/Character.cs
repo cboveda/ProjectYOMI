@@ -13,7 +13,6 @@ public class Character : ScriptableObject
     [SerializeField] private NetworkObject _gameplayPrefab;
     [SerializeField] private CharacterMoveSet _characterMoveSet;
     [SerializeField] private int _maximumHealth;
-    [SerializeField] private CharacterBaseEffect _effect;
 
     public int Id => _id;
     public string DisplayName => _displayName;
@@ -23,5 +22,8 @@ public class Character : ScriptableObject
     public NetworkObject GameplayPrefab => _gameplayPrefab;
     public CharacterMoveSet CharacterMoveSet => _characterMoveSet;
     public int MaximumHealth => _maximumHealth;
+<<<<<<< HEAD
     public CharacterBaseEffect Effect => _effect;
+=======
+>>>>>>> c1b107977f50cfe1f358e96f0f71c52a0ceca50a
 }
