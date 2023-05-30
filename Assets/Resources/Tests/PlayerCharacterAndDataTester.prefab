@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7050038120645946710}
   - component: {fileID: 7050038120645946709}
   - component: {fileID: 7436865455234961111}
-  - component: {fileID: 2187698002203860536}
   - component: {fileID: 8003670581108048550}
   m_Layer: 0
   m_Name: PlayerCharacterAndDataTester
@@ -77,19 +76,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0367ebac2993c84aa5fc361bd405086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2187698002203860536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7050038120645946708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8dd0d9a0618aa847afa28fa47fe054c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _healAmountOnSpecial: 15
 --- !u!114 &8003670581108048550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,5 +89,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _knockIncrement: 0.75
-  _initialX: 0
-  _direction: 0
