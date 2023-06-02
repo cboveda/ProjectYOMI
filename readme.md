@@ -9,7 +9,7 @@ An online multiplayer, synchronous turn-based fighting game for iOS and Web with
 ## Links
 
 - [Project Management](https://github.com/users/cboveda/projects/3/views/1)
-- [Design Documents](https://github.com/cboveda/ProjectYOMI/wiki)
+- [Design Documents](./Documentation/)
 - [Dev Journal](https://dev.to/cboveda/series/22535)
 
 ## Tools
