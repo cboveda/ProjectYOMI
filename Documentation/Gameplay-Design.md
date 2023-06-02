@@ -41,7 +41,7 @@
     - Grab beats Parry
     - Parry beats Poke
 
-    ![Neutral Move Interaction Diagram](/images/NeutralMoveInteractions.png)
+    ![Neutral Move Interaction Diagram](./images/NeutralMoveInteractions.png)
 
 ### Advantage
 
@@ -79,7 +79,7 @@
 
 ### Interactions between Advantage and Disadvantage
 
-![Non-Neutral Move Interaction Diagram](/images/NonNeutralMoveInteractions.png)
+![Non-Neutral Move Interaction Diagram](./images/NonNeutralMoveInteractions.png)
 
 ---
 
@@ -117,4 +117,4 @@
 - While a player is on their own half of the stage, they will have a 2x multiplier applied to the knockback they transmit, allowing the player to more quickly retake neutral stage position.
     - If a player special modifies the knockback amount and is used while that player is on their own half, the modifications to the knockback will be additive not multiplicative.
 
-    ![Knockback example](/images/KnockbackExample.png)
+    ![Knockback example](./images/KnockbackExample.png)
